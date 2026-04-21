@@ -147,21 +147,56 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .sobre-detail { font-size:0.88rem; color:var(--muted); line-height:1.8; border-left:2px solid var(--accent); padding-left:1.2rem; }
 
 /* PROCESSO */
-#processo { padding:8rem 3rem; background:var(--ink); color:var(--paper); position:relative; overflow:hidden; }
+@property --gc-hue     { syntax:"<number>"; inherits:true; initial-value:0; }
+@property --gc-rotate  { syntax:"<number>"; inherits:true; initial-value:0; }
+@property --gc-bg-y    { syntax:"<number>"; inherits:true; initial-value:0; }
+@property --gc-bg-x    { syntax:"<number>"; inherits:true; initial-value:0; }
+@property --gc-glow-ty { syntax:"<number>"; inherits:true; initial-value:0; }
+@property --gc-bg-size { syntax:"<number>"; inherits:true; initial-value:1; }
+@property --gc-gop     { syntax:"<number>"; inherits:true; initial-value:0.6; }
+@property --gc-gblur   { syntax:"<number>"; inherits:true; initial-value:6; }
+@property --gc-gscale  { syntax:"<number>"; inherits:true; initial-value:1.5; }
+@property --gc-gradius { syntax:"<number>"; inherits:true; initial-value:100; }
+@property --gc-wshadow { syntax:"<number>"; inherits:true; initial-value:0; }
+
+#processo {
+  padding:8rem 3rem; background:var(--ink); color:var(--paper);
+  position:relative; overflow:hidden;
+  --gc-anim-speed:5s; --gc-interact-speed:0.55s;
+  --gc-card-radius:20px; --gc-border-width:2px; --gc-hue-speed:1;
+}
 .processo-bg { position:absolute; bottom:-10%; right:-5%; font-family:var(--f-display); font-size:20rem; font-weight:700; color:transparent; -webkit-text-stroke:1px rgba(245,242,235,0.04); pointer-events:none; line-height:1; }
-.processo-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:5rem; }
+.processo-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:4rem; }
 .processo-title { font-family:var(--f-display); font-size:clamp(3rem,6vw,6rem); font-weight:300; line-height:1; letter-spacing:-0.02em; }
 .processo-title em { font-style:italic; font-weight:600; color:var(--accent2); }
 .processo-desc { font-size:0.85rem; color:rgba(245,242,235,0.5); max-width:280px; line-height:1.7; text-align:right; }
-.steps-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:0; position:relative; z-index:2; }
-.step { padding:2.5rem 2rem 2.5rem 0; border-right:1px solid rgba(245,242,235,0.1); transition:all 0.3s; }
-.step:last-child { border-right:none; }
-.step:first-child { padding-left:0; }
-.step:hover { background:rgba(245,242,235,0.03); }
-.step-num { font-family:var(--f-mono); font-size:0.65rem; letter-spacing:0.15em; color:rgba(245,242,235,0.3); margin-bottom:1.5rem; }
-.step-icon { font-size:1.4rem; margin-bottom:1.2rem; color:var(--accent2); display:block; line-height:1; }
-.step-title { font-family:var(--f-display); font-size:1.6rem; font-weight:600; color:var(--paper); margin-bottom:0.8rem; letter-spacing:-0.01em; }
-.step-desc { font-size:0.8rem; color:rgba(245,242,235,0.5); line-height:1.7; }
+
+.steps-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:1.2rem; position:relative; z-index:2; }
+
+/* Glow card wrapper */
+.gc-wrap { position:relative; border-radius:var(--gc-card-radius); cursor:pointer; aspect-ratio:0.62; display:flex; align-items:center; justify-content:center; z-index:2; }
+.gc-wrap::before,.gc-wrap::after { content:''; display:block; position:absolute; width:100%; height:100%; border-radius:var(--gc-card-radius); }
+
+.gc-glow { --gc-glow-ty:0; display:block; position:absolute; width:40%; height:40%; animation:gc-rotate var(--gc-anim-speed) linear infinite; transform:rotateZ(calc(var(--gc-rotate) * 1deg)); transform-origin:center; border-radius:calc(var(--gc-gradius) * 10vw); pointer-events:none; }
+.gc-glow::after { content:''; display:block; z-index:-2; filter:blur(calc(var(--gc-gblur) * 8px)); width:130%; height:130%; left:-15%; top:-15%; background:hsl(calc(var(--gc-hue) * var(--gc-hue-speed) * 1deg) 100% 60%); position:relative; border-radius:calc(var(--gc-gradius) * 10vw); animation:gc-hue var(--gc-anim-speed) linear infinite; transform:scaleY(calc(var(--gc-gscale)/1.1)) scaleX(calc(var(--gc-gscale)*1.2)) translateY(calc(var(--gc-glow-ty)*1%)); opacity:var(--gc-gop); }
+
+.gc-body { position:absolute; width:100%; height:100%; background:hsl(260deg 18% 8%); border-radius:calc(var(--gc-card-radius)*0.9); display:flex; flex-direction:column; justify-content:flex-end; padding:1.6rem 1.4rem 1.4rem; overflow:hidden; }
+.gc-body::before { content:''; display:block; position:absolute; width:calc(100% + var(--gc-border-width)); height:calc(100% + var(--gc-border-width)); border-radius:calc(var(--gc-card-radius)*0.9); box-shadow:0 0 20px black; mix-blend-mode:color-burn; z-index:-1; background:hsl(0deg 0% 12%) radial-gradient(30% 30% at calc(var(--gc-bg-x)*1%) calc(var(--gc-bg-y)*1%),hsl(calc(var(--gc-hue)*var(--gc-hue-speed)*1deg) 100% 90%) calc(0%*var(--gc-bg-size)),hsl(calc(var(--gc-hue)*var(--gc-hue-speed)*1deg) 100% 70%) calc(20%*var(--gc-bg-size)),hsl(calc(var(--gc-hue)*var(--gc-hue-speed)*1deg) 100% 50%) calc(40%*var(--gc-bg-size)),transparent 100%); animation:gc-hue var(--gc-anim-speed) linear infinite,gc-rotate-bg var(--gc-anim-speed) linear infinite; transition:--gc-bg-size var(--gc-interact-speed) ease; }
+
+.gc-wrap:hover .gc-body { mix-blend-mode:darken; box-shadow:0 0 calc(var(--gc-wshadow)*1vw) calc(var(--gc-wshadow)*0.15vw) rgb(255 255 255/15%); animation:gc-shadow-pulse calc(var(--gc-anim-speed)*2) linear infinite; }
+.gc-wrap:hover .gc-body::before { --gc-bg-size:15; }
+.gc-wrap:hover .gc-glow { --gc-gblur:1.5; --gc-gop:0.5; --gc-gscale:2.2; --gc-gradius:0; --gc-rotate:900; animation-play-state:paused; }
+.gc-wrap:hover .gc-glow::after { --gc-glow-ty:0; animation-play-state:paused; transition:--gc-glow-ty 0s ease,--gc-gblur 0.05s ease,--gc-gop 0.05s ease,--gc-gscale 0.05s ease; }
+
+.gc-num { position:absolute; top:1.2rem; left:1.4rem; font-family:var(--f-mono); font-size:0.6rem; letter-spacing:0.15em; color:rgba(255,255,255,0.25); }
+.gc-icon { position:absolute; top:2.8rem; left:1.4rem; font-size:1.3rem; color:var(--accent2); line-height:1; }
+.gc-title { font-family:var(--f-display); font-size:1.35rem; font-weight:600; color:#fff; letter-spacing:-0.01em; line-height:1.1; margin-bottom:0.6rem; position:relative; z-index:1; }
+.gc-desc { font-size:0.72rem; color:rgba(255,255,255,0.45); line-height:1.65; position:relative; z-index:1; }
+
+@keyframes gc-hue        { 0%{--gc-hue:0}   100%{--gc-hue:360} }
+@keyframes gc-rotate-bg  { 0%{--gc-bg-x:0;--gc-bg-y:0} 25%{--gc-bg-x:100;--gc-bg-y:0} 50%{--gc-bg-x:100;--gc-bg-y:100} 75%{--gc-bg-x:0;--gc-bg-y:100} 100%{--gc-bg-x:0;--gc-bg-y:0} }
+@keyframes gc-rotate     { from{--gc-rotate:-70;--gc-glow-ty:-65} to{--gc-rotate:290;--gc-glow-ty:-65} }
+@keyframes gc-shadow-pulse { 0%,24%,46%,73%,96%{--gc-wshadow:0.5} 12%,28%,41%,63%,75%,82%,98%{--gc-wshadow:2.5} 6%,32%,57%{--gc-wshadow:1.3} 18%,52%,88%{--gc-wshadow:3} }
 
 /* PROJETOS */
 #projetos { padding:8rem 3rem; }
@@ -247,8 +282,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   .pc-card-wrapper { width:220px; }
   .pc-card { height:300px; }
   #sobre { grid-template-columns:1fr; gap:3rem; padding:5rem 1.5rem; }
-  .steps-grid { grid-template-columns:1fr; }
-  .step { border-right:none; border-bottom:1px solid rgba(245,242,235,0.1); padding:2rem 0; }
+  .steps-grid { grid-template-columns:1fr 1fr; gap:0.8rem; }
+  .gc-wrap { aspect-ratio:unset; min-height:200px; }
   #processo { padding:5rem 1.5rem; }
   .processo-header { flex-direction:column; align-items:flex-start; gap:1rem; }
   .processo-desc { text-align:left; }
@@ -366,11 +401,57 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <p class="processo-desc">Um método sem suposições. Do diagnóstico ao lançamento — cada etapa tem propósito.</p>
   </div>
   <div class="steps-grid">
-    <div class="step reveal"><div class="step-num">01</div><span class="step-icon">◎</span><div class="step-title">Diagnóstico</div><p class="step-desc">Análise profunda do negócio — lacunas de posicionamento, falhas de comunicação, oportunidades perdidas. Sem suposições.</p></div>
-    <div class="step reveal" style="transition-delay:0.1s"><div class="step-num">02</div><span class="step-icon">◈</span><div class="step-title">Estratégia</div><p class="step-desc">Defina a narrativa, o público-alvo e a ação desejada. Cada decisão justificada pela lógica de mercado, não por opinião.</p></div>
-    <div class="step reveal" style="transition-delay:0.2s"><div class="step-num">03</div><span class="step-icon">◇</span><div class="step-title">Cópia</div><p class="step-desc">Palavras criadas para converter. Títulos que prendem, textos que convencem, CTAs que geram resultado.</p></div>
-    <div class="step reveal" style="transition-delay:0.3s"><div class="step-num">04</div><span class="step-icon">▣</span><div class="step-title">Construção</div><p class="step-desc">Execução completa e precisa. Prioridade para performance, mobile e fundamentos de SEO desde o primeiro dia.</p></div>
-    <div class="step reveal" style="transition-delay:0.4s"><div class="step-num">05</div><span class="step-icon">◉</span><div class="step-title">Implantação</div><p class="step-desc">Infraestrutura profissional. Pronto para funcionar em horas, não semanas. Projetado para escalar.</p></div>
+
+    <div class="gc-wrap reveal">
+      <span class="gc-glow"></span>
+      <div class="gc-body">
+        <span class="gc-num">01</span>
+        <span class="gc-icon">◎</span>
+        <div class="gc-title">Diagnóstico</div>
+        <p class="gc-desc">Análise profunda do negócio — lacunas de posicionamento, falhas de comunicação, oportunidades perdidas. Sem suposições.</p>
+      </div>
+    </div>
+
+    <div class="gc-wrap reveal" style="transition-delay:0.08s">
+      <span class="gc-glow"></span>
+      <div class="gc-body">
+        <span class="gc-num">02</span>
+        <span class="gc-icon">◈</span>
+        <div class="gc-title">Estratégia</div>
+        <p class="gc-desc">Narrativa, público-alvo e ação desejada. Cada decisão justificada pela lógica de mercado, não por opinião.</p>
+      </div>
+    </div>
+
+    <div class="gc-wrap reveal" style="transition-delay:0.16s">
+      <span class="gc-glow"></span>
+      <div class="gc-body">
+        <span class="gc-num">03</span>
+        <span class="gc-icon">◇</span>
+        <div class="gc-title">Cópia</div>
+        <p class="gc-desc">Palavras criadas para converter. Títulos que prendem, textos que convencem, CTAs que geram resultado.</p>
+      </div>
+    </div>
+
+    <div class="gc-wrap reveal" style="transition-delay:0.24s">
+      <span class="gc-glow"></span>
+      <div class="gc-body">
+        <span class="gc-num">04</span>
+        <span class="gc-icon">▣</span>
+        <div class="gc-title">Construção</div>
+        <p class="gc-desc">Execução completa e precisa. Performance, mobile e SEO implementados desde o primeiro dia.</p>
+      </div>
+    </div>
+
+    <div class="gc-wrap reveal" style="transition-delay:0.32s">
+      <span class="gc-glow"></span>
+      <div class="gc-body">
+        <span class="gc-num">05</span>
+        <span class="gc-icon">◉</span>
+        <div class="gc-title">Implantação</div>
+        <p class="gc-desc">Infraestrutura profissional. Pronto para funcionar em horas, não semanas. Projetado para escalar.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
