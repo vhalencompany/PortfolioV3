@@ -146,156 +146,156 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .sobre-bio strong { font-weight:600; font-style:italic; }
 .sobre-detail { font-size:0.88rem; color:var(--muted); line-height:1.8; border-left:2px solid var(--accent); padding-left:1.2rem; }
 
-/* PROCESSO */
-@property --gc-hue     { syntax:"<number>"; inherits:true; initial-value:0; }
-@property --gc-rotate  { syntax:"<number>"; inherits:true; initial-value:0; }
-@property --gc-bg-y    { syntax:"<number>"; inherits:true; initial-value:0; }
-@property --gc-bg-x    { syntax:"<number>"; inherits:true; initial-value:0; }
-@property --gc-glow-ty { syntax:"<number>"; inherits:true; initial-value:0; }
-@property --gc-bg-size { syntax:"<number>"; inherits:true; initial-value:1; }
-@property --gc-gop     { syntax:"<number>"; inherits:true; initial-value:0.6; }
-@property --gc-gblur   { syntax:"<number>"; inherits:true; initial-value:6; }
-@property --gc-gscale  { syntax:"<number>"; inherits:true; initial-value:1.5; }
-@property --gc-gradius { syntax:"<number>"; inherits:true; initial-value:100; }
-@property --gc-wshadow { syntax:"<number>"; inherits:true; initial-value:0; }
+/* PROCESSO — Holo cards (original component) */
+:root {
+  --hc1: #38bdf8;
+  --hc2: #a855f7;
+  --hc3: #22c55e;
+}
 
 #processo {
-  padding:8rem 3rem; background:var(--ink); color:var(--paper);
-  position:relative; overflow:hidden;
-  --gc-anim-speed:5s; --gc-interact-speed:0.55s;
-  --gc-card-radius:20px; --gc-border-width:2px; --gc-hue-speed:1;
+  padding: 8rem 3rem;
+  background: radial-gradient(circle at 15% 15%, #1e293b, transparent 55%),
+              radial-gradient(circle at 85% 85%, #020617, transparent 60%),
+              #020617;
+  color: var(--paper);
+  position: relative;
+  overflow: hidden;
 }
-.processo-bg { position:absolute; bottom:-10%; right:-5%; font-family:var(--f-display); font-size:20rem; font-weight:700; color:transparent; -webkit-text-stroke:1px rgba(245,242,235,0.04); pointer-events:none; line-height:1; }
-.processo-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:4rem; }
+.processo-bg { display:none; }
+.processo-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:5rem; position:relative; z-index:2; }
 .processo-title { font-family:var(--f-display); font-size:clamp(3rem,6vw,6rem); font-weight:300; line-height:1; letter-spacing:-0.02em; }
 .processo-title em { font-style:italic; font-weight:600; color:var(--accent2); }
 .processo-desc { font-size:0.85rem; color:rgba(245,242,235,0.5); max-width:280px; line-height:1.7; text-align:right; }
 
-.steps-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:1.2rem; position:relative; z-index:2; }
+/* Grid */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.6rem;
+  position: relative; z-index: 2;
+  perspective: 1000px;
+}
 
-/* Glow card wrapper */
-.gc-wrap {
+/* The card — straight from the reference */
+.holo-card {
   position: relative;
-  border-radius: var(--gc-card-radius);
-  cursor: pointer;
-  aspect-ratio: 0.58;
-  overflow: hidden;
-  isolation: isolate;
-  transition: transform 0.3s ease;
-}
-.gc-wrap:hover { transform: translateY(-4px); }
-.gc-wrap::before, .gc-wrap::after { content: none; }
-
-/* Rainbow border glow */
-.gc-glow {
-  position: absolute;
-  inset: -3px;
-  z-index: 0;
-  border-radius: var(--gc-card-radius);
-  background: conic-gradient(
-    from calc(var(--gc-hue) * 1deg),
-    hsl(0,100%,60%), hsl(60,100%,60%), hsl(120,100%,60%),
-    hsl(180,100%,60%), hsl(240,100%,60%), hsl(300,100%,60%), hsl(360,100%,60%)
-  );
-  animation: gc-hue-spin var(--gc-anim-speed) linear infinite;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-.gc-wrap:hover .gc-glow { opacity: 1; }
-
-@keyframes gc-hue-spin {
-  0%   { filter: hue-rotate(0deg);   }
-  100% { filter: hue-rotate(360deg); }
-}
-
-/* Inner card */
-.gc-body {
-  position: absolute;
-  inset: 2px;
-  z-index: 1;
-  background: hsl(240deg 22% 9%);
-  border-radius: calc(var(--gc-card-radius) - 2px);
+  padding: 2rem 1.5rem 1.8rem;
+  border-radius: 28px;
+  background: linear-gradient(120deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  backdrop-filter: blur(16px);
+  box-shadow: 0 0 50px rgba(56,189,248,0.25), inset 0 0 35px rgba(255,255,255,0.1);
+  transform-style: preserve-3d;
+  animation: hc-float var(--hc-dur, 6s) ease-in-out infinite;
+  animation-delay: var(--hc-delay, 0s);
+  cursor: default;
+  aspect-ratio: 0.62;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1.5rem 1.4rem 1.5rem;
-  overflow: hidden;
 }
+.holo-card:nth-child(1) { --hc-dur:6s;   --hc-delay:0s;   }
+.holo-card:nth-child(2) { --hc-dur:6.8s; --hc-delay:.5s;  }
+.holo-card:nth-child(3) { --hc-dur:5.5s; --hc-delay:1s;   }
+.holo-card:nth-child(4) { --hc-dur:7s;   --hc-delay:.25s; }
+.holo-card:nth-child(5) { --hc-dur:6.4s; --hc-delay:1.3s; }
 
-/* Ambient colour blob — travels around the card */
-.gc-body::before {
+/* Holo glow border */
+.holo-card::before {
   content: '';
-  position: absolute; inset: 0; z-index: 0;
-  background: radial-gradient(
-    50% 50% at calc(var(--gc-bg-x) * 1%) calc(var(--gc-bg-y) * 1%),
-    hsl(calc(var(--gc-hue) * var(--gc-hue-speed) * 1deg) 100% 55%) 0%,
-    transparent 70%
-  );
-  animation: gc-hue var(--gc-anim-speed) linear infinite,
-             gc-rotate-bg calc(var(--gc-anim-speed) * 2) linear infinite;
-  opacity: 0.12;
-  transition: opacity 0.4s ease;
+  position: absolute;
+  inset: -2px; z-index: -1;
+  border-radius: 30px;
+  background: linear-gradient(120deg, transparent 20%, var(--hc1), var(--hc2), var(--hc3), transparent 80%);
+  background-size: 400% 100%;
+  filter: blur(22px);
+  opacity: 0.4;
+  animation: hc-holo 4s linear infinite;
 }
-.gc-wrap:hover .gc-body::before { opacity: 0.28; }
-
-/* Top area: step number + icon */
-.gc-top {
-  position: relative; z-index: 1;
-  display: flex; align-items: flex-start; justify-content: space-between;
+.holo-card:hover::before { opacity: 0.85; filter: blur(10px); }
+.holo-card:hover {
+  animation-play-state: paused;
+  transform: rotateX(0) rotateY(0) translateY(-10px) scale(1.03) !important;
+  transition: transform 0.35s ease;
+  box-shadow: 0 0 70px rgba(56,189,248,0.4), inset 0 0 35px rgba(255,255,255,0.15);
+  z-index: 10;
 }
 
-.gc-num {
+@keyframes hc-float {
+  0%,100% { transform: rotateX(12deg) rotateY(-10deg) translateY(0); }
+  50%      { transform: rotateX(18deg) rotateY(12deg) translateY(-22px); }
+}
+@keyframes hc-holo { to { background-position: 400% 0; } }
+
+/* Card top: number + icon */
+.hc-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.hc-num {
   font-family: var(--f-display);
-  font-size: 3.5rem;
-  font-weight: 700;
-  line-height: 1;
+  font-size: 3.2rem; font-weight: 700; line-height: 1;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(255,255,255,0.15);
-  transition: -webkit-text-stroke-color 0.3s ease;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.2);
   display: block;
+  transition: -webkit-text-stroke-color 0.3s;
 }
-.gc-wrap:hover .gc-num { -webkit-text-stroke-color: rgba(255,255,255,0.35); }
+.holo-card:hover .hc-num { -webkit-text-stroke-color: rgba(255,255,255,0.55); }
 
-.gc-icon {
-  font-size: 1.5rem;
-  color: var(--accent2);
-  line-height: 1;
-  display: block;
-  margin-top: 0.2rem;
-  transition: transform 0.3s ease, color 0.3s ease;
+.hc-icon {
+  font-size: 1.5rem; line-height: 1; display: block;
+  background: linear-gradient(90deg, var(--hc1), var(--hc2), var(--hc3));
+  background-size: 300% 100%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: hc-holo 3s linear infinite;
+  transition: transform 0.35s ease;
 }
-.gc-wrap:hover .gc-icon { transform: scale(1.2) rotate(-5deg); color: #fff; }
+.holo-card:hover .hc-icon { transform: scale(1.3) rotate(-10deg); }
 
-/* Bottom area: title + description */
-.gc-bottom { position: relative; z-index: 1; }
+/* Card bottom: sep + title + desc */
+.hc-bottom {}
 
-/* Separator line that grows on hover */
-.gc-sep {
-  display: block;
-  width: 24px; height: 1px;
-  background: rgba(255,255,255,0.2);
+.hc-sep {
+  display: block; height: 1px; width: 22px;
+  background: linear-gradient(90deg, var(--hc1), var(--hc2));
   margin-bottom: 0.9rem;
-  transition: width 0.4s ease, background 0.3s ease;
+  transition: width 0.45s ease;
 }
-.gc-wrap:hover .gc-sep { width: 100%; background: rgba(255,255,255,0.12); }
+.holo-card:hover .hc-sep { width: 100%; }
 
-.gc-title {
+.hc-title {
   font-family: var(--f-display);
-  font-size: 1.25rem; font-weight: 600;
-  color: rgba(255,255,255,0.92);
-  letter-spacing: -0.01em; line-height: 1.15;
-  margin-bottom: 0.55rem;
+  font-size: 1.3rem; font-weight: 600; line-height: 1.1;
+  color: rgba(255,255,255,0.95);
+  letter-spacing: -0.01em; margin-bottom: 0.6rem;
 }
-.gc-desc {
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.38);
+.hc-desc {
+  font-size: 0.69rem;
+  color: rgba(255,255,255,0.42);
   line-height: 1.7;
-  transition: color 0.3s ease;
+  transition: color 0.3s;
 }
-.gc-wrap:hover .gc-desc { color: rgba(255,255,255,0.58); }
+.holo-card:hover .hc-desc { color: rgba(255,255,255,0.7); }
 
-@keyframes gc-hue       { 0%{--gc-hue:0} 100%{--gc-hue:360} }
-@keyframes gc-rotate-bg { 0%{--gc-bg-x:0;--gc-bg-y:0} 25%{--gc-bg-x:100;--gc-bg-y:0} 50%{--gc-bg-x:100;--gc-bg-y:100} 75%{--gc-bg-x:0;--gc-bg-y:100} 100%{--gc-bg-x:0;--gc-bg-y:0} }
+/* Holo button (step number badge) */
+.hc-btn {
+  display: inline-block;
+  margin-top: 1.4rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-size: 0.6rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: white; text-decoration: none;
+  background: linear-gradient(90deg, var(--hc1), var(--hc2), var(--hc3));
+  background-size: 300% 100%;
+  animation: hc-holo 3s linear infinite;
+  box-shadow: 0 0 18px rgba(168,85,247,0.5);
+  transition: box-shadow 0.3s;
+}
+.holo-card:hover .hc-btn { box-shadow: 0 0 30px rgba(56,189,248,0.8); }
 
 /* PROJETOS */
 #projetos { padding:8rem 3rem; }
@@ -464,7 +464,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   .pc-card { height:300px; }
   #sobre { grid-template-columns:1fr; gap:3rem; padding:5rem 1.5rem; }
   .steps-grid { grid-template-columns:1fr 1fr; gap:0.8rem; }
-  .gc-wrap { aspect-ratio:1; }
+  .holo-card { aspect-ratio: 1; aspect-ratio: unset; min-height: 240px; }
   #processo { padding:5rem 1.5rem; }
   .processo-header { flex-direction:column; align-items:flex-start; gap:1rem; }
   .processo-desc { text-align:left; }
@@ -584,78 +584,68 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   </div>
   <div class="steps-grid">
 
-    <div class="gc-wrap reveal">
-      <div class="gc-glow"></div>
-      <div class="gc-body">
-        <div class="gc-top">
-          <span class="gc-num">01</span>
-          <span class="gc-icon">◎</span>
-        </div>
-        <div class="gc-bottom">
-          <span class="gc-sep"></span>
-          <div class="gc-title">Diagnóstico</div>
-          <p class="gc-desc">Análise profunda do negócio — lacunas de posicionamento, falhas de comunicação, oportunidades perdidas. Sem suposições.</p>
-        </div>
+    <div class="holo-card reveal">
+      <div class="hc-top">
+        <span class="hc-num">01</span>
+        <span class="hc-icon">◎</span>
+      </div>
+      <div class="hc-bottom">
+        <span class="hc-sep"></span>
+        <div class="hc-title">Diagnóstico</div>
+        <p class="hc-desc">Análise profunda do negócio — lacunas de posicionamento, falhas de comunicação, oportunidades perdidas. Sem suposições.</p>
+        <span class="hc-btn">Etapa 01</span>
       </div>
     </div>
 
-    <div class="gc-wrap reveal" style="transition-delay:0.08s">
-      <div class="gc-glow"></div>
-      <div class="gc-body">
-        <div class="gc-top">
-          <span class="gc-num">02</span>
-          <span class="gc-icon">◈</span>
-        </div>
-        <div class="gc-bottom">
-          <span class="gc-sep"></span>
-          <div class="gc-title">Estratégia</div>
-          <p class="gc-desc">Narrativa, público-alvo e ação desejada. Cada decisão justificada pela lógica de mercado, não por opinião.</p>
-        </div>
+    <div class="holo-card reveal" style="transition-delay:0.1s">
+      <div class="hc-top">
+        <span class="hc-num">02</span>
+        <span class="hc-icon">◈</span>
+      </div>
+      <div class="hc-bottom">
+        <span class="hc-sep"></span>
+        <div class="hc-title">Estratégia</div>
+        <p class="hc-desc">Narrativa, público-alvo e ação desejada. Cada decisão justificada pela lógica de mercado, não por opinião.</p>
+        <span class="hc-btn">Etapa 02</span>
       </div>
     </div>
 
-    <div class="gc-wrap reveal" style="transition-delay:0.16s">
-      <div class="gc-glow"></div>
-      <div class="gc-body">
-        <div class="gc-top">
-          <span class="gc-num">03</span>
-          <span class="gc-icon">◇</span>
-        </div>
-        <div class="gc-bottom">
-          <span class="gc-sep"></span>
-          <div class="gc-title">Cópia</div>
-          <p class="gc-desc">Palavras criadas para converter. Títulos que prendem, textos que convencem, CTAs que geram resultado.</p>
-        </div>
+    <div class="holo-card reveal" style="transition-delay:0.2s">
+      <div class="hc-top">
+        <span class="hc-num">03</span>
+        <span class="hc-icon">◇</span>
+      </div>
+      <div class="hc-bottom">
+        <span class="hc-sep"></span>
+        <div class="hc-title">Cópia</div>
+        <p class="hc-desc">Palavras criadas para converter. Títulos que prendem, textos que convencem, CTAs que geram resultado.</p>
+        <span class="hc-btn">Etapa 03</span>
       </div>
     </div>
 
-    <div class="gc-wrap reveal" style="transition-delay:0.24s">
-      <div class="gc-glow"></div>
-      <div class="gc-body">
-        <div class="gc-top">
-          <span class="gc-num">04</span>
-          <span class="gc-icon">▣</span>
-        </div>
-        <div class="gc-bottom">
-          <span class="gc-sep"></span>
-          <div class="gc-title">Construção</div>
-          <p class="gc-desc">Execução completa e precisa. Performance, mobile e SEO implementados desde o primeiro dia.</p>
-        </div>
+    <div class="holo-card reveal" style="transition-delay:0.3s">
+      <div class="hc-top">
+        <span class="hc-num">04</span>
+        <span class="hc-icon">▣</span>
+      </div>
+      <div class="hc-bottom">
+        <span class="hc-sep"></span>
+        <div class="hc-title">Construção</div>
+        <p class="hc-desc">Execução completa e precisa. Performance, mobile e SEO implementados desde o primeiro dia.</p>
+        <span class="hc-btn">Etapa 04</span>
       </div>
     </div>
 
-    <div class="gc-wrap reveal" style="transition-delay:0.32s">
-      <div class="gc-glow"></div>
-      <div class="gc-body">
-        <div class="gc-top">
-          <span class="gc-num">05</span>
-          <span class="gc-icon">◉</span>
-        </div>
-        <div class="gc-bottom">
-          <span class="gc-sep"></span>
-          <div class="gc-title">Implantação</div>
-          <p class="gc-desc">Infraestrutura profissional. Pronto para funcionar em horas, não semanas. Projetado para escalar.</p>
-        </div>
+    <div class="holo-card reveal" style="transition-delay:0.4s">
+      <div class="hc-top">
+        <span class="hc-num">05</span>
+        <span class="hc-icon">◉</span>
+      </div>
+      <div class="hc-bottom">
+        <span class="hc-sep"></span>
+        <div class="hc-title">Implantação</div>
+        <p class="hc-desc">Infraestrutura profissional. Pronto para funcionar em horas, não semanas. Projetado para escalar.</p>
+        <span class="hc-btn">Etapa 05</span>
       </div>
     </div>
 
