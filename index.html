@@ -174,29 +174,69 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .steps-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:1.2rem; position:relative; z-index:2; }
 
 /* Glow card wrapper */
-.gc-wrap { position:relative; border-radius:var(--gc-card-radius); cursor:pointer; aspect-ratio:0.62; display:flex; align-items:center; justify-content:center; z-index:2; }
-.gc-wrap::before,.gc-wrap::after { content:''; display:block; position:absolute; width:100%; height:100%; border-radius:var(--gc-card-radius); }
+.gc-wrap {
+  position: relative;
+  border-radius: var(--gc-card-radius);
+  cursor: pointer;
+  aspect-ratio: 0.62;
+  overflow: hidden;
+  isolation: isolate;
+}
+.gc-wrap::before, .gc-wrap::after { content: none; }
 
-.gc-glow { --gc-glow-ty:0; display:block; position:absolute; width:40%; height:40%; animation:gc-rotate var(--gc-anim-speed) linear infinite; transform:rotateZ(calc(var(--gc-rotate) * 1deg)); transform-origin:center; border-radius:calc(var(--gc-gradius) * 10vw); pointer-events:none; }
-.gc-glow::after { content:''; display:block; z-index:-2; filter:blur(calc(var(--gc-gblur) * 8px)); width:130%; height:130%; left:-15%; top:-15%; background:hsl(calc(var(--gc-hue) * var(--gc-hue-speed) * 1deg) 100% 60%); position:relative; border-radius:calc(var(--gc-gradius) * 10vw); animation:gc-hue var(--gc-anim-speed) linear infinite; transform:scaleY(calc(var(--gc-gscale)/1.1)) scaleX(calc(var(--gc-gscale)*1.2)) translateY(calc(var(--gc-glow-ty)*1%)); opacity:var(--gc-gop); }
+/* Animated border glow (sits behind the body) */
+.gc-glow {
+  position: absolute;
+  inset: -2px;
+  z-index: 0;
+  border-radius: var(--gc-card-radius);
+  background: hsl(calc(var(--gc-hue) * var(--gc-hue-speed) * 1deg) 100% 55%);
+  animation: gc-hue var(--gc-anim-speed) linear infinite;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: blur(6px);
+}
+.gc-wrap:hover .gc-glow { opacity: 1; filter: blur(3px); }
 
-.gc-body { position:absolute; width:100%; height:100%; background:hsl(260deg 18% 8%); border-radius:calc(var(--gc-card-radius)*0.9); display:flex; flex-direction:column; justify-content:flex-end; padding:1.6rem 1.4rem 1.4rem; overflow:hidden; }
-.gc-body::before { content:''; display:block; position:absolute; width:calc(100% + var(--gc-border-width)); height:calc(100% + var(--gc-border-width)); border-radius:calc(var(--gc-card-radius)*0.9); box-shadow:0 0 20px black; mix-blend-mode:color-burn; z-index:-1; background:hsl(0deg 0% 12%) radial-gradient(30% 30% at calc(var(--gc-bg-x)*1%) calc(var(--gc-bg-y)*1%),hsl(calc(var(--gc-hue)*var(--gc-hue-speed)*1deg) 100% 90%) calc(0%*var(--gc-bg-size)),hsl(calc(var(--gc-hue)*var(--gc-hue-speed)*1deg) 100% 70%) calc(20%*var(--gc-bg-size)),hsl(calc(var(--gc-hue)*var(--gc-hue-speed)*1deg) 100% 50%) calc(40%*var(--gc-bg-size)),transparent 100%); animation:gc-hue var(--gc-anim-speed) linear infinite,gc-rotate-bg var(--gc-anim-speed) linear infinite; transition:--gc-bg-size var(--gc-interact-speed) ease; }
+/* Inner card body fills the wrapper */
+.gc-body {
+  position: absolute;
+  inset: 2px;
+  z-index: 1;
+  background: hsl(260deg 18% 7%);
+  border-radius: calc(var(--gc-card-radius) - 2px);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 1.6rem 1.4rem 1.4rem;
+  overflow: hidden;
+}
 
-.gc-wrap:hover .gc-body { mix-blend-mode:darken; box-shadow:0 0 calc(var(--gc-wshadow)*1vw) calc(var(--gc-wshadow)*0.15vw) rgb(255 255 255/15%); animation:gc-shadow-pulse calc(var(--gc-anim-speed)*2) linear infinite; }
-.gc-wrap:hover .gc-body::before { --gc-bg-size:15; }
-.gc-wrap:hover .gc-glow { --gc-gblur:1.5; --gc-gop:0.5; --gc-gscale:2.2; --gc-gradius:0; --gc-rotate:900; animation-play-state:paused; }
-.gc-wrap:hover .gc-glow::after { --gc-glow-ty:0; animation-play-state:paused; transition:--gc-glow-ty 0s ease,--gc-gblur 0.05s ease,--gc-gop 0.05s ease,--gc-gscale 0.05s ease; }
+/* Travelling colour spot inside the card */
+.gc-body::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 0;
+  background: radial-gradient(
+    35% 35% at calc(var(--gc-bg-x) * 1%) calc(var(--gc-bg-y) * 1%),
+    hsl(calc(var(--gc-hue) * var(--gc-hue-speed) * 1deg) 100% 65%) calc(0%  * var(--gc-bg-size)),
+    hsl(calc(var(--gc-hue) * var(--gc-hue-speed) * 1deg) 100% 45%) calc(25% * var(--gc-bg-size)),
+    transparent 100%
+  );
+  animation:
+    gc-hue       var(--gc-anim-speed) linear infinite,
+    gc-rotate-bg var(--gc-anim-speed) linear infinite;
+  opacity: 0.18;
+  transition: --gc-bg-size var(--gc-interact-speed) ease, opacity 0.4s ease;
+}
+.gc-wrap:hover .gc-body::before { --gc-bg-size: 14; opacity: 0.35; }
 
-.gc-num { position:absolute; top:1.2rem; left:1.4rem; font-family:var(--f-mono); font-size:0.6rem; letter-spacing:0.15em; color:rgba(255,255,255,0.25); }
-.gc-icon { position:absolute; top:2.8rem; left:1.4rem; font-size:1.3rem; color:var(--accent2); line-height:1; }
-.gc-title { font-family:var(--f-display); font-size:1.35rem; font-weight:600; color:#fff; letter-spacing:-0.01em; line-height:1.1; margin-bottom:0.6rem; position:relative; z-index:1; }
-.gc-desc { font-size:0.72rem; color:rgba(255,255,255,0.45); line-height:1.65; position:relative; z-index:1; }
+/* Content sits above the colour spot */
+.gc-num  { position: relative; z-index: 1; display: block; font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.15em; color: rgba(255,255,255,0.25); margin-bottom: 1.4rem; }
+.gc-icon { position: relative; z-index: 1; display: block; font-size: 1.3rem; color: var(--accent2); line-height: 1; margin-bottom: 1rem; }
+.gc-title { position: relative; z-index: 1; font-family: var(--f-display); font-size: 1.35rem; font-weight: 600; color: #fff; letter-spacing: -0.01em; line-height: 1.1; margin-bottom: 0.6rem; }
+.gc-desc  { position: relative; z-index: 1; font-size: 0.72rem; color: rgba(255,255,255,0.45); line-height: 1.65; }
 
-@keyframes gc-hue        { 0%{--gc-hue:0}   100%{--gc-hue:360} }
-@keyframes gc-rotate-bg  { 0%{--gc-bg-x:0;--gc-bg-y:0} 25%{--gc-bg-x:100;--gc-bg-y:0} 50%{--gc-bg-x:100;--gc-bg-y:100} 75%{--gc-bg-x:0;--gc-bg-y:100} 100%{--gc-bg-x:0;--gc-bg-y:0} }
-@keyframes gc-rotate     { from{--gc-rotate:-70;--gc-glow-ty:-65} to{--gc-rotate:290;--gc-glow-ty:-65} }
-@keyframes gc-shadow-pulse { 0%,24%,46%,73%,96%{--gc-wshadow:0.5} 12%,28%,41%,63%,75%,82%,98%{--gc-wshadow:2.5} 6%,32%,57%{--gc-wshadow:1.3} 18%,52%,88%{--gc-wshadow:3} }
+@keyframes gc-hue       { 0%{--gc-hue:0} 100%{--gc-hue:360} }
+@keyframes gc-rotate-bg { 0%{--gc-bg-x:0;--gc-bg-y:0} 25%{--gc-bg-x:100;--gc-bg-y:0} 50%{--gc-bg-x:100;--gc-bg-y:100} 75%{--gc-bg-x:0;--gc-bg-y:100} 100%{--gc-bg-x:0;--gc-bg-y:0} }
 
 /* PROJETOS */
 #projetos { padding:8rem 3rem; }
@@ -205,20 +245,39 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .projetos-title em { font-style:italic; font-weight:600; }
 .projetos-note { font-size:0.85rem; color:var(--muted); line-height:1.8; max-width:380px; align-self:flex-end; }
 .projetos-grid { display:grid; grid-template-columns:1.3fr 1fr; grid-template-rows:auto auto; gap:1.5px; background:var(--line); }
-.project-card { background:var(--paper); padding:3rem; cursor:pointer; transition:all 0.3s; position:relative; overflow:hidden; }
-.project-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:0; background:var(--accent); transition:height 0.3s ease; }
+.project-card { background:var(--paper); cursor:pointer; transition:all 0.3s; position:relative; overflow:hidden; display:flex; flex-direction:column; }
+.project-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:0; background:var(--accent); transition:height 0.3s ease; z-index:2; }
 .project-card:hover::before { height:100%; }
 .project-card:hover { background:var(--paper2); }
-.project-card.featured { grid-row:1/3; display:flex; flex-direction:column; justify-content:space-between; min-height:480px; }
-.project-type { font-family:var(--f-mono); font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:1.5rem; }
-.project-name { font-family:var(--f-display); font-size:clamp(1.8rem,3vw,3rem); font-weight:600; line-height:1.1; letter-spacing:-0.01em; margin-bottom:1rem; }
-.project-desc { font-size:0.85rem; color:var(--muted); line-height:1.7; max-width:420px; }
-.project-footer { display:flex; align-items:center; justify-content:space-between; margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--line); }
-.project-result { font-family:var(--f-display); font-size:1.1rem; font-style:italic; color:var(--ink); }
-.project-arrow { width:36px; height:36px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:1.1rem; transition:all 0.2s; text-decoration:none; }
+.project-card.featured { grid-row:1/3; min-height:480px; }
+
+/* Image area */
+.project-img {
+  width:100%; overflow:hidden;
+  flex-shrink:0;
+}
+.project-img img {
+  width:100%; height:100%; object-fit:cover; object-position:center top;
+  display:block;
+  transition: transform 0.5s ease;
+  filter: grayscale(20%) contrast(1.05);
+}
+.project-card:hover .project-img img { transform: scale(1.04); filter: grayscale(0%) contrast(1.05); }
+.project-card.featured .project-img { height:260px; }
+.project-card.sm .project-img { height:140px; }
+
+/* Text area */
+.project-info { padding:2rem 2.5rem; flex:1; display:flex; flex-direction:column; justify-content:space-between; }
+
+.project-type { font-family:var(--f-mono); font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:0.8rem; }
+.project-name { font-family:var(--f-display); font-size:clamp(1.4rem,2.5vw,2.2rem); font-weight:600; line-height:1.1; letter-spacing:-0.01em; margin-bottom:0.6rem; }
+.project-desc { font-size:0.83rem; color:var(--muted); line-height:1.7; max-width:420px; }
+.project-footer { display:flex; align-items:center; justify-content:space-between; margin-top:1.5rem; padding-top:1.2rem; border-top:1px solid var(--line); }
+.project-result { font-family:var(--f-display); font-size:1rem; font-style:italic; color:var(--ink); }
+.project-arrow { width:36px; height:36px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:1.1rem; transition:all 0.2s; text-decoration:none; flex-shrink:0; }
 .project-card:hover .project-arrow { background:var(--ink); color:var(--paper); border-color:var(--ink); }
-.project-card.sm { min-height:220px; display:flex; flex-direction:column; justify-content:space-between; }
-.project-num { position:absolute; bottom:2.5rem; right:3rem; font-family:var(--f-display); font-size:5rem; font-weight:700; color:transparent; -webkit-text-stroke:1px rgba(10,10,8,0.06); line-height:1; pointer-events:none; }
+.project-card.sm { min-height:220px; }
+.project-num { position:absolute; bottom:1.5rem; right:2rem; font-family:var(--f-display); font-size:4rem; font-weight:700; color:transparent; -webkit-text-stroke:1px rgba(10,10,8,0.06); line-height:1; pointer-events:none; z-index:1; }
 
 /* AVALIAÇÕES */
 #avaliacoes { padding:8rem 3rem; background:var(--paper2); position:relative; overflow:hidden; }
@@ -355,7 +414,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
                 <span class="pc-status">Estratégia &amp; Posicionamento</span>
               </div>
             </div>
-            <a href="#contato" class="pc-contact-btn">Contato</a>
+            <a href="https://wa.me/5579998453719" target="_blank" class="pc-contact-btn">WhatsApp</a>
           </div>
         </div>
       </div>
@@ -403,7 +462,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   <div class="steps-grid">
 
     <div class="gc-wrap reveal">
-      <span class="gc-glow"></span>
+      <div class="gc-glow"></div>
       <div class="gc-body">
         <span class="gc-num">01</span>
         <span class="gc-icon">◎</span>
@@ -413,7 +472,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
     <div class="gc-wrap reveal" style="transition-delay:0.08s">
-      <span class="gc-glow"></span>
+      <div class="gc-glow"></div>
       <div class="gc-body">
         <span class="gc-num">02</span>
         <span class="gc-icon">◈</span>
@@ -423,7 +482,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
     <div class="gc-wrap reveal" style="transition-delay:0.16s">
-      <span class="gc-glow"></span>
+      <div class="gc-glow"></div>
       <div class="gc-body">
         <span class="gc-num">03</span>
         <span class="gc-icon">◇</span>
@@ -433,7 +492,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
     <div class="gc-wrap reveal" style="transition-delay:0.24s">
-      <span class="gc-glow"></span>
+      <div class="gc-glow"></div>
       <div class="gc-body">
         <span class="gc-num">04</span>
         <span class="gc-icon">▣</span>
@@ -443,7 +502,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
     <div class="gc-wrap reveal" style="transition-delay:0.32s">
-      <span class="gc-glow"></span>
+      <div class="gc-glow"></div>
       <div class="gc-body">
         <span class="gc-num">05</span>
         <span class="gc-icon">◉</span>
@@ -461,44 +520,64 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <p class="projetos-note reveal" style="transition-delay:0.1s">Trabalhos que transformaram a comunicação de negócios reais — diagnóstico, estratégia e execução do início ao fim.</p>
   </div>
   <div class="projetos-grid">
+
+    <!-- FEATURED -->
     <div class="project-card featured reveal">
-      <div>
-        <div class="project-type">Posicionamento Digital · E-commerce</div>
-        <h3 class="project-name">Estratégia de Posicionamento para Varejo de Hortifruti</h3>
-        <p class="project-desc">Diagnóstico completo do negócio, reposicionamento da comunicação digital e definição de narrativa para diferenciação no mercado local. Da análise ao site, em menos de 15 dias.</p>
+      <div class="project-img">
+        <img src="https://i.ibb.co/TDTYWTcx/Captura-de-tela-2026-04-20-110133.png" alt="Projeto 01" />
       </div>
-      <div>
+      <div class="project-info">
+        <div>
+          <div class="project-type">Posicionamento Digital · E-commerce</div>
+          <h3 class="project-name">Estratégia de Posicionamento para Varejo de Hortifruti</h3>
+          <p class="project-desc">Diagnóstico completo do negócio, reposicionamento da comunicação digital e definição de narrativa para diferenciação no mercado local. Da análise ao site, em menos de 15 dias.</p>
+        </div>
         <div class="project-footer">
           <span class="project-result">"Você entendeu perfeitamente o meu negócio."</span>
-          <a href="#contato" class="project-arrow">→</a>
+          <a href="https://wa.me/5579998453719" target="_blank" class="project-arrow">→</a>
         </div>
       </div>
       <span class="project-num">01</span>
     </div>
+
+    <!-- SM 1 -->
     <div class="project-card sm reveal" style="transition-delay:0.15s">
-      <div>
-        <div class="project-type">Estratégia · Diagnóstico</div>
-        <h3 class="project-name">Análise de Posicionamento Empresarial</h3>
-        <p class="project-desc">Sessão de diagnóstico estratégico para empresa com falha crítica de posicionamento e comunicação inconsistente com seu público.</p>
+      <div class="project-img">
+        <img src="https://i.ibb.co/mr4SJqBp/Captura-de-tela-2026-04-20-110048.png" alt="Projeto 02" />
       </div>
-      <div class="project-footer">
-        <span class="project-result">"Você tocou na ferida."</span>
-        <a href="#contato" class="project-arrow">→</a>
+      <div class="project-info">
+        <div>
+          <div class="project-type">Estratégia · Diagnóstico</div>
+          <h3 class="project-name">Análise de Posicionamento Empresarial</h3>
+          <p class="project-desc">Sessão de diagnóstico estratégico para empresa com falha crítica de posicionamento e comunicação inconsistente.</p>
+        </div>
+        <div class="project-footer">
+          <span class="project-result">"Você tocou na ferida."</span>
+          <a href="https://wa.me/5579998453719" target="_blank" class="project-arrow">→</a>
+        </div>
       </div>
       <span class="project-num">02</span>
     </div>
+
+    <!-- SM 2 -->
     <div class="project-card sm reveal" style="transition-delay:0.25s">
-      <div>
-        <div class="project-type">Comunicação Digital · Jurídico</div>
-        <h3 class="project-name">Comunicação Digital para Escritório de Advocacia</h3>
-        <p class="project-desc">Construção de presença digital estratégica e copywriting especializado para captação de clientes no setor jurídico.</p>
+      <div class="project-img">
+        <img src="https://i.ibb.co/QgymQcD/Captura-de-tela-2026-04-19-213714.png" alt="Projeto 03" />
       </div>
-      <div class="project-footer">
-        <span class="project-result">"Qualquer empresa precisa disto — já."</span>
-        <a href="#contato" class="project-arrow">→</a>
+      <div class="project-info">
+        <div>
+          <div class="project-type">Comunicação Digital · Jurídico</div>
+          <h3 class="project-name">Comunicação Digital para Escritório de Advocacia</h3>
+          <p class="project-desc">Construção de presença digital estratégica e copywriting especializado para captação de clientes no setor jurídico.</p>
+        </div>
+        <div class="project-footer">
+          <span class="project-result">"Qualquer empresa precisa disto — já."</span>
+          <a href="https://wa.me/5579998453719" target="_blank" class="project-arrow">→</a>
+        </div>
       </div>
       <span class="project-num">03</span>
     </div>
+
   </div>
 </section>
 
@@ -535,14 +614,14 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <p class="contato-sub">Diagnóstico gratuito de 30 minutos para entender onde seu negócio está perdendo dinheiro por falta de posicionamento claro.</p>
   </div>
   <div class="contato-right reveal" style="transition-delay:0.15s">
-    <a href="https://wa.me/5579999999999" class="contact-link" target="_blank">
+    <a href="https://wa.me/5579998453719" class="contact-link" target="_blank">
       <div class="contact-link-inner"><div><span class="contact-link-label">WhatsApp</span><span class="contact-link-value">Iniciar Diagnóstico</span></div><span class="contact-arrow">→</span></div>
     </a>
-    <a href="mailto:felipenunescontato@email.com" class="contact-link">
-      <div class="contact-link-inner"><div><span class="contact-link-label">E-mail</span><span class="contact-link-value">felipenunescontato@email.com</span></div><span class="contact-arrow">→</span></div>
+    <a href="mailto:valencompany001@gmail.com" class="contact-link">
+      <div class="contact-link-inner"><div><span class="contact-link-label">E-mail</span><span class="contact-link-value">valencompany001@gmail.com</span></div><span class="contact-arrow">→</span></div>
     </a>
-    <a href="https://instagram.com/felipenunes" class="contact-link" target="_blank">
-      <div class="contact-link-inner"><div><span class="contact-link-label">Instagram</span><span class="contact-link-value">@felipenunes</span></div><span class="contact-arrow">→</span></div>
+    <a href="https://instagram.com/felipe.f.nunes" class="contact-link" target="_blank">
+      <div class="contact-link-inner"><div><span class="contact-link-label">Instagram</span><span class="contact-link-value">@felipe.f.nunes</span></div><span class="contact-arrow">→</span></div>
     </a>
   </div>
 </section>
