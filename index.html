@@ -59,17 +59,18 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 /* HERO */
 #hero { min-height:100vh; display:grid; grid-template-columns:1fr auto; grid-template-rows:1fr auto; padding:0 3rem; position:relative; overflow:hidden; gap:0 4rem; align-items:stretch; }
 
-/* Beams canvas background */
-#hero-beams {
+/* DotGrid canvas background */
+#hero-dotgrid {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
 }
-#hero-beams canvas {
+#hero-dotgrid canvas {
+  position: absolute;
+  inset: 0;
   width: 100% !important;
   height: 100% !important;
-  opacity: 0.55;
 }
 
 
@@ -82,6 +83,153 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 
 .hero-headline { font-family:var(--f-display); font-size:clamp(3.2rem,6.5vw,7.5rem); font-weight:300; line-height:0.95; letter-spacing:-0.02em; color:var(--ink); margin-bottom:2.5rem; }
 .hero-headline em { font-style:italic; font-weight:600; color:var(--accent); }
+
+/* ── 3D floating headline ── */
+.headline-3d {
+  display: inline-block;
+  transform-style: preserve-3d;
+  animation: hl-float 6s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes hl-float {
+  0%,100% { transform: rotateX(4deg) rotateY(-3deg) translateZ(0); }
+  25%      { transform: rotateX(2deg) rotateY(4deg)  translateZ(8px); }
+  50%      { transform: rotateX(-3deg) rotateY(2deg) translateZ(14px); }
+  75%      { transform: rotateX(3deg) rotateY(-5deg) translateZ(6px); }
+}
+
+/* Lines wrap for perspective container */
+.hl-line { display: block; overflow: visible; }
+
+/* "comunicam" — featured word */
+.hl-comunicam {
+  display: inline-block;
+  position: relative;
+  font-style: italic;
+  font-weight: 700;
+  color: transparent;
+  background: linear-gradient(135deg, var(--accent) 0%, #e8834a 40%, #c8522a 70%, #a03c1e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: hl-float 6s ease-in-out infinite, hl-glow 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 0px rgba(200,82,42,0));
+  transform-origin: center;
+}
+@keyframes hl-glow {
+  0%,100% { filter: drop-shadow(0 0 0px rgba(200,82,42,0)); }
+  50%      { filter: drop-shadow(0 2px 24px rgba(200,82,42,0.45)) drop-shadow(0 0 60px rgba(200,82,42,0.15)); }
+}
+
+/* Shadow layer — "depth" under the headline */
+.headline-shadow {
+  display: block;
+  font-family: var(--f-display);
+  font-size: clamp(3.2rem,6.5vw,7.5rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: rgba(10,10,8,0.06);
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+  animation: hl-shadow 6s ease-in-out infinite;
+  white-space: nowrap;
+}
+@keyframes hl-shadow {
+  0%,100% { transform: translate(4px, 6px) rotateX(4deg) rotateY(-3deg); }
+  25%      { transform: translate(6px, 4px) rotateX(2deg) rotateY(4deg); }
+  50%      { transform: translate(8px, 10px) rotateX(-3deg) rotateY(2deg); }
+  75%      { transform: translate(5px, 7px) rotateX(3deg) rotateY(-5deg); }
+}
+
+.hero-headline-wrap {
+  position: relative;
+  perspective: 800px;
+  margin-bottom: 2.5rem;
+  display: inline-block;
+}
+
+/* ── Sobre DotGrid ── */
+
+#sobre-dotgrid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.45;
+}
+#sobre-dotgrid canvas {
+  position: absolute;
+  inset: 0;
+}
+/* ensure sobre content sits above the canvas */
+#sobre > * { position: relative; z-index: 1; }
+
+/* Foto editorial no sobre */
+.sobre-photo-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 2rem;
+}
+.sobre-photo {
+  width: 220px;
+  height: 280px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  filter: grayscale(15%) contrast(1.05);
+  transition: filter 0.4s ease;
+}
+.sobre-photo-wrap:hover .sobre-photo { filter: grayscale(0%) contrast(1.05); }
+.sobre-photo-frame {
+  position: absolute;
+  inset: -8px -8px auto auto;
+  width: 100%;
+  height: 100%;
+  border: 1.5px solid var(--accent);
+  pointer-events: none;
+  transform: translate(8px, 8px);
+  transition: transform 0.4s ease;
+}
+.sobre-photo-wrap:hover .sobre-photo-frame { transform: translate(4px, 4px); }
+
+/* Project result strip */
+.project-result-strip {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1.8rem 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: none;
+}
+.result-item {
+  padding: 0 2rem;
+  border-right: 1px solid rgba(245,242,235,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.result-item:first-child { padding-left: 0; }
+.result-item:last-child  { border-right: none; }
+.result-label {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(245,242,235,0.4);
+}
+.result-value {
+  font-family: var(--f-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--paper);
+  line-height: 1.3;
+}
+.result-value em {
+  font-style: normal;
+  color: var(--accent2);
+}
 
 .hero-sub { font-size:0.95rem; color:var(--muted); line-height:1.7; max-width:420px; font-weight:400; letter-spacing:0.01em; }
 
@@ -573,16 +721,22 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
 <!-- HERO -->
 <section id="hero">
-  <div id="hero-beams"></div>
+  <div id="hero-dotgrid"></div>
   <div class="hero-bg-text">NUNES</div>
 
   <div class="hero-content">
     <div class="hero-tag">Estratégia · Posicionamento · Digital</div>
-    <h1 class="hero-headline">
-      Negócios que<br>
-      <em>comunicam</em><br>
-      crescem.
-    </h1>
+
+    <div class="hero-headline-wrap">
+      <h1 class="hero-headline">
+        <div class="headline-3d">
+          <span class="hl-line">Negócios que</span>
+          <span class="hl-line"><span class="hl-comunicam">comunicam</span></span>
+          <span class="hl-line">crescem.</span>
+        </div>
+      </h1>
+    </div>
+
     <p class="hero-sub">
       Marketing, gestão e tecnologia aplicados a resultados reais. Diagnóstico preciso, estratégia com lógica de mercado e execução que funciona.
     </p>
@@ -612,7 +766,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
                 <span class="pc-status">Estratégia &amp; Posicionamento</span>
               </div>
             </div>
-            <a href="https://wa.me/5579998453719" target="_blank" class="pc-contact-btn">WhatsApp</a>
+            <a href="https://wa.me/5579998453719" target="_blank" class="pc-contact-btn" style="display:none">WhatsApp</a>
           </div>
         </div>
       </div>
@@ -631,6 +785,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 <div class="divider"></div>
 
 <section id="sobre">
+  <div id="sobre-dotgrid"></div>
   <div class="sobre-left reveal">
     <span class="sobre-number">21</span>
     <h2 class="sobre-name">Felipe<br><em>Nunes</em></h2>
@@ -658,6 +813,13 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   </div>
   <div class="sobre-right reveal" style="transition-delay:0.15s">
     <div class="section-label" data-num="01">Sobre</div>
+
+    <!-- Foto editorial -->
+    <div class="sobre-photo-wrap">
+      <img src="https://i.ibb.co/5XpbpvV7/3-CDDD13-E-178-F-4-E47-93-FC-F31-E520-E806-D.jpg" alt="Felipe Nunes" class="sobre-photo" />
+      <div class="sobre-photo-frame"></div>
+    </div>
+
     <p class="sobre-bio">Trabalho na <strong>interseção entre estratégia e execução</strong> — onde uma ideia bem posicionada encontra as palavras certas e a tecnologia para escalar.</p>
     <p class="sobre-detail">Com 21 anos, atuo com diagnóstico de posicionamento, construção de comunicação digital e implementação de soluções com inteligência artificial para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: por que este negócio não está crescendo como deveria?</p>
   </div>
@@ -779,7 +941,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         <div>
           <div class="project-type">Posicionamento Digital · E-commerce</div>
           <h3 class="project-name">Estratégia de Posicionamento para Varejo de Hortifruti</h3>
-          <p class="project-desc">Diagnóstico completo do negócio, reposicionamento da comunicação digital e definição de narrativa para diferenciação no mercado local. Da análise ao site, em menos de 15 dias.</p>
+          <p class="project-desc">O negócio não tinha narrativa clara — era mais um hortifruti sem diferencial. Diagnóstico identificou ausência total de posicionamento local e comunicação genérica. Reposicionamos a identidade, criamos a narrativa e entregamos o site completo.</p>
         </div>
         <div class="project-footer">
           <span class="project-result">"Você entendeu perfeitamente o meu negócio."</span>
@@ -787,6 +949,20 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         </div>
       </div>
       <span class="project-num">01</span>
+    </div>
+    <div class="project-result-strip reveal">
+      <div class="result-item">
+        <span class="result-label">Problema</span>
+        <span class="result-value">Sem identidade local, invisível para o cliente certo</span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Solução</span>
+        <span class="result-value">Diagnóstico + narrativa + site em <em>menos de 15 dias</em></span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Resultado</span>
+        <span class="result-value">Posicionamento definido, presença digital estabelecida</span>
+      </div>
     </div>
 
     <!-- 02 — imagem direita (alternado) -->
@@ -798,7 +974,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         <div>
           <div class="project-type">Estratégia · Diagnóstico</div>
           <h3 class="project-name">Análise de Posicionamento Empresarial</h3>
-          <p class="project-desc">Sessão de diagnóstico estratégico para empresa com falha crítica de posicionamento e comunicação inconsistente com seu público-alvo.</p>
+          <p class="project-desc">Empresa com anos de mercado comunicando errado para o público errado. Uma sessão de diagnóstico estratégico expôs as falhas de posicionamento que nenhum consultor havia apontado diretamente.</p>
         </div>
         <div class="project-footer">
           <span class="project-result">"Você tocou na ferida."</span>
@@ -806,6 +982,20 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         </div>
       </div>
       <span class="project-num">02</span>
+    </div>
+    <div class="project-result-strip reveal">
+      <div class="result-item">
+        <span class="result-label">Problema</span>
+        <span class="result-value">Comunicação desalinhada com o público e mercado-alvo</span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Solução</span>
+        <span class="result-value">Diagnóstico estratégico com <em>análise de posicionamento</em></span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Resultado</span>
+        <span class="result-value">Clareza sobre onde e como corrigir a comunicação</span>
+      </div>
     </div>
 
     <!-- 03 — imagem esquerda -->
@@ -817,7 +1007,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         <div>
           <div class="project-type">Comunicação Digital · Jurídico</div>
           <h3 class="project-name">Comunicação Digital para Escritório de Advocacia</h3>
-          <p class="project-desc">Construção de presença digital estratégica e copywriting especializado para captação de clientes no setor jurídico.</p>
+          <p class="project-desc">Escritório sem presença digital estruturada, perdendo clientes para concorrentes com comunicação mais clara. Construímos posicionamento, copywriting e presença do zero para o mercado jurídico local.</p>
         </div>
         <div class="project-footer">
           <span class="project-result">"Qualquer empresa precisa disto — já."</span>
@@ -825,6 +1015,20 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         </div>
       </div>
       <span class="project-num">03</span>
+    </div>
+    <div class="project-result-strip reveal">
+      <div class="result-item">
+        <span class="result-label">Problema</span>
+        <span class="result-value">Sem presença digital, perdendo clientes para concorrentes</span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Solução</span>
+        <span class="result-value">Copywriting especializado + <em>presença digital completa</em></span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Resultado</span>
+        <span class="result-value">Escritório posicionado e comunicando para o cliente certo</span>
+      </div>
     </div>
 
   </div>
@@ -881,254 +1085,180 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 </footer>
 
 <script>
-/* CURSOR */
-const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');
-let mouseX=0,mouseY=0,ringX=0,ringY=0;
-document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;dot.style.left=mouseX+'px';dot.style.top=mouseY+'px';});
-(function loop(){ringX+=(mouseX-ringX)*0.12;ringY+=(mouseY-ringY)*0.12;ring.style.left=ringX+'px';ring.style.top=ringY+'px';requestAnimationFrame(loop);})();
-document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>{ring.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.opacity='0.5';});el.addEventListener('mouseleave',()=>{ring.style.transform='translate(-50%,-50%) scale(1)';ring.style.opacity='1';});});
-
-/* HERO BEAMS — Three.js WebGL (port of the React component) */
-(function(){
-  const container = document.getElementById('hero-beams');
-  if(!container) return;
-
-  const script = document.createElement('script');
-  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-  script.onload = initBeams;
-  document.head.appendChild(script);
-
-  function initBeams() {
-    /* ── Config (mirrors the React props) ── */
-    const BEAM_WIDTH      = 2.5;
-    const BEAM_HEIGHT     = 18;
-    const BEAM_COUNT      = 18;
-    const SPEED           = 2;
-    const NOISE_INTENSITY = 1.75;
-    const SCALE           = 0.22;
-    const ROTATION_DEG   = 30;
-    const LIGHT_COLOR    = '#c8522a';   /* terracota do portfólio */
-
-    /* ── Renderer ── */
-    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(renderer.domElement);
-
-    /* ── Scene / Camera ── */
-    const scene  = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 200);
-    camera.position.set(0, 0, 20);
-
-    /* ── Lights ── */
-    scene.add(new THREE.AmbientLight(0xffffff, 1));
-    const dirLight = new THREE.DirectionalLight(new THREE.Color(LIGHT_COLOR), 1);
-    dirLight.position.set(0, 3, 10);
-    scene.add(dirLight);
-
-    /* ── Noise GLSL (Classic Perlin 3D) ── */
-    const noiseGLSL = `
-float random(in vec2 st){return fract(sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123);}
-float noise2(in vec2 st){
-  vec2 i=floor(st),f=fract(st);
-  float a=random(i),b=random(i+vec2(1,0)),c=random(i+vec2(0,1)),d=random(i+vec2(1,1));
-  vec2 u=f*f*(3.-2.*f);
-  return mix(a,b,u.x)+(c-a)*u.y*(1.-u.x)+(d-b)*u.x*u.y;
-}
-vec4 permute(vec4 x){return mod(((x*34.)+1.)*x,289.);}
-vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
-vec3 fade3(vec3 t){return t*t*t*(t*(t*6.-15.)+10.);}
-float cnoise(vec3 P){
-  vec3 Pi0=floor(P),Pi1=Pi0+1.;
-  Pi0=mod(Pi0,289.);Pi1=mod(Pi1,289.);
-  vec3 Pf0=fract(P),Pf1=Pf0-1.;
-  vec4 ix=vec4(Pi0.x,Pi1.x,Pi0.x,Pi1.x);
-  vec4 iy=vec4(Pi0.yy,Pi1.yy);
-  vec4 iz0=Pi0.zzzz,iz1=Pi1.zzzz;
-  vec4 ixy=permute(permute(ix)+iy);
-  vec4 ixy0=permute(ixy+iz0),ixy1=permute(ixy+iz1);
-  vec4 gx0=ixy0/7.,gy0=fract(floor(gx0)/7.)-.5;gx0=fract(gx0);
-  vec4 gz0=vec4(.5)-abs(gx0)-abs(gy0);vec4 sz0=step(gz0,vec4(0.));
-  gx0-=sz0*(step(0.,gx0)-.5);gy0-=sz0*(step(0.,gy0)-.5);
-  vec4 gx1=ixy1/7.,gy1=fract(floor(gx1)/7.)-.5;gx1=fract(gx1);
-  vec4 gz1=vec4(.5)-abs(gx1)-abs(gy1);vec4 sz1=step(gz1,vec4(0.));
-  gx1-=sz1*(step(0.,gx1)-.5);gy1-=sz1*(step(0.,gy1)-.5);
-  vec3 g000=vec3(gx0.x,gy0.x,gz0.x),g100=vec3(gx0.y,gy0.y,gz0.y);
-  vec3 g010=vec3(gx0.z,gy0.z,gz0.z),g110=vec3(gx0.w,gy0.w,gz0.w);
-  vec3 g001=vec3(gx1.x,gy1.x,gz1.x),g101=vec3(gx1.y,gy1.y,gz1.y);
-  vec3 g011=vec3(gx1.z,gy1.z,gz1.z),g111=vec3(gx1.w,gy1.w,gz1.w);
-  vec4 norm0=taylorInvSqrt(vec4(dot(g000,g000),dot(g010,g010),dot(g100,g100),dot(g110,g110)));
-  g000*=norm0.x;g010*=norm0.y;g100*=norm0.z;g110*=norm0.w;
-  vec4 norm1=taylorInvSqrt(vec4(dot(g001,g001),dot(g011,g011),dot(g101,g101),dot(g111,g111)));
-  g001*=norm1.x;g011*=norm1.y;g101*=norm1.z;g111*=norm1.w;
-  float n000=dot(g000,Pf0),n100=dot(g100,vec3(Pf1.x,Pf0.yz));
-  float n010=dot(g010,vec3(Pf0.x,Pf1.y,Pf0.z)),n110=dot(g110,vec3(Pf1.xy,Pf0.z));
-  float n001=dot(g001,vec3(Pf0.xy,Pf1.z)),n101=dot(g101,vec3(Pf1.x,Pf0.y,Pf1.z));
-  float n011=dot(g011,vec3(Pf0.x,Pf1.yz)),n111=dot(g111,Pf1);
-  vec3 fade_xyz=fade3(Pf0);
-  vec4 n_z=mix(vec4(n000,n100,n010,n110),vec4(n001,n101,n011,n111),fade_xyz.z);
-  vec2 n_yz=mix(n_z.xy,n_z.zw,fade_xyz.y);
-  return 2.2*mix(n_yz.x,n_yz.y,fade_xyz.x);
-}`;
-
-    /* ── Shader material ── */
-    const beamMat = new THREE.ShaderMaterial({
-      lights: true,
-      fog: false,
-      transparent: true,
-      uniforms: {
-        ...THREE.UniformsLib.lights,
-        time:            { value: 0 },
-        uSpeed:          { value: SPEED },
-        uNoiseIntensity: { value: NOISE_INTENSITY },
-        uScale:          { value: SCALE },
-        diffuse:         { value: new THREE.Color(0x080808) },
-        roughness:       { value: 0.3 },
-        metalness:       { value: 0.3 },
-      },
-      vertexShader: `
-${noiseGLSL}
-uniform float time;
-uniform float uSpeed;
-uniform float uScale;
-varying vec2 vUv;
-varying float vNoise;
-
-float getDisplace(vec3 pos){
-  return cnoise(vec3(pos.x*0.,pos.y,pos.z+time*uSpeed*3.)*uScale);
-}
-void main(){
-  vUv = uv;
-  vec3 pos = position;
-  pos.z += getDisplace(pos);
-  vNoise = getDisplace(position);
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(pos,1.0);
-}`,
-      fragmentShader: `
-uniform vec3 diffuse;
-uniform float uNoiseIntensity;
-varying vec2 vUv;
-varying float vNoise;
-
-float random2(vec2 st){return fract(sin(dot(st,vec2(12.9898,78.233)))*43758.5453);}
-
-void main(){
-  /* edge fade — alpha drops off at top and bottom of each beam */
-  float edgeFade = smoothstep(0.,0.08,vUv.x)*smoothstep(1.,0.92,vUv.x);
-  float vFade    = smoothstep(0.,0.12,vUv.y)*smoothstep(1.,0.88,vUv.y);
-
-  /* noise-based brightness variation */
-  float brightness = 0.55 + vNoise * 0.45;
-
-  vec3 col = diffuse * brightness;
-
-  /* film grain */
-  float grain = random2(gl_FragCoord.xy) / 15. * uNoiseIntensity;
-  col -= grain;
-
-  float alpha = edgeFade * vFade * 0.75;
-  gl_FragColor = vec4(col, alpha);
-}`
-    });
-
-    /* ── Geometry: stacked planes (mirrors createStackedPlanesBufferGeometry) ── */
-    function buildGeometry(n, w, h, segs) {
-      const geo = new THREE.BufferGeometry();
-      const vCount = n * (segs+1) * 2;
-      const fCount = n * segs * 2;
-      const pos  = new Float32Array(vCount * 3);
-      const uvs  = new Float32Array(vCount * 2);
-      const idx  = new Uint32Array(fCount * 3);
-      let vi=0, ii=0, ui=0;
-      const totalW = n*w + (n-1)*0;
-      const xBase  = -totalW/2;
-      for(let i=0;i<n;i++){
-        const xOff = xBase + i*w;
-        const uvXOff = Math.random()*300;
-        const uvYOff = Math.random()*300;
-        for(let j=0;j<=segs;j++){
-          const y = h*(j/segs - 0.5);
-          pos.set([xOff,y,0, xOff+w,y,0], vi*3);
-          uvs.set([uvXOff, j/segs+uvYOff, uvXOff+1, j/segs+uvYOff], ui);
-          if(j<segs){
-            const a=vi,b=vi+1,c=vi+2,d=vi+3;
-            idx.set([a,b,c, c,b,d], ii);
-            ii+=6;
-          }
-          vi+=2; ui+=4;
-        }
-      }
-      geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
-      geo.setAttribute('uv',       new THREE.BufferAttribute(uvs,2));
-      geo.setIndex(new THREE.BufferAttribute(idx,1));
-      geo.computeVertexNormals();
-      return geo;
-    }
-
-    const geo  = buildGeometry(BEAM_COUNT, BEAM_WIDTH, BEAM_HEIGHT, 120);
-    const mesh = new THREE.Mesh(geo, beamMat);
-    mesh.rotation.z = THREE.MathUtils.degToRad(ROTATION_DEG);
-    scene.add(mesh);
-
-    /* ── Resize ── */
-    function onResize(){
-      const w = container.clientWidth, h = container.clientHeight;
-      renderer.setSize(w, h);
-      camera.aspect = w/h;
-      camera.updateProjectionMatrix();
-    }
-    window.addEventListener('resize', onResize);
-
-    /* ── Animate ── */
-    let t = 0;
-    (function loop(){
-      requestAnimationFrame(loop);
-      t += 0.016;
-      beamMat.uniforms.time.value = t;
-      renderer.render(scene, camera);
-    })();
-  }
+/* ═══════════════════════════════════════
+   CURSOR
+═══════════════════════════════════════ */
+var dot  = document.getElementById('cursorDot');
+var ring = document.getElementById('cursorRing');
+var mouseX=0, mouseY=0, ringX=0, ringY=0;
+document.addEventListener('mousemove', function(e){
+  mouseX=e.clientX; mouseY=e.clientY;
+  dot.style.left=mouseX+'px'; dot.style.top=mouseY+'px';
+});
+(function loop(){
+  ringX+=(mouseX-ringX)*0.12; ringY+=(mouseY-ringY)*0.12;
+  ring.style.left=ringX+'px'; ring.style.top=ringY+'px';
+  requestAnimationFrame(loop);
 })();
+document.querySelectorAll('a,button').forEach(function(el){
+  el.addEventListener('mouseenter',function(){ ring.style.transform='translate(-50%,-50%) scale(1.8)'; ring.style.opacity='0.5'; });
+  el.addEventListener('mouseleave',function(){ ring.style.transform='translate(-50%,-50%) scale(1)';   ring.style.opacity='1';   });
+});
 
-/* PROFILE CARD TILT */
+/* ═══════════════════════════════════════
+   SCROLL REVEAL
+═══════════════════════════════════════ */
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold:0.08, rootMargin:'0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+
+/* ═══════════════════════════════════════
+   PROFILE CARD TILT
+═══════════════════════════════════════ */
 (function(){
-  const wrapper=document.getElementById('profileCardWrapper');
-  const card=document.getElementById('profileCard');
-  const shell=document.getElementById('cardShell');
-  if(!wrapper||!card)return;
-  const MAX=15;
-
+  var wrapper = document.getElementById('profileCardWrapper');
+  var card    = document.getElementById('profileCard');
+  var shell   = document.getElementById('cardShell');
+  if(!wrapper||!card) return;
+  var MAX=15;
   function set(x,y){
-    const r=card.getBoundingClientRect();
-    const fl=(x-r.left)/r.width, ft=(y-r.top)/r.height;
-    const fc=Math.sqrt(Math.pow(fl-0.5,2)+Math.pow(ft-0.5,2));
-    wrapper.style.setProperty('--pointer-x',`${fl*100}%`);
-    wrapper.style.setProperty('--pointer-y',`${ft*100}%`);
-    wrapper.style.setProperty('--pointer-from-center',fc.toFixed(3));
-    wrapper.style.setProperty('--pointer-from-top',ft.toFixed(3));
-    wrapper.style.setProperty('--pointer-from-left',fl.toFixed(3));
-    wrapper.style.setProperty('--rotate-x',`${(fl-0.5)*MAX}deg`);
-    wrapper.style.setProperty('--rotate-y',`${-(ft-0.5)*MAX}deg`);
-    wrapper.style.setProperty('--background-x',`${50+(fl-0.5)*30}%`);
-    wrapper.style.setProperty('--background-y',`${50+(ft-0.5)*30}%`);
+    var r=card.getBoundingClientRect();
+    var fl=(x-r.left)/r.width, ft=(y-r.top)/r.height;
+    var fc=Math.sqrt(Math.pow(fl-0.5,2)+Math.pow(ft-0.5,2));
+    wrapper.style.setProperty('--pointer-x',        (fl*100)+'%');
+    wrapper.style.setProperty('--pointer-y',        (ft*100)+'%');
+    wrapper.style.setProperty('--pointer-from-center', fc.toFixed(3));
+    wrapper.style.setProperty('--pointer-from-top',    ft.toFixed(3));
+    wrapper.style.setProperty('--pointer-from-left',   fl.toFixed(3));
+    wrapper.style.setProperty('--rotate-x',  ((fl-0.5)*MAX)+'deg');
+    wrapper.style.setProperty('--rotate-y', (-(ft-0.5)*MAX)+'deg');
+    wrapper.style.setProperty('--background-x', (50+(fl-0.5)*30)+'%');
+    wrapper.style.setProperty('--background-y', (50+(ft-0.5)*30)+'%');
   }
   function reset(){
-    ['--pointer-x','--pointer-y','--rotate-x','--rotate-y','--background-x','--background-y'].forEach(p=>wrapper.style.removeProperty(p));
+    wrapper.style.setProperty('--pointer-x','50%'); wrapper.style.setProperty('--pointer-y','50%');
     wrapper.style.setProperty('--pointer-from-center','0');
-    wrapper.style.setProperty('--pointer-from-top','0.5');
-    wrapper.style.setProperty('--pointer-from-left','0.5');
+    wrapper.style.setProperty('--pointer-from-top','0.5'); wrapper.style.setProperty('--pointer-from-left','0.5');
+    wrapper.style.setProperty('--rotate-x','0deg'); wrapper.style.setProperty('--rotate-y','0deg');
+    wrapper.style.setProperty('--background-x','50%'); wrapper.style.setProperty('--background-y','50%');
   }
-
-  wrapper.addEventListener('mouseenter',()=>{shell.classList.add('entering');card.classList.add('active');wrapper.classList.add('active');setTimeout(()=>shell.classList.remove('entering'),200);});
-  wrapper.addEventListener('mousemove',e=>set(e.clientX,e.clientY));
-  wrapper.addEventListener('mouseleave',()=>{card.classList.remove('active');wrapper.classList.remove('active');reset();});
-  wrapper.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0];set(t.clientX,t.clientY);card.classList.add('active');wrapper.classList.add('active');},{passive:false});
-  wrapper.addEventListener('touchend',()=>{card.classList.remove('active');wrapper.classList.remove('active');reset();});
+  wrapper.addEventListener('mouseenter',function(){ shell.classList.add('entering'); card.classList.add('active'); wrapper.classList.add('active'); setTimeout(function(){ shell.classList.remove('entering'); },200); });
+  wrapper.addEventListener('mousemove', function(e){ set(e.clientX,e.clientY); });
+  wrapper.addEventListener('mouseleave',function(){ card.classList.remove('active'); wrapper.classList.remove('active'); reset(); });
+  wrapper.addEventListener('touchmove', function(e){ e.preventDefault(); var t=e.touches[0]; set(t.clientX,t.clientY); card.classList.add('active'); wrapper.classList.add('active'); },{passive:false});
+  wrapper.addEventListener('touchend',  function(){ card.classList.remove('active'); wrapper.classList.remove('active'); reset(); });
 })();
 
-/* SCROLL REVEAL */
-const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+/* ═══════════════════════════════════════
+   DOT GRID — shared factory
+═══════════════════════════════════════ */
+function initDotGrid(cfg){
+  var container = document.getElementById(cfg.containerId);
+  var trackEl   = cfg.trackEl;
+  if(!container||!trackEl) return;
+
+  var canvas = document.createElement('canvas');
+  container.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
+
+  var dots=[], mouse={x:-9999,y:-9999}, shock=null;
+
+  function hexRgb(h){
+    var c=h.replace('#','');
+    return [parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)];
+  }
+  var BR=hexRgb(cfg.baseColor), AR=hexRgb(cfg.activeColor);
+
+  function buildDots(W,H){
+    dots=[];
+    var step=cfg.dotSize+cfg.gap;
+    var cols=Math.ceil(W/step)+1, rows=Math.ceil(H/step)+1;
+    var ox=(W-(cols-1)*step)/2, oy=(H-(rows-1)*step)/2;
+    for(var r=0;r<rows;r++) for(var c=0;c<cols;c++)
+      dots.push({ox:ox+c*step,oy:oy+r*step,x:ox+c*step,y:oy+r*step,vx:0,vy:0,t:0});
+  }
+
+  function resize(){
+    var W=trackEl.offsetWidth, H=trackEl.offsetHeight;
+    if(!W||!H) return;
+    canvas.width=W; canvas.height=H;
+    buildDots(W,H);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  trackEl.addEventListener('mousemove',function(e){
+    var r=trackEl.getBoundingClientRect(); mouse.x=e.clientX-r.left; mouse.y=e.clientY-r.top;
+  });
+  trackEl.addEventListener('mouseleave',function(){ mouse.x=-9999; mouse.y=-9999; });
+  trackEl.addEventListener('click',function(e){
+    var r=trackEl.getBoundingClientRect();
+    shock={x:e.clientX-r.left, y:e.clientY-r.top, t:performance.now()};
+  });
+
+  function lerpC(a,b,f){
+    return [Math.round(a[0]+(b[0]-a[0])*f),Math.round(a[1]+(b[1]-a[1])*f),Math.round(a[2]+(b[2]-a[2])*f)];
+  }
+
+  var last=performance.now();
+  function frame(now){
+    requestAnimationFrame(frame);
+    var dt=Math.min((now-last)/1000,0.05); last=now;
+    if(!canvas.width||!canvas.height){ resize(); return; }
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    var sa=shock?(now-shock.t)/1000:999;
+    for(var i=0;i<dots.length;i++){
+      var d=dots[i];
+      var dxM=d.ox-mouse.x, dyM=d.oy-mouse.y;
+      var distM=Math.sqrt(dxM*dxM+dyM*dyM);
+      if(shock&&sa<2){
+        var dxS=d.ox-shock.x, dyS=d.oy-shock.y;
+        var distS=Math.sqrt(dxS*dxS+dyS*dyS);
+        var wave=Math.abs(distS-sa*cfg.shockRadius*2);
+        if(wave<cfg.shockRadius*0.4){
+          var fo=1-wave/(cfg.shockRadius*0.4);
+          var ang=Math.atan2(dyS,dxS);
+          d.vx+=Math.cos(ang)*fo*cfg.shockStrength*60;
+          d.vy+=Math.sin(ang)*fo*cfg.shockStrength*60;
+        }
+      }
+      var tx=d.ox, ty=d.oy;
+      if(distM<cfg.proximity&&distM>0.5){
+        var force=1-distM/cfg.proximity;
+        tx+=(dxM/distM)*force*cfg.proximity*0.35;
+        ty+=(dyM/distM)*force*cfg.proximity*0.35;
+      }
+      var sp=1-Math.pow(0.001,dt/cfg.returnDuration);
+      d.x+=(tx-d.x)*sp+d.vx*dt; d.y+=(ty-d.y)*sp+d.vy*dt;
+      d.vx*=Math.pow(0.01,dt); d.vy*=Math.pow(0.01,dt);
+      var ct=distM<cfg.proximity?Math.pow(1-distM/cfg.proximity,1.5):0;
+      d.t+=(ct-d.t)*(1-Math.pow(0.001,dt/0.18));
+      var rgb=lerpC(BR,AR,d.t);
+      ctx.beginPath();
+      ctx.arc(d.x,d.y,cfg.dotSize/2,0,Math.PI*2);
+      ctx.fillStyle='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+(cfg.baseOpacity*(0.25+d.t*0.75))+')';
+      ctx.fill();
+    }
+    if(shock&&sa>2) shock=null;
+  }
+  requestAnimationFrame(frame);
+}
+
+/* Hero dotgrid */
+initDotGrid({
+  containerId:'hero-dotgrid', trackEl:document.getElementById('hero'),
+  dotSize:5, gap:15, baseColor:'#f5f2eb', activeColor:'#c8522a',
+  proximity:120, shockRadius:250, shockStrength:5, returnDuration:1.5, baseOpacity:1
+});
+
+/* Sobre dotgrid */
+initDotGrid({
+  containerId:'sobre-dotgrid', trackEl:document.getElementById('sobre'),
+  dotSize:5, gap:15, baseColor:'#f5f2eb', activeColor:'#c8522a',
+  proximity:120, shockRadius:250, shockStrength:5, returnDuration:1.5, baseOpacity:1
+});
+
 </script>
 </body>
 </html>
