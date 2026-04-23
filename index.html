@@ -57,7 +57,7 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .nav-links a:hover { color:var(--ink); }
 
 /* HERO */
-#hero { min-height:100vh; display:grid; grid-template-columns:1fr auto; grid-template-rows:1fr auto; padding:0 3rem; position:relative; overflow:hidden; gap:0 4rem; align-items:stretch; }
+#hero { min-height:100vh; display:grid; grid-template-columns:1fr 320px; grid-template-rows:1fr auto; padding:0 3rem; position:relative; overflow:hidden; gap:0 4rem; align-items:stretch; }
 
 /* DotGrid canvas background */
 #hero-dotgrid {
@@ -168,12 +168,14 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 /* Foto editorial no sobre */
 .sobre-photo-wrap {
   position: relative;
-  display: inline-block;
-  margin-bottom: 2rem;
+  display: block;
+  margin-bottom: 2.5rem;
+  width: 100%;
+  max-width: 280px;
 }
 .sobre-photo {
-  width: 220px;
-  height: 280px;
+  width: 100%;
+  height: 340px;
   object-fit: cover;
   object-position: center top;
   display: block;
@@ -183,15 +185,13 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .sobre-photo-wrap:hover .sobre-photo { filter: grayscale(0%) contrast(1.05); }
 .sobre-photo-frame {
   position: absolute;
-  inset: -8px -8px auto auto;
-  width: 100%;
-  height: 100%;
+  top: 8px; right: -8px;
+  width: 100%; height: 100%;
   border: 1.5px solid var(--accent);
   pointer-events: none;
-  transform: translate(8px, 8px);
   transition: transform 0.4s ease;
 }
-.sobre-photo-wrap:hover .sobre-photo-frame { transform: translate(4px, 4px); }
+.sobre-photo-wrap:hover .sobre-photo-frame { transform: translate(-4px, -4px); }
 
 /* Project result strip */
 .project-result-strip {
@@ -295,7 +295,7 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .divider { height:1px; background:var(--line); margin:0 3rem; }
 
 /* SOBRE */
-#sobre { padding:8rem 3rem; display:grid; grid-template-columns:1fr 1.4fr; gap:6rem; align-items:start; position:relative; overflow:hidden; }
+#sobre { padding:8rem 3rem; display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; position:relative; overflow:hidden; }
 
 /* Watermark number */
 #sobre::before {
@@ -811,10 +811,10 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       </div>
     </div>
   </div>
+
   <div class="sobre-right reveal" style="transition-delay:0.15s">
     <div class="section-label" data-num="01">Sobre</div>
 
-    <!-- Foto editorial -->
     <div class="sobre-photo-wrap">
       <img src="https://i.ibb.co/5XpbpvV7/3-CDDD13-E-178-F-4-E47-93-FC-F31-E520-E806-D.jpg" alt="Felipe Nunes" class="sobre-photo" />
       <div class="sobre-photo-frame"></div>
