@@ -292,79 +292,239 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 /* DIVIDER */
 .divider { height:1px; background:var(--line); margin:0 3rem; }
 
-/* SOBRE */
-#sobre { padding:8rem 3rem; display:grid; grid-template-columns:1fr 1.4fr; gap:6rem; align-items:start; position:relative; overflow:hidden; }
+/* ══════════════════════════════════════
+   SOBRE — redesign completo
+══════════════════════════════════════ */
+#sobre {
+  padding: 8rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
 
-/* Watermark number */
+/* DotGrid canvas */
+#sobre-dotgrid {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.45;
+}
+#sobre-dotgrid canvas { position: absolute; inset: 0; }
+#sobre > * { position: relative; z-index: 1; }
+
+/* Watermark */
 #sobre::before {
-  content: '21';
-  position: absolute;
-  right: -2rem; top: -4rem;
+  content: 'FN';
+  position: absolute; right: -1rem; top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
   font-family: var(--f-display);
-  font-size: clamp(14rem, 28vw, 26rem);
+  font-size: clamp(10rem, 20vw, 18rem);
   font-weight: 700; line-height: 1;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(10,10,8,0.05);
+  -webkit-text-stroke: 1px rgba(10,10,8,0.04);
   pointer-events: none; user-select: none;
-  animation: sobre-drift 12s ease-in-out infinite;
+  animation: sobre-drift 14s ease-in-out infinite;
+  letter-spacing: -0.05em;
 }
 @keyframes sobre-drift {
-  0%,100% { transform: translateY(0) rotate(-4deg); }
-  50%      { transform: translateY(-20px) rotate(-3deg); }
+  0%,100% { transform: translateY(-50%) rotate(-90deg) translateX(0); }
+  50%      { transform: translateY(-52%) rotate(-90deg) translateX(-12px); }
 }
 
-/* Stats row */
-.sobre-stats {
-  display: flex; gap: 2.5rem;
-  margin-top: 3rem; padding-top: 2rem;
-  border-top: 1px solid var(--line);
+/* ── Header row ── */
+.sobre-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--line);
 }
-.stat-item { display: flex; flex-direction: column; gap: 0.3rem; }
+
+.sobre-headline {
+  font-family: var(--f-display);
+  font-size: clamp(3.5rem, 7vw, 7rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.sobre-headline .hl-accent {
+  display: block;
+  font-style: italic;
+  font-weight: 700;
+  color: transparent;
+  background: linear-gradient(135deg, var(--accent), #e8834a, var(--accent));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: sobre-shine 4s linear infinite;
+}
+@keyframes sobre-shine {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.sobre-tagline {
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  max-width: 220px;
+  line-height: 1.8;
+  text-align: right;
+}
+
+/* ── Body grid: 3 columns ── */
+.sobre-body {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+/* Left — identity */
+.sobre-identity {}
+
+.sobre-name-block {
+  margin-bottom: 2.5rem;
+}
+.sobre-pre {
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.sobre-pre::before { content:''; display:block; width:20px; height:1px; background:var(--accent); }
+
+.sobre-name {
+  font-family: var(--f-display);
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.sobre-name em { font-style: italic; font-weight: 300; display: block; }
+
+/* Animated tag pills */
+.sobre-tags {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-top: 1.8rem;
+}
+.tag {
+  font-family: var(--f-mono); font-size: 0.62rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  border: 1px solid var(--line);
+  padding: 0.4rem 0.85rem;
+  color: var(--muted);
+  cursor: default;
+  transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.2s;
+}
+.tag:hover {
+  background: var(--ink); color: var(--paper);
+  border-color: var(--ink); transform: translateY(-2px);
+}
+
+/* Stats column */
+.sobre-stats-col {
+  display: flex; flex-direction: column; gap: 0;
+  border: 1px solid var(--line);
+}
+.stat-item {
+  padding: 1.8rem 2rem;
+  border-bottom: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 0.4rem;
+  position: relative; overflow: hidden;
+  transition: background 0.3s;
+}
+.stat-item::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.35s ease;
+}
+.stat-item:hover::before { width: 3px; }
+.stat-item:hover { background: var(--paper2); }
+.stat-item:last-child { border-bottom: none; }
+
 .stat-num {
   font-family: var(--f-display);
-  font-size: 2.8rem; font-weight: 700; line-height: 1;
-  color: var(--ink); letter-spacing: -0.03em;
+  font-size: 3rem; font-weight: 700; line-height: 1;
+  letter-spacing: -0.04em; color: var(--ink);
+  transition: color 0.3s;
 }
-.stat-num span { color: var(--accent); }
+.stat-item:hover .stat-num { color: var(--accent); }
+.stat-num span { color: var(--accent); font-size: 0.65em; }
 .stat-label {
-  font-family: var(--f-mono);
-  font-size: 0.62rem; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--muted);
+  font-family: var(--f-mono); font-size: 0.6rem;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
 }
 
-/* Marquee tags strip */
+/* Centre — bio */
+.sobre-bio-col {}
+
+.sobre-bio {
+  font-family: var(--f-display);
+  font-size: clamp(1.3rem, 2vw, 1.75rem);
+  font-weight: 300; line-height: 1.55;
+  color: var(--ink); margin-bottom: 2rem;
+}
+.sobre-bio strong {
+  font-weight: 700; font-style: italic;
+  color: var(--accent);
+  position: relative;
+}
+.sobre-bio strong::after {
+  content: '';
+  position: absolute; left: 0; bottom: -2px;
+  width: 100%; height: 1px;
+  background: var(--accent); opacity: 0.4;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.sobre-bio:hover strong::after { transform: scaleX(1); }
+
+.sobre-detail {
+  font-size: 0.875rem; color: var(--muted);
+  line-height: 1.85;
+  border-left: 2px solid var(--accent);
+  padding-left: 1.2rem;
+}
+
+/* Highlighted phrases */
+.sobre-highlight {
+  display: inline;
+  background: linear-gradient(to right, rgba(200,82,42,0.12), rgba(200,82,42,0.06));
+  padding: 0 0.2em;
+  border-radius: 2px;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ── Marquee strip ── */
 .sobre-marquee-wrap {
-  grid-column: 1/-1;
+  margin-top: 5rem;
   overflow: hidden;
-  margin-top: 4rem;
-  padding: 1.5rem 0;
+  padding: 1.4rem 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  position: relative; z-index: 1;
 }
 .sobre-marquee-track {
   display: flex; gap: 3rem;
   width: max-content;
-  animation: marquee-left 20s linear infinite;
-  font-family: var(--f-mono);
-  font-size: 0.7rem; letter-spacing: 0.15em;
-  text-transform: uppercase; color: var(--muted);
-  white-space: nowrap;
+  animation: marquee-left 22s linear infinite;
+  font-family: var(--f-mono); font-size: 0.68rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap;
 }
-.sobre-marquee-track .dot {
-  color: var(--accent); margin: 0 0.5rem;
-}
+.sobre-marquee-track .dot { color: var(--accent); margin: 0 0.4rem; }
+@keyframes marquee-left { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
 .section-label { font-family:var(--f-mono); font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:1.2rem; display:flex; align-items:center; gap:0.7rem; }
 .section-label::before { content:attr(data-num); color:var(--accent); font-size:0.65rem; }
-.sobre-number { font-family:var(--f-display); font-size:clamp(5rem,12vw,10rem); font-weight:700; color:transparent; -webkit-text-stroke:1px var(--line); line-height:1; margin-bottom:-1rem; display:block; }
-.sobre-name { font-family:var(--f-display); font-size:clamp(2.5rem,5vw,4rem); font-weight:600; line-height:1.1; letter-spacing:-0.01em; margin-bottom:1.5rem; }
-.sobre-name em { font-style:italic; font-weight:300; }
-.sobre-tags { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:2rem; }
-.tag { font-family:var(--f-mono); font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; border:1px solid var(--line); padding:0.4rem 0.9rem; color:var(--muted); transition:all 0.2s; }
-.tag:hover { background:var(--ink); color:var(--paper); border-color:var(--ink); }
-.sobre-bio { font-family:var(--f-display); font-size:clamp(1.4rem,2.5vw,2rem); font-weight:300; line-height:1.5; color:var(--ink); margin-bottom:2rem; }
-.sobre-bio strong { font-weight:600; font-style:italic; }
-.sobre-detail { font-size:0.88rem; color:var(--muted); line-height:1.8; border-left:2px solid var(--accent); padding-left:1.2rem; }
+.sobre-number { display:none; }
 
 /* PROCESSO — Holo cards (original component) */
 :root {
@@ -682,8 +842,12 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   .hero-bottom { grid-column:1; grid-row:3; flex-direction:column; gap:2rem; align-items:flex-start; }
   .pc-card-wrapper { width:220px; }
   .pc-card { height:300px; }
-  #sobre { grid-template-columns:1fr; gap:3rem; padding:5rem 1.5rem; }
-  .sobre-photo { height: 300px; }
+  #sobre { padding:5rem 1.5rem; }
+  .sobre-header { flex-direction:column; align-items:flex-start; gap:1rem; margin-bottom:3rem; padding-bottom:2rem; }
+  .sobre-tagline { text-align:left; max-width:100%; }
+  .sobre-body { grid-template-columns:1fr; gap:3rem; }
+  .sobre-stats-col { flex-direction:row; flex-wrap:wrap; border:none; gap:0; }
+  .stat-item { flex:1; min-width:120px; border:1px solid var(--line); border-bottom:1px solid var(--line); }
   .steps-grid { grid-template-columns:1fr 1fr; gap:0.8rem; }
   .holo-card { aspect-ratio: 1; aspect-ratio: unset; min-height: 240px; }
   #processo { padding:5rem 1.5rem; }
@@ -785,17 +949,52 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
 <section id="sobre">
   <div id="sobre-dotgrid"></div>
-  <div class="sobre-left reveal">
-    <span class="sobre-number">21</span>
-    <h2 class="sobre-name">Felipe<br><em>Nunes</em></h2>
-    <div class="sobre-tags">
-      <span class="tag">Marketing</span>
-      <span class="tag">Gestão</span>
-      <span class="tag">Tecnologia</span>
-      <span class="tag">IA</span>
-      <span class="tag">Posicionamento</span>
+
+  <!-- Header -->
+  <div class="sobre-header reveal">
+    <h2 class="sobre-headline">
+      <span>Felipe</span>
+      <span class="hl-accent">Nunes</span>
+    </h2>
+    <p class="sobre-tagline">21 anos · Estratégia &amp; Posicionamento Digital · Aracaju, Brasil</p>
+  </div>
+
+  <!-- Body -->
+  <div class="sobre-body">
+
+    <!-- Col 1: identidade -->
+    <div class="sobre-identity reveal">
+      <div class="sobre-name-block">
+        <div class="sobre-pre">Quem sou</div>
+        <div class="sobre-name">
+          Estrategista<br>
+          <em>Digital</em>
+        </div>
+      </div>
+      <div class="sobre-tags">
+        <span class="tag">Marketing</span>
+        <span class="tag">Gestão</span>
+        <span class="tag">Tecnologia</span>
+        <span class="tag">IA</span>
+        <span class="tag">Posicionamento</span>
+        <span class="tag">Copywriting</span>
+        <span class="tag">Diagnóstico</span>
+      </div>
     </div>
-    <div class="sobre-stats">
+
+    <!-- Col 2: bio -->
+    <div class="sobre-bio-col reveal" style="transition-delay:0.12s">
+      <div class="section-label" data-num="01">Sobre</div>
+      <p class="sobre-bio">
+        Trabalho na <strong>interseção entre estratégia e execução</strong> — onde uma ideia bem posicionada encontra as palavras certas e a tecnologia para escalar.
+      </p>
+      <p class="sobre-detail">
+        Com 21 anos, atuo com <span class="sobre-highlight">diagnóstico de posicionamento</span>, construção de comunicação digital e implementação de soluções com <span class="sobre-highlight">inteligência artificial</span> para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: <em>por que este negócio não está crescendo como deveria?</em>
+      </p>
+    </div>
+
+    <!-- Col 3: métricas -->
+    <div class="sobre-stats-col reveal" style="transition-delay:0.24s">
       <div class="stat-item">
         <span class="stat-num">3<span>+</span></span>
         <span class="stat-label">Projetos entregues</span>
@@ -806,18 +1005,17 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       </div>
       <div class="stat-item">
         <span class="stat-num">100<span>%</span></span>
-        <span class="stat-label">Satisfação</span>
+        <span class="stat-label">Satisfação dos clientes</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">3<span>×</span></span>
+        <span class="stat-label">Setores atendidos</span>
       </div>
     </div>
+
   </div>
 
-  <div class="sobre-right reveal" style="transition-delay:0.15s">
-    <div class="section-label" data-num="01">Sobre</div>
-    <p class="sobre-bio">Trabalho na <strong>interseção entre estratégia e execução</strong> — onde uma ideia bem posicionada encontra as palavras certas e a tecnologia para escalar.</p>
-    <p class="sobre-detail">Com 21 anos, atuo com diagnóstico de posicionamento, construção de comunicação digital e implementação de soluções com inteligência artificial para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: por que este negócio não está crescendo como deveria?</p>
-  </div>
-
-  <!-- Marquee strip -->
+  <!-- Marquee -->
   <div class="sobre-marquee-wrap reveal">
     <div class="sobre-marquee-track">
       <span>Marketing</span><span class="dot">◆</span>
