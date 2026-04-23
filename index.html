@@ -293,7 +293,7 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .divider { height:1px; background:var(--line); margin:0 3rem; }
 
 /* SOBRE */
-#sobre { padding:8rem 3rem; display:grid; grid-template-columns:340px 1fr; gap:5rem; align-items:start; position:relative; overflow:hidden; }
+#sobre { padding:8rem 3rem; display:grid; grid-template-columns:1fr 1.4fr; gap:6rem; align-items:start; position:relative; overflow:hidden; }
 
 /* Watermark number */
 #sobre::before {
@@ -786,18 +786,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 <section id="sobre">
   <div id="sobre-dotgrid"></div>
   <div class="sobre-left reveal">
-    <!-- Foto ocupa toda a coluna esquerda -->
-    <div class="sobre-photo-wrap">
-      <img src="https://i.ibb.co/5XpbpvV7/3-CDDD13-E-178-F-4-E47-93-FC-F31-E520-E806-D.jpg" alt="Felipe Nunes" class="sobre-photo" />
-      <div class="sobre-photo-frame"></div>
-    </div>
-  </div>
-
-  <div class="sobre-right reveal" style="transition-delay:0.15s">
-    <div class="section-label" data-num="01">Sobre</div>
-
+    <span class="sobre-number">21</span>
     <h2 class="sobre-name">Felipe<br><em>Nunes</em></h2>
-
     <div class="sobre-tags">
       <span class="tag">Marketing</span>
       <span class="tag">Gestão</span>
@@ -805,10 +795,6 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <span class="tag">IA</span>
       <span class="tag">Posicionamento</span>
     </div>
-
-    <p class="sobre-bio" style="margin-top:2rem;">Trabalho na <strong>interseção entre estratégia e execução</strong> — onde uma ideia bem posicionada encontra as palavras certas e a tecnologia para escalar.</p>
-    <p class="sobre-detail">Com 21 anos, atuo com diagnóstico de posicionamento, construção de comunicação digital e implementação de soluções com inteligência artificial para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: por que este negócio não está crescendo como deveria?</p>
-
     <div class="sobre-stats">
       <div class="stat-item">
         <span class="stat-num">3<span>+</span></span>
@@ -823,6 +809,12 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         <span class="stat-label">Satisfação</span>
       </div>
     </div>
+  </div>
+
+  <div class="sobre-right reveal" style="transition-delay:0.15s">
+    <div class="section-label" data-num="01">Sobre</div>
+    <p class="sobre-bio">Trabalho na <strong>interseção entre estratégia e execução</strong> — onde uma ideia bem posicionada encontra as palavras certas e a tecnologia para escalar.</p>
+    <p class="sobre-detail">Com 21 anos, atuo com diagnóstico de posicionamento, construção de comunicação digital e implementação de soluções com inteligência artificial para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: por que este negócio não está crescendo como deveria?</p>
   </div>
 
   <!-- Marquee strip -->
