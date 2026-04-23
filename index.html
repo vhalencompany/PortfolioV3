@@ -169,13 +169,11 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .sobre-photo-wrap {
   position: relative;
   display: block;
-  margin-bottom: 2.5rem;
   width: 100%;
-  max-width: 280px;
 }
 .sobre-photo {
   width: 100%;
-  height: 340px;
+  height: 460px;
   object-fit: cover;
   object-position: center top;
   display: block;
@@ -185,7 +183,7 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .sobre-photo-wrap:hover .sobre-photo { filter: grayscale(0%) contrast(1.05); }
 .sobre-photo-frame {
   position: absolute;
-  top: 8px; right: -8px;
+  top: 10px; right: -10px;
   width: 100%; height: 100%;
   border: 1.5px solid var(--accent);
   pointer-events: none;
@@ -295,7 +293,7 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .divider { height:1px; background:var(--line); margin:0 3rem; }
 
 /* SOBRE */
-#sobre { padding:8rem 3rem; display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; position:relative; overflow:hidden; }
+#sobre { padding:8rem 3rem; display:grid; grid-template-columns:340px 1fr; gap:5rem; align-items:start; position:relative; overflow:hidden; }
 
 /* Watermark number */
 #sobre::before {
@@ -685,6 +683,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   .pc-card-wrapper { width:220px; }
   .pc-card { height:300px; }
   #sobre { grid-template-columns:1fr; gap:3rem; padding:5rem 1.5rem; }
+  .sobre-photo { height: 300px; }
   .steps-grid { grid-template-columns:1fr 1fr; gap:0.8rem; }
   .holo-card { aspect-ratio: 1; aspect-ratio: unset; min-height: 240px; }
   #processo { padding:5rem 1.5rem; }
@@ -787,8 +786,18 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 <section id="sobre">
   <div id="sobre-dotgrid"></div>
   <div class="sobre-left reveal">
-    <span class="sobre-number">21</span>
+    <!-- Foto ocupa toda a coluna esquerda -->
+    <div class="sobre-photo-wrap">
+      <img src="https://i.ibb.co/5XpbpvV7/3-CDDD13-E-178-F-4-E47-93-FC-F31-E520-E806-D.jpg" alt="Felipe Nunes" class="sobre-photo" />
+      <div class="sobre-photo-frame"></div>
+    </div>
+  </div>
+
+  <div class="sobre-right reveal" style="transition-delay:0.15s">
+    <div class="section-label" data-num="01">Sobre</div>
+
     <h2 class="sobre-name">Felipe<br><em>Nunes</em></h2>
+
     <div class="sobre-tags">
       <span class="tag">Marketing</span>
       <span class="tag">Gestão</span>
@@ -796,6 +805,10 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <span class="tag">IA</span>
       <span class="tag">Posicionamento</span>
     </div>
+
+    <p class="sobre-bio" style="margin-top:2rem;">Trabalho na <strong>interseção entre estratégia e execução</strong> — onde uma ideia bem posicionada encontra as palavras certas e a tecnologia para escalar.</p>
+    <p class="sobre-detail">Com 21 anos, atuo com diagnóstico de posicionamento, construção de comunicação digital e implementação de soluções com inteligência artificial para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: por que este negócio não está crescendo como deveria?</p>
+
     <div class="sobre-stats">
       <div class="stat-item">
         <span class="stat-num">3<span>+</span></span>
@@ -810,18 +823,6 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         <span class="stat-label">Satisfação</span>
       </div>
     </div>
-  </div>
-
-  <div class="sobre-right reveal" style="transition-delay:0.15s">
-    <div class="section-label" data-num="01">Sobre</div>
-
-    <div class="sobre-photo-wrap">
-      <img src="https://i.ibb.co/5XpbpvV7/3-CDDD13-E-178-F-4-E47-93-FC-F31-E520-E806-D.jpg" alt="Felipe Nunes" class="sobre-photo" />
-      <div class="sobre-photo-frame"></div>
-    </div>
-
-    <p class="sobre-bio">Trabalho na <strong>interseção entre estratégia e execução</strong> — onde uma ideia bem posicionada encontra as palavras certas e a tecnologia para escalar.</p>
-    <p class="sobre-detail">Com 21 anos, atuo com diagnóstico de posicionamento, construção de comunicação digital e implementação de soluções com inteligência artificial para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: por que este negócio não está crescendo como deveria?</p>
   </div>
 
   <!-- Marquee strip -->
