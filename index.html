@@ -1284,8 +1284,10 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   }
   .contato-title { font-size: clamp(2.5rem, 10vw, 4.5rem); margin-bottom: 1.5rem; }
   .contato-sub { font-size: 0.82rem; }
-  .contact-link { padding: 1.5rem 1.2rem; }
-  .contact-link-value { font-size: 1rem; }
+  .contato-pill { margin-top: 1.5rem; }
+  .contact-link { padding: 1.4rem 1.2rem; }
+  .contact-link:hover { transform: none; }
+  .contact-link-value { font-size: 0.95rem; }
 
   /* ── Footer ── */
   footer { flex-direction: column; gap: 0.8rem; padding: 1.5rem 1.2rem; text-align: center; }
@@ -1741,21 +1743,53 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 </section>
 
 <section id="contato">
+
+  <!-- Orbes animados -->
+  <div class="contato-orb-1"></div>
+  <div class="contato-orb-2"></div>
+
   <div class="contato-left reveal">
-    <div class="section-label" data-num="05" style="color:rgba(245,242,235,0.4)">Contato</div>
+    <div class="contato-tag">Vamos conversar</div>
     <h2 class="contato-title">Vamos<br>construir<br><em>juntos?</em></h2>
     <p class="contato-sub">Diagnóstico gratuito de 30 minutos para entender onde seu negócio está perdendo dinheiro por falta de posicionamento claro.</p>
+    <div class="contato-pill">
+      <span class="contato-pill-icon"></span>
+      <span class="contato-pill-text">Resposta em até 24 horas</span>
+    </div>
   </div>
+
   <div class="contato-right reveal" style="transition-delay:0.15s">
+
     <a href="https://wa.me/5579998453719" class="contact-link" target="_blank">
-      <div class="contact-link-inner"><div><span class="contact-link-label">WhatsApp</span><span class="contact-link-value">Iniciar Diagnóstico</span></div><span class="contact-arrow">→</span></div>
+      <div class="contact-link-inner">
+        <div>
+          <span class="contact-link-label">WhatsApp</span>
+          <span class="contact-link-value">Iniciar Diagnóstico</span>
+        </div>
+        <span class="contact-arrow">→</span>
+      </div>
     </a>
+
     <a href="mailto:valencompany001@gmail.com" class="contact-link">
-      <div class="contact-link-inner"><div><span class="contact-link-label">E-mail</span><span class="contact-link-value">valencompany001@gmail.com</span></div><span class="contact-arrow">→</span></div>
+      <div class="contact-link-inner">
+        <div>
+          <span class="contact-link-label">E-mail</span>
+          <span class="contact-link-value">valencompany001@gmail.com</span>
+        </div>
+        <span class="contact-arrow">→</span>
+      </div>
     </a>
+
     <a href="https://instagram.com/felipe.f.nunes" class="contact-link" target="_blank">
-      <div class="contact-link-inner"><div><span class="contact-link-label">Instagram</span><span class="contact-link-value">@felipe.f.nunes</span></div><span class="contact-arrow">→</span></div>
+      <div class="contact-link-inner">
+        <div>
+          <span class="contact-link-label">Instagram</span>
+          <span class="contact-link-value">@felipe.f.nunes</span>
+        </div>
+        <span class="contact-arrow">→</span>
+      </div>
     </a>
+
   </div>
 </section>
 
