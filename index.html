@@ -4,6 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Felipe Nunes — Estratégia & Posicionamento Digital</title>
+<meta name="description" content="Felipe Nunes — Estratégia, posicionamento e comunicação digital para negócios que precisam ser vistos, entendidos e escolhidos. Diagnóstico gratuito de 30 minutos.">
+<meta name="author" content="Felipe Nunes">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph / WhatsApp / LinkedIn preview -->
+<meta property="og:type"        content="website">
+<meta property="og:title"       content="Felipe Nunes — Estratégia & Posicionamento Digital">
+<meta property="og:description" content="Diagnóstico preciso, estratégia com lógica de mercado e execução que funciona. Negócios que comunicam crescem.">
+<meta property="og:image"       content="https://i.ibb.co/hxdfqFr5/E5-A76-EBE-350-B-41-F1-8-B21-CD40-E1-A51745.jpg">
+<meta property="og:locale"      content="pt_BR">
+
+<!-- Twitter card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="Felipe Nunes — Estratégia & Posicionamento Digital">
+<meta name="twitter:description" content="Diagnóstico preciso, estratégia com lógica de mercado e execução que funciona.">
+<meta name="twitter:image"       content="https://i.ibb.co/hxdfqFr5/E5-A76-EBE-350-B-41-F1-8-B21-CD40-E1-A51745.jpg">
+
+<!-- Favicon SVG inline -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0a08' rx='6'/><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-family='Georgia,serif' font-size='14' font-weight='700' font-style='italic' fill='%23c8522a'>FN</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -181,6 +200,70 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 }
 
 .hero-sub { font-size:0.95rem; color:var(--muted); line-height:1.7; max-width:420px; font-weight:400; letter-spacing:0.01em; }
+
+/* Phone link in hero */
+.hero-phone {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  margin-top: 1.2rem;
+  font-family: var(--f-mono); font-size: 0.72rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+  transition: color 0.2s;
+}
+.hero-phone:hover { color: var(--ink); }
+.hero-phone-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  animation: cta-pulse 2.5s ease-out infinite;
+  flex-shrink: 0;
+}
+
+/* Projetos CTA block */
+.projetos-cta {
+  margin-top: 4rem;
+  padding: 2.5rem 3rem;
+  border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2rem;
+  position: relative; overflow: hidden;
+}
+.projetos-cta::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--ink);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s ease;
+  z-index: 0;
+}
+.projetos-cta:hover::before { transform: scaleX(1); }
+.projetos-cta-text { position: relative; z-index: 1; transition: color 0.3s; }
+.projetos-cta:hover .projetos-cta-text { color: var(--paper); }
+.projetos-cta-headline {
+  font-family: var(--f-display);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 600; line-height: 1.1;
+  letter-spacing: -0.01em; color: var(--ink);
+  margin-bottom: 0.4rem;
+  transition: color 0.3s;
+}
+.projetos-cta:hover .projetos-cta-headline { color: var(--paper); }
+.projetos-cta-sub {
+  font-family: var(--f-mono); font-size: 0.65rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); transition: color 0.3s;
+}
+.projetos-cta:hover .projetos-cta-sub { color: rgba(245,242,235,0.5); }
+.projetos-cta-btn {
+  position: relative; z-index: 1; flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 0.7rem;
+  background: var(--accent); color: var(--paper);
+  padding: 0.9rem 1.8rem;
+  font-family: var(--f-mono); font-size: 0.68rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; transition: background 0.3s, transform 0.2s;
+}
+.projetos-cta:hover .projetos-cta-btn { background: var(--paper); color: var(--ink); }
+.projetos-cta-btn:hover { transform: translateX(4px); }
 
 .hero-card-col { grid-column:2; grid-row:1; display:flex; align-items:center; justify-content:center; padding-top:6rem; padding-bottom:2rem; position:relative; z-index:3; animation:fadeUp 0.9s ease 0.45s both; }
 
@@ -1122,6 +1205,73 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 .hero-bottom   { animation:fadeUp 0.7s ease 0.65s both; }
 .hero-card-col { animation:fadeUp 0.9s ease 0.45s both; }
 
+/* ── Floating CTA ── */
+.float-cta {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  z-index: 500;
+  display: flex; align-items: center; gap: 0;
+  text-decoration: none;
+  overflow: hidden;
+  border-radius: 50px;
+  box-shadow: 0 4px 24px rgba(200,82,42,0.35), 0 2px 8px rgba(0,0,0,0.2);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  animation: float-cta-in 0.6s cubic-bezier(0.34,1.56,0.64,1) 1.5s both;
+}
+@keyframes float-cta-in {
+  from { opacity:0; transform: translateY(20px) scale(0.85); }
+  to   { opacity:1; transform: translateY(0)    scale(1); }
+}
+.float-cta:hover {
+  box-shadow: 0 8px 32px rgba(200,82,42,0.55), 0 4px 16px rgba(0,0,0,0.25);
+  transform: translateY(-3px) scale(1.03);
+}
+
+/* Icon circle */
+.float-cta-icon {
+  width: 52px; height: 52px;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.float-cta-icon svg {
+  width: 22px; height: 22px; fill: white;
+}
+/* Pulse ring */
+.float-cta-icon::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: cta-pulse 2.5s ease-out infinite;
+  z-index: -1;
+}
+@keyframes cta-pulse {
+  0%   { opacity: 0.6; transform: scale(1); }
+  70%  { opacity: 0;   transform: scale(1.6); }
+  100% { opacity: 0;   transform: scale(1.6); }
+}
+
+/* Label — hidden by default, expands on hover */
+.float-cta-label {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0;
+  transition: max-width 0.4s ease, padding 0.4s ease;
+}
+.float-cta:hover .float-cta-label {
+  max-width: 200px;
+  padding: 0 1.2rem;
+}
+
 /* ══════════════════════════════════════
    RESPONSIVE — mobile (≤900px)
    Notebook nunca entra aqui.
@@ -1131,6 +1281,13 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   /* ── Global ── */
   body { cursor: auto; }
   .cursor { display: none; }
+  .float-cta-label { display: none; }
+  .float-cta { bottom: 1.5rem; right: 1.5rem; }
+  .float-cta-icon { width: 48px; height: 48px; }
+
+  .hero-phone { font-size: 0.65rem; }
+  .projetos-cta { flex-direction: column; align-items: flex-start; gap: 1.5rem; padding: 2rem 1.2rem; margin-top: 2rem; }
+  .projetos-cta-btn { width: 100%; justify-content: center; }
 
   /* ── Nav ── */
   nav { padding:1rem 1.2rem; background: rgba(245,242,235,0.92); backdrop-filter: blur(12px); }
@@ -1310,6 +1467,18 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 <div class="cursor cursor-ring" id="cursorRing"></div>
 <div class="cursor cursor-dot"  id="cursorDot"></div>
 
+<!-- Floating WhatsApp CTA -->
+<a href="https://wa.me/5579998453719" target="_blank" class="float-cta" aria-label="Iniciar diagnóstico no WhatsApp">
+  <span class="float-cta-icon">
+    <!-- WhatsApp icon -->
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.849L0 24l6.335-1.508A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.214-3.732.888.935-3.63-.235-.374A9.818 9.818 0 1112 21.818z"/>
+    </svg>
+  </span>
+  <span class="float-cta-label">Diagnóstico Gratuito</span>
+</a>
+
 <nav>
   <a href="#hero" class="nav-logo">FN — Portfolio</a>
   <ul class="nav-links">
@@ -1342,6 +1511,10 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <p class="hero-sub">
       Marketing, gestão e tecnologia aplicados a resultados reais. Diagnóstico preciso, estratégia com lógica de mercado e execução que funciona.
     </p>
+    <a href="tel:+5579998453719" class="hero-phone">
+      <span class="hero-phone-dot"></span>
+      (79) 99984-3719
+    </a>
   </div>
 
   <!-- ProfileCard holográfico -->
@@ -1662,11 +1835,20 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
   </div>
+
+  <!-- CTA ao final dos projetos -->
+  <div class="projetos-cta reveal">
+    <div class="projetos-cta-text">
+      <div class="projetos-cta-headline">Quer um projeto assim?</div>
+      <div class="projetos-cta-sub">Diagnóstico gratuito · Resposta em 24h · (79) 99984-3719</div>
+    </div>
+    <a href="https://wa.me/5579998453719" target="_blank" class="projetos-cta-btn">
+      <span>Falar agora</span>
+      <span>→</span>
+    </a>
+  </div>
+
 </section>
-
-<div class="divider"></div>
-
-<section id="avaliacoes">
 
   <div class="avaliacoes-header reveal">
     <div>
