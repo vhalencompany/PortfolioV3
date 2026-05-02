@@ -2685,18 +2685,13 @@ initDotGrid({containerId:'sobre-dotgrid',trackEl:document.getElementById('sobre'
   var cards = document.querySelectorAll('.servico-card');
   if(!cards.length) return;
 
-  // disable on touch devices
-  if('ontouchstart' in window) return;
-
   cards.forEach(function(card) {
     var bounds;
     var glow = card.querySelector('.servico-glow');
 
-    function onMove(e) {
-      var mouseX = e.clientX;
-      var mouseY = e.clientY;
-      var leftX  = mouseX - bounds.x;
-      var topY   = mouseY - bounds.y;
+    function applyTilt(clientX, clientY) {
+      var leftX = clientX - bounds.x;
+      var topY  = clientY - bounds.y;
       var cx = leftX - bounds.width  / 2;
       var cy = topY  - bounds.height / 2;
       var dist = Math.sqrt(cx * cx + cy * cy);
@@ -2716,26 +2711,48 @@ initDotGrid({containerId:'sobre-dotgrid',trackEl:document.getElementById('sobre'
       if(glow) {
         glow.style.backgroundImage = [
           'radial-gradient(circle at',
-          (leftX) + 'px',
-          (topY)  + 'px,',
+          leftX + 'px',
+          topY  + 'px,',
           'rgba(200,82,42,0.18),',
           'transparent 65%)'
         ].join(' ');
       }
     }
 
-    card.addEventListener('mouseenter', function() {
-      bounds = card.getBoundingClientRect();
-      card.style.transition = 'box-shadow 150ms ease-out';
-      document.addEventListener('mousemove', onMove);
-    });
-
-    card.addEventListener('mouseleave', function() {
-      document.removeEventListener('mousemove', onMove);
+    function resetTilt() {
       card.style.transform = '';
       card.style.transition = 'transform 300ms ease-out, box-shadow 300ms ease-out';
       card.style.boxShadow  = '';
       if(glow) glow.style.backgroundImage = '';
+    }
+
+    // ── Mouse ──
+    function onMouseMove(e) { applyTilt(e.clientX, e.clientY); }
+
+    card.addEventListener('mouseenter', function() {
+      bounds = card.getBoundingClientRect();
+      card.style.transition = 'box-shadow 150ms ease-out';
+      document.addEventListener('mousemove', onMouseMove);
+    });
+    card.addEventListener('mouseleave', function() {
+      document.removeEventListener('mousemove', onMouseMove);
+      resetTilt();
+    });
+
+    // ── Touch ──
+    card.addEventListener('touchstart', function(e) {
+      bounds = card.getBoundingClientRect();
+      card.style.transition = 'box-shadow 150ms ease-out';
+    }, { passive: true });
+
+    card.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      var t = e.touches[0];
+      applyTilt(t.clientX, t.clientY);
+    }, { passive: false });
+
+    card.addEventListener('touchend', function() {
+      resetTilt();
     });
   });
 })();
