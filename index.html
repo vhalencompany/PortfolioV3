@@ -454,16 +454,88 @@ footer {
   font-style: italic;
   font-weight: 700;
   color: transparent;
-  background: linear-gradient(135deg, var(--accent), #e8834a, var(--accent));
+  background-image: linear-gradient(
+    120deg,
+    var(--accent) 0%,
+    var(--accent) 30%,
+    #ffffff 50%,
+    var(--accent) 70%,
+    var(--accent) 100%
+  );
   background-size: 200% auto;
+  background-position: 150% center;
   -webkit-background-clip: text;
   background-clip: text;
-  animation: sobre-shine 4s linear infinite;
+  -webkit-text-fill-color: transparent;
+  animation: shiny-sweep 3s ease-in-out infinite;
+  animation-delay: 0s;
 }
 @keyframes sobre-shine {
   0%   { background-position: 0% center; }
   100% { background-position: 200% center; }
 }
+
+/* ── ShinyText — só nas palavras destacadas <em> ──────────────
+   Replica o efeito ShinyText (reactbits.dev) em CSS puro.
+   background-clip: text move um gradiente sobre o texto.
+   Zero JS, zero bibliotecas, zero peso.
+   ─────────────────────────────────────────────────────────── */
+@keyframes shiny-sweep {
+  0%   { background-position: 150% center; }
+  100% { background-position: -50% center; }
+}
+
+/* Aplica em todos os <em> dentro de títulos de seção */
+.sobre-headline em,
+.processo-title em,
+.servicos-title em,
+.projetos-title em,
+.aval-title em,
+.contato-title em {
+  display: inline-block;
+  background-image: linear-gradient(
+    120deg,
+    var(--accent) 0%,
+    var(--accent) 30%,
+    #ffffff 50%,
+    var(--accent) 70%,
+    var(--accent) 100%
+  );
+  background-size: 200% auto;
+  background-position: 150% center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shiny-sweep 3s ease-in-out infinite;
+  font-style: italic;
+  font-weight: inherit;
+}
+
+/* Versão light — para fundos escuros (processo, avaliacoes, contato) */
+.processo-title em,
+.aval-title em,
+.contato-title em {
+  background-image: linear-gradient(
+    120deg,
+    var(--accent2) 0%,
+    var(--accent2) 30%,
+    #ffffff 50%,
+    var(--accent2) 70%,
+    var(--accent2) 100%
+  );
+  background-size: 200% auto;
+  background-position: 150% center;
+  animation: shiny-sweep 3s ease-in-out infinite;
+}
+
+/* Delays escalonados — não sincronizam */
+.sobre-headline em    { animation-delay: 0s; }
+.processo-title em    { animation-delay: 0.5s; }
+.servicos-title em    { animation-delay: 1s; }
+.projetos-title em    { animation-delay: 1.5s; }
+.aval-title em        { animation-delay: 0.8s; }
+.contato-title em     { animation-delay: 1.3s; }
 
 .sobre-tagline {
   font-family: var(--f-mono);
@@ -752,7 +824,7 @@ footer {
   font-size: clamp(3rem,6vw,6rem); font-weight: 300;
   line-height: 1; letter-spacing: -0.02em;
 }
-.processo-title em { font-style: italic; font-weight: 600; color: var(--accent2); }
+.processo-title em { font-style: italic; font-weight: 600; }
 .processo-desc {
   font-size: 0.85rem; color: rgba(245,242,235,0.45);
   max-width: 280px; line-height: 1.7; text-align: right;
