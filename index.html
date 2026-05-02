@@ -836,34 +836,32 @@ footer {
 .step-card:hover .step-desc { color: rgba(245,242,235,0.62); }
 
 /* ══════════════════════════════════════
-   SERVIÇOS
+   SERVIÇOS — floating 3D tilt cards
 ══════════════════════════════════════ */
 #servicos {
-  padding: 8rem 3rem;
+  padding: 6rem 3rem 5rem;
   background: var(--paper);
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* allow tilt scale to breathe */
 }
 
-/* Watermark number */
+/* Subtle diagonal texture */
 #servicos::before {
-  content: '09';
-  position: absolute; right: 2rem; top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--f-display);
-  font-size: clamp(12rem, 22vw, 20rem);
-  font-weight: 700; line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(10,10,8,0.04);
-  pointer-events: none; user-select: none;
-  letter-spacing: -0.05em;
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    -45deg, transparent, transparent 60px,
+    rgba(10,10,8,0.018) 60px, rgba(10,10,8,0.018) 61px
+  );
+  pointer-events: none; z-index: 0;
 }
 
 .servicos-header {
   display: flex; align-items: flex-end; justify-content: space-between;
-  margin-bottom: 5rem;
-  padding-bottom: 3rem;
+  margin-bottom: 4rem;
+  padding-bottom: 2.5rem;
   border-bottom: 1px solid var(--line);
+  position: relative; z-index: 1;
 }
 .servicos-title {
   font-family: var(--f-display);
@@ -886,61 +884,73 @@ footer {
   line-height: 1.8; text-align: right;
 }
 
-/* ── Grid: 3 colunas, 3 linhas ── */
+/* ── Floating grid ── */
 .servicos-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--line);
+  gap: 1.5rem;
   position: relative; z-index: 1;
+  /* each card needs perspective for 3D tilt */
+  perspective: 1200px;
 }
 
+/* ── Card base ── */
 .servico-card {
-  background: var(--paper);
-  padding: 2.8rem 2.4rem;
-  position: relative; overflow: hidden;
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 2rem 1.8rem;
+  position: relative;
   cursor: default;
-  transition: background 0.35s ease;
-  display: flex; flex-direction: column; gap: 1.4rem;
+  display: flex; flex-direction: column; gap: 1rem;
+  box-shadow: 0 2px 8px rgba(10,10,8,0.07), 0 1px 2px rgba(10,10,8,0.05);
+  /* tilt transition when mouse leaves */
+  transition: transform 300ms ease-out, box-shadow 300ms ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+  overflow: hidden;
 }
 
-/* Top accent line — cresce no hover */
+/* Glow layer — repositioned by JS */
+.servico-glow {
+  position: absolute; inset: 0;
+  border-radius: 16px;
+  background: radial-gradient(circle at 50% -20%, rgba(200,82,42,0.12), transparent 70%);
+  pointer-events: none;
+  transition: opacity 300ms ease;
+  opacity: 0;
+  z-index: 0;
+}
+.servico-card:hover .servico-glow { opacity: 1; }
+
+/* Top accent line */
 .servico-card::before {
   content: '';
-  position: absolute; top: 0; left: 0;
-  height: 2px; width: 0;
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px; border-radius: 16px 16px 0 0;
   background: linear-gradient(to right, var(--accent), var(--accent2));
-  transition: width 0.45s ease;
-  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 2;
 }
-.servico-card:hover::before { width: 100%; }
-
-/* Left bar */
-.servico-card::after {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0;
-  width: 0; background: var(--accent);
-  transition: width 0.3s ease;
-}
-.servico-card:hover::after { width: 3px; }
-
-.servico-card:hover { background: var(--paper2); }
+.servico-card:hover::before { opacity: 1; }
 
 /* Número decorativo */
 .servico-num {
   font-family: var(--f-display);
-  font-size: 0.75rem; font-weight: 700;
+  font-size: 0.7rem; font-weight: 700;
   color: var(--accent); letter-spacing: 0.1em;
   font-style: italic;
+  position: relative; z-index: 1;
 }
 
-/* Ícone / símbolo */
+/* Ícone */
 .servico-icon {
-  font-size: 1.6rem; line-height: 1;
-  color: var(--ink); opacity: 0.15;
-  transition: opacity 0.35s ease, transform 0.35s ease, color 0.35s ease;
+  font-size: 1.4rem; line-height: 1;
+  color: var(--ink); opacity: 0.1;
+  transition: opacity 0.3s ease, transform 0.35s ease, color 0.3s ease;
   display: block;
-  position: absolute; top: 2.4rem; right: 2.4rem;
+  position: absolute; top: 1.8rem; right: 1.8rem;
+  z-index: 1;
 }
 .servico-card:hover .servico-icon {
   opacity: 1; color: var(--accent);
@@ -949,56 +959,53 @@ footer {
 
 .servico-name {
   font-family: var(--f-display);
-  font-size: clamp(1.3rem, 2vw, 1.7rem);
-  font-weight: 600; line-height: 1.05;
+  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+  font-weight: 600; line-height: 1.1;
   letter-spacing: -0.02em; color: var(--ink);
   transition: color 0.3s;
+  position: relative; z-index: 1;
 }
 .servico-card:hover .servico-name { color: var(--accent); }
 
 .servico-desc {
-  font-size: 0.8rem; color: var(--muted);
-  line-height: 1.75; flex: 1;
+  font-size: 0.78rem; color: var(--muted);
+  line-height: 1.7; flex: 1;
+  position: relative; z-index: 1;
 }
 
-/* Tag de destaque dentro do card */
+/* Tag */
 .servico-tag {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: var(--f-mono); font-size: 0.58rem;
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  font-family: var(--f-mono); font-size: 0.56rem;
   letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--accent); border: 1px solid rgba(200,82,42,0.25);
-  padding: 0.35rem 0.8rem; align-self: flex-start;
-  transition: background 0.3s, color 0.3s;
+  color: var(--accent); border: 1px solid rgba(200,82,42,0.22);
+  padding: 0.3rem 0.7rem; align-self: flex-start;
+  border-radius: 3px;
+  transition: background 0.3s, color 0.3s, border-color 0.3s;
+  position: relative; z-index: 1;
 }
-.servico-tag::before {
-  content: '◆'; font-size: 0.4rem;
-}
+.servico-tag::before { content: '◆'; font-size: 0.38rem; }
 .servico-card:hover .servico-tag {
-  background: var(--accent); color: var(--paper);
+  background: var(--accent); color: var(--paper); border-color: var(--accent);
 }
 
-/* Card destacado (Diagnóstico — âncora gratuita) */
+/* ── Destaque card (Diagnóstico) ── */
 .servico-card.destaque {
   background: var(--ink);
+  box-shadow: 0 4px 20px rgba(10,10,8,0.25), 0 2px 6px rgba(10,10,8,0.15);
 }
 .servico-card.destaque .servico-name { color: var(--paper); }
-.servico-card.destaque .servico-desc { color: rgba(245,242,235,0.45); }
+.servico-card.destaque .servico-desc { color: rgba(245,242,235,0.5); }
 .servico-card.destaque .servico-num  { color: var(--accent2); }
-.servico-card.destaque .servico-icon { color: var(--paper); opacity: 0.12; }
-.servico-card.destaque:hover { background: #141410; }
+.servico-card.destaque .servico-icon { color: var(--paper); opacity: 0.1; }
 .servico-card.destaque:hover .servico-name { color: var(--accent2); }
 .servico-card.destaque:hover .servico-icon { color: var(--accent2); opacity: 1; }
-.servico-card.destaque .servico-tag {
-  color: var(--accent2); border-color: rgba(232,201,154,0.3);
+.servico-card.destaque .servico-tag { color: var(--accent2); border-color: rgba(232,201,154,0.3); }
+.servico-card.destaque:hover .servico-tag { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.servico-card.destaque::before { background: linear-gradient(to right, var(--accent2), var(--accent)); }
+.servico-card.destaque .servico-glow {
+  background: radial-gradient(circle at 50% -20%, rgba(200,82,42,0.25), transparent 70%);
 }
-.servico-card.destaque:hover .servico-tag {
-  background: var(--accent); color: var(--paper);
-  border-color: var(--accent);
-}
-.servico-card.destaque::before {
-  background: linear-gradient(to right, var(--accent2), var(--accent));
-}
-.servico-card.destaque::after { background: var(--accent2); }
 
 /* CTA strip abaixo do grid */
 .servicos-cta-strip {
@@ -1035,18 +1042,17 @@ footer {
 .servicos-cta-btn span { position: relative; z-index: 1; }
 .servicos-cta-btn:hover { transform: translateX(4px); }
 
-/* Responsive */
+/* Responsive servicos */
 @media (max-width: 900px) {
-  #servicos { padding: 4rem 1.2rem; }
-  #servicos::before { font-size: 6rem; right: 0; }
+  #servicos { padding: 4rem 1.2rem 3rem; }
   .servicos-header {
     flex-direction: column; align-items: flex-start;
     gap: 0.8rem; margin-bottom: 2.5rem; padding-bottom: 2rem;
   }
   .servicos-title { font-size: clamp(2.2rem, 9vw, 3.5rem); }
   .servicos-sub { text-align: left; max-width: 100%; }
-  .servicos-grid { grid-template-columns: 1fr; }
-  .servico-card { padding: 1.8rem 1.4rem; }
+  .servicos-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .servico-card { padding: 1.6rem 1.4rem; }
   .servicos-cta-strip { flex-direction: column; align-items: flex-start; gap: 1.2rem; padding: 1.5rem 1.2rem; }
   .servicos-cta-btn { width: 100%; justify-content: center; }
 }
@@ -2122,6 +2128,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- 01 — Diagnóstico Estratégico (destaque) -->
     <div class="servico-card destaque reveal">
+      <div class="servico-glow"></div>
       <span class="servico-icon">◎</span>
       <span class="servico-num">01</span>
       <div class="servico-name">Diagnóstico Estratégico</div>
@@ -2131,6 +2138,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- 02 — Posicionamento Digital -->
     <div class="servico-card reveal" style="transition-delay:0.07s">
+      <div class="servico-glow"></div>
       <span class="servico-icon">◈</span>
       <span class="servico-num">02</span>
       <div class="servico-name">Posicionamento Digital</div>
@@ -2140,6 +2148,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- 03 — Sistemas com IA -->
     <div class="servico-card reveal" style="transition-delay:0.14s">
+      <div class="servico-glow"></div>
       <span class="servico-icon">◉</span>
       <span class="servico-num">03</span>
       <div class="servico-name">Sistemas com IA</div>
@@ -2149,6 +2158,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- 04 — Copy de Conversão -->
     <div class="servico-card reveal" style="transition-delay:0.07s">
+      <div class="servico-glow"></div>
       <span class="servico-icon">◇</span>
       <span class="servico-num">04</span>
       <div class="servico-name">Copy de Conversão</div>
@@ -2158,6 +2168,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- 05 — Landing Page & Site -->
     <div class="servico-card reveal" style="transition-delay:0.14s">
+      <div class="servico-glow"></div>
       <span class="servico-icon">▣</span>
       <span class="servico-num">05</span>
       <div class="servico-name">Landing Page & Site</div>
@@ -2167,6 +2178,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- 06 — Roteiros & Estratégia para Vídeos -->
     <div class="servico-card reveal" style="transition-delay:0.21s">
+      <div class="servico-glow"></div>
       <span class="servico-icon">▷</span>
       <span class="servico-num">06</span>
       <div class="servico-name">Roteiros & Estratégia para Vídeos</div>
@@ -2176,6 +2188,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- 07 — Estratégias de Tráfego -->
     <div class="servico-card reveal" style="transition-delay:0.07s">
+      <div class="servico-glow"></div>
       <span class="servico-icon">◐</span>
       <span class="servico-num">07</span>
       <div class="servico-name">Estratégias de Tráfego Pago & Orgânico</div>
@@ -2185,6 +2198,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- 08 — Plano de Ação para Colaboradores -->
     <div class="servico-card reveal" style="transition-delay:0.14s">
+      <div class="servico-glow"></div>
       <span class="servico-icon">◫</span>
       <span class="servico-num">08</span>
       <div class="servico-name">Plano de Ação para Colaboradores</div>
@@ -2194,6 +2208,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- 09 — Guia de Cultura Empresarial -->
     <div class="servico-card reveal" style="transition-delay:0.21s">
+      <div class="servico-glow"></div>
       <span class="servico-icon">◑</span>
       <span class="servico-num">09</span>
       <div class="servico-name">Guia de Cultura Empresarial</div>
@@ -2666,7 +2681,66 @@ function initDotGrid(cfg){
 initDotGrid({containerId:'hero-dotgrid',trackEl:document.getElementById('hero'),dotSize:5,gap:15,baseColor:'#f4f6f7',activeColor:'#c8522a',proximity:120,shockRadius:250,shockStrength:5,returnDuration:1.5,baseOpacity:1});
 initDotGrid({containerId:'sobre-dotgrid',trackEl:document.getElementById('sobre'),dotSize:5,gap:15,baseColor:'#f4f6f7',activeColor:'#c8522a',proximity:120,shockRadius:250,shockStrength:5,returnDuration:1.5,baseOpacity:1});
 
-// ── ANIMATED COUNTERS ──────────────────────────────────────────
+// ── 3D TILT — service cards ────────────────────────────────────
+(function(){
+  var cards = document.querySelectorAll('.servico-card');
+  if(!cards.length) return;
+
+  // disable on touch devices
+  if('ontouchstart' in window) return;
+
+  cards.forEach(function(card) {
+    var bounds;
+    var glow = card.querySelector('.servico-glow');
+
+    function onMove(e) {
+      var mouseX = e.clientX;
+      var mouseY = e.clientY;
+      var leftX  = mouseX - bounds.x;
+      var topY   = mouseY - bounds.y;
+      var cx = leftX - bounds.width  / 2;
+      var cy = topY  - bounds.height / 2;
+      var dist = Math.sqrt(cx * cx + cy * cy);
+
+      card.style.transform = [
+        'scale3d(1.04, 1.04, 1.04)',
+        'rotate3d(',
+          (cy / 120) + ',',
+          (-cx / 120) + ',',
+          '0,',
+          (Math.log(dist + 1) * 1.8) + 'deg',
+        ')'
+      ].join(' ');
+
+      card.style.boxShadow = '0 16px 40px rgba(10,10,8,0.18), 0 4px 12px rgba(10,10,8,0.1)';
+
+      if(glow) {
+        glow.style.backgroundImage = [
+          'radial-gradient(circle at',
+          (leftX) + 'px',
+          (topY)  + 'px,',
+          'rgba(200,82,42,0.18),',
+          'transparent 65%)'
+        ].join(' ');
+      }
+    }
+
+    card.addEventListener('mouseenter', function() {
+      bounds = card.getBoundingClientRect();
+      card.style.transition = 'box-shadow 150ms ease-out';
+      document.addEventListener('mousemove', onMove);
+    });
+
+    card.addEventListener('mouseleave', function() {
+      document.removeEventListener('mousemove', onMove);
+      card.style.transform = '';
+      card.style.transition = 'transform 300ms ease-out, box-shadow 300ms ease-out';
+      card.style.boxShadow  = '';
+      if(glow) glow.style.backgroundImage = '';
+    });
+  });
+})();
+// ──────────────────────────────────────────────────────────────
 (function(){
   var counters = document.querySelectorAll('.stat-num[data-target]');
   if(!counters.length) return;
