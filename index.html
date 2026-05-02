@@ -99,7 +99,7 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
   position: relative;
   z-index: 2;
 }
-#sobre, #projetos {
+#sobre, #projetos, #servicos {
   border-radius: 2rem 2rem 0 0;
   margin-top: -2rem;
   position: relative;
@@ -835,6 +835,222 @@ footer {
 }
 .step-card:hover .step-desc { color: rgba(245,242,235,0.62); }
 
+/* ══════════════════════════════════════
+   SERVIÇOS
+══════════════════════════════════════ */
+#servicos {
+  padding: 8rem 3rem;
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Watermark number */
+#servicos::before {
+  content: '09';
+  position: absolute; right: 2rem; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--f-display);
+  font-size: clamp(12rem, 22vw, 20rem);
+  font-weight: 700; line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(10,10,8,0.04);
+  pointer-events: none; user-select: none;
+  letter-spacing: -0.05em;
+}
+
+.servicos-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 5rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--line);
+}
+.servicos-title {
+  font-family: var(--f-display);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 300; line-height: 0.95;
+  letter-spacing: -0.03em; color: var(--ink);
+}
+.servicos-title em {
+  display: block; font-style: italic; font-weight: 700;
+  color: transparent;
+  background: linear-gradient(135deg, var(--accent), #e8834a, var(--accent));
+  background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text;
+  animation: sobre-shine 4s linear infinite;
+}
+.servicos-sub {
+  font-family: var(--f-mono); font-size: 0.7rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--muted); max-width: 240px;
+  line-height: 1.8; text-align: right;
+}
+
+/* ── Grid: 3 colunas, 3 linhas ── */
+.servicos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  position: relative; z-index: 1;
+}
+
+.servico-card {
+  background: var(--paper);
+  padding: 2.8rem 2.4rem;
+  position: relative; overflow: hidden;
+  cursor: default;
+  transition: background 0.35s ease;
+  display: flex; flex-direction: column; gap: 1.4rem;
+}
+
+/* Top accent line — cresce no hover */
+.servico-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  height: 2px; width: 0;
+  background: linear-gradient(to right, var(--accent), var(--accent2));
+  transition: width 0.45s ease;
+  z-index: 1;
+}
+.servico-card:hover::before { width: 100%; }
+
+/* Left bar */
+.servico-card::after {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 0; background: var(--accent);
+  transition: width 0.3s ease;
+}
+.servico-card:hover::after { width: 3px; }
+
+.servico-card:hover { background: var(--paper2); }
+
+/* Número decorativo */
+.servico-num {
+  font-family: var(--f-display);
+  font-size: 0.75rem; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.1em;
+  font-style: italic;
+}
+
+/* Ícone / símbolo */
+.servico-icon {
+  font-size: 1.6rem; line-height: 1;
+  color: var(--ink); opacity: 0.15;
+  transition: opacity 0.35s ease, transform 0.35s ease, color 0.35s ease;
+  display: block;
+  position: absolute; top: 2.4rem; right: 2.4rem;
+}
+.servico-card:hover .servico-icon {
+  opacity: 1; color: var(--accent);
+  transform: scale(1.15) rotate(-8deg);
+}
+
+.servico-name {
+  font-family: var(--f-display);
+  font-size: clamp(1.3rem, 2vw, 1.7rem);
+  font-weight: 600; line-height: 1.05;
+  letter-spacing: -0.02em; color: var(--ink);
+  transition: color 0.3s;
+}
+.servico-card:hover .servico-name { color: var(--accent); }
+
+.servico-desc {
+  font-size: 0.8rem; color: var(--muted);
+  line-height: 1.75; flex: 1;
+}
+
+/* Tag de destaque dentro do card */
+.servico-tag {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--f-mono); font-size: 0.58rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent); border: 1px solid rgba(200,82,42,0.25);
+  padding: 0.35rem 0.8rem; align-self: flex-start;
+  transition: background 0.3s, color 0.3s;
+}
+.servico-tag::before {
+  content: '◆'; font-size: 0.4rem;
+}
+.servico-card:hover .servico-tag {
+  background: var(--accent); color: var(--paper);
+}
+
+/* Card destacado (Diagnóstico — âncora gratuita) */
+.servico-card.destaque {
+  background: var(--ink);
+}
+.servico-card.destaque .servico-name { color: var(--paper); }
+.servico-card.destaque .servico-desc { color: rgba(245,242,235,0.45); }
+.servico-card.destaque .servico-num  { color: var(--accent2); }
+.servico-card.destaque .servico-icon { color: var(--paper); opacity: 0.12; }
+.servico-card.destaque:hover { background: #141410; }
+.servico-card.destaque:hover .servico-name { color: var(--accent2); }
+.servico-card.destaque:hover .servico-icon { color: var(--accent2); opacity: 1; }
+.servico-card.destaque .servico-tag {
+  color: var(--accent2); border-color: rgba(232,201,154,0.3);
+}
+.servico-card.destaque:hover .servico-tag {
+  background: var(--accent); color: var(--paper);
+  border-color: var(--accent);
+}
+.servico-card.destaque::before {
+  background: linear-gradient(to right, var(--accent2), var(--accent));
+}
+.servico-card.destaque::after { background: var(--accent2); }
+
+/* CTA strip abaixo do grid */
+.servicos-cta-strip {
+  margin-top: 3rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem 2.5rem;
+  border: 1px solid var(--line);
+  position: relative; z-index: 1;
+}
+.servicos-cta-strip-text {
+  font-family: var(--f-display);
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  font-weight: 300; font-style: italic; color: var(--muted);
+}
+.servicos-cta-strip-text strong {
+  font-style: normal; font-weight: 700; color: var(--ink);
+}
+.servicos-cta-btn {
+  display: inline-flex; align-items: center; gap: 0.8rem;
+  background: var(--ink); color: var(--paper);
+  padding: 0.9rem 2rem; flex-shrink: 0;
+  font-family: var(--f-mono); font-size: 0.68rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; position: relative; overflow: hidden;
+  transition: transform 0.2s;
+}
+.servicos-cta-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--accent); transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+.servicos-cta-btn:hover::before { transform: translateX(0); }
+.servicos-cta-btn span { position: relative; z-index: 1; }
+.servicos-cta-btn:hover { transform: translateX(4px); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  #servicos { padding: 4rem 1.2rem; }
+  #servicos::before { font-size: 6rem; right: 0; }
+  .servicos-header {
+    flex-direction: column; align-items: flex-start;
+    gap: 0.8rem; margin-bottom: 2.5rem; padding-bottom: 2rem;
+  }
+  .servicos-title { font-size: clamp(2.2rem, 9vw, 3.5rem); }
+  .servicos-sub { text-align: left; max-width: 100%; }
+  .servicos-grid { grid-template-columns: 1fr; }
+  .servico-card { padding: 1.8rem 1.4rem; }
+  .servicos-cta-strip { flex-direction: column; align-items: flex-start; gap: 1.2rem; padding: 1.5rem 1.2rem; }
+  .servicos-cta-btn { width: 100%; justify-content: center; }
+}
+
 /* PROJETOS */
 #projetos { padding:8rem 3rem; }
 .projetos-header { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:end; margin-bottom:5rem; }
@@ -1419,7 +1635,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     text-decoration: none;
     box-shadow: 0 4px 16px rgba(0,0,0,0.2);
   }
-  #sobre, #processo, #projetos, #avaliacoes, #contato, footer {
+  #sobre, #processo, #projetos, #servicos, #avaliacoes, #contato, footer {
     border-radius: 1.2rem 1.2rem 0 0;
     margin-top: -1.2rem;
   }
@@ -1600,6 +1816,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   <ul class="nav-links">
     <li><a href="#sobre">Sobre</a></li>
     <li><a href="#processo">Processo</a></li>
+    <li><a href="#servicos">Serviços</a></li>
     <li><a href="#projetos">Projetos</a></li>
     <li><a href="#avaliacoes">Avaliações</a></li>
     <li><a href="#contato">Contato</a></li>
@@ -1891,6 +2108,114 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   </div>
 </section>
 
+<!-- ══ SERVIÇOS ══ -->
+<section id="servicos">
+
+  <div class="servicos-header reveal">
+    <h2 class="servicos-title">
+      O que posso<br><em>fazer por você</em>
+    </h2>
+    <p class="servicos-sub">9 serviços. Um objetivo: seu negócio crescendo com clareza.</p>
+  </div>
+
+  <div class="servicos-grid">
+
+    <!-- 01 — Diagnóstico Estratégico (destaque) -->
+    <div class="servico-card destaque reveal">
+      <span class="servico-icon">◎</span>
+      <span class="servico-num">01</span>
+      <div class="servico-name">Diagnóstico Estratégico</div>
+      <p class="servico-desc">Antes de qualquer ação, é preciso entender o problema real. Em 30 minutos, identificamos com clareza onde seu negócio está perdendo dinheiro — e o que fazer a respeito.</p>
+      <span class="servico-tag">Gratuito — 30 min</span>
+    </div>
+
+    <!-- 02 — Posicionamento Digital -->
+    <div class="servico-card reveal" style="transition-delay:0.07s">
+      <span class="servico-icon">◈</span>
+      <span class="servico-num">02</span>
+      <div class="servico-name">Posicionamento Digital</div>
+      <p class="servico-desc">Seu negócio precisa ocupar um lugar claro na cabeça do cliente — antes mesmo de ele te procurar. Definimos sua narrativa, sua voz e a forma como o mercado vai te enxergar.</p>
+      <span class="servico-tag">Autoridade de marca</span>
+    </div>
+
+    <!-- 03 — Sistemas com IA -->
+    <div class="servico-card reveal" style="transition-delay:0.14s">
+      <span class="servico-icon">◉</span>
+      <span class="servico-num">03</span>
+      <div class="servico-name">Sistemas com IA</div>
+      <p class="servico-desc">Tarefas repetitivas consomem tempo que poderia gerar receita. Criamos sistemas que trabalham por você — buscando clientes, triando contatos e comunicando, de forma automática.</p>
+      <span class="servico-tag">Escala sem esforço</span>
+    </div>
+
+    <!-- 04 — Copy de Conversão -->
+    <div class="servico-card reveal" style="transition-delay:0.07s">
+      <span class="servico-icon">◇</span>
+      <span class="servico-num">04</span>
+      <div class="servico-name">Copy de Conversão</div>
+      <p class="servico-desc">A diferença entre um texto que passa batido e um que gera venda está na estrutura — gatilhos certos, sequência lógica e linguagem que fala direto com quem você quer atingir.</p>
+      <span class="servico-tag">Texto que fecha negócio</span>
+    </div>
+
+    <!-- 05 — Landing Page & Site -->
+    <div class="servico-card reveal" style="transition-delay:0.14s">
+      <span class="servico-icon">▣</span>
+      <span class="servico-num">05</span>
+      <div class="servico-name">Landing Page & Site</div>
+      <p class="servico-desc">Uma página bonita que não converte é desperdício. Desenvolvemos com design, copy e velocidade integrados — pensados para transformar visitante em lead, e lead em cliente.</p>
+      <span class="servico-tag">Presença que converte</span>
+    </div>
+
+    <!-- 06 — Roteiros & Estratégia para Vídeos -->
+    <div class="servico-card reveal" style="transition-delay:0.21s">
+      <span class="servico-icon">▷</span>
+      <span class="servico-num">06</span>
+      <div class="servico-name">Roteiros & Estratégia para Vídeos</div>
+      <p class="servico-desc">Vídeo sem estratégia é só imagem em movimento. Criamos roteiros com começo que prende, meio que convence e fim que gera ação — para marketing, posicionamento pessoal ou institucional.</p>
+      <span class="servico-tag">Conteúdo que retém</span>
+    </div>
+
+    <!-- 07 — Estratégias de Tráfego -->
+    <div class="servico-card reveal" style="transition-delay:0.07s">
+      <span class="servico-icon">◐</span>
+      <span class="servico-num">07</span>
+      <div class="servico-name">Estratégias de Tráfego Pago & Orgânico</div>
+      <p class="servico-desc">Impulsionar post não é estratégia. Definimos onde seu dinheiro rende mais, como alcançar as pessoas certas e qual mensagem usar — tanto nos anúncios quanto no conteúdo gratuito.</p>
+      <span class="servico-tag">Visibilidade com retorno</span>
+    </div>
+
+    <!-- 08 — Plano de Ação para Colaboradores -->
+    <div class="servico-card reveal" style="transition-delay:0.14s">
+      <span class="servico-icon">◫</span>
+      <span class="servico-num">08</span>
+      <div class="servico-name">Plano de Ação para Colaboradores</div>
+      <p class="servico-desc">Equipe sem clareza trabalha muito e entrega pouco. Estruturamos planos objetivos para que cada pessoa saiba sua função, sua meta e seu próximo passo — sem depender de você para tudo.</p>
+      <span class="servico-tag">Time que caminha sozinho</span>
+    </div>
+
+    <!-- 09 — Guia de Cultura Empresarial -->
+    <div class="servico-card reveal" style="transition-delay:0.21s">
+      <span class="servico-icon">◑</span>
+      <span class="servico-num">09</span>
+      <div class="servico-name">Guia de Cultura Empresarial</div>
+      <p class="servico-desc">Cultura é o que seu time faz quando ninguém está olhando. Construímos um guia personalizado que define valores reais, comportamentos esperados e a identidade que faz bons profissionais quererem ficar.</p>
+      <span class="servico-tag">Identidade que retém talentos</span>
+    </div>
+
+  </div>
+
+  <!-- CTA strip -->
+  <div class="servicos-cta-strip reveal">
+    <p class="servicos-cta-strip-text">
+      <strong>Não sabe por onde começar?</strong> O diagnóstico gratuito define o caminho certo para o seu caso.
+    </p>
+    <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20seus%20servi%C3%A7os%20no%20portf%C3%B3lio%20e%20quero%20saber%20qual%20faz%20mais%20sentido%20para%20o%20meu%20neg%C3%B3cio." target="_blank" class="servicos-cta-btn">
+      <span>Quero o diagnóstico gratuito</span>
+      <span>→</span>
+    </a>
+  </div>
+
+</section>
+
 <section id="projetos">
   <div class="projetos-header">
     <h2 class="projetos-title reveal">Projetos<br><em>realizados</em></h2>
@@ -2157,6 +2482,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <div class="footer-links">
         <a href="#sobre"      class="footer-link">Sobre</a>
         <a href="#processo"   class="footer-link">Processo</a>
+        <a href="#servicos"   class="footer-link">Serviços</a>
         <a href="#projetos"   class="footer-link">Projetos</a>
         <a href="#avaliacoes" class="footer-link">Avaliações</a>
         <a href="#contato"    class="footer-link">Contato</a>
