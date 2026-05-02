@@ -841,32 +841,29 @@ footer {
 .step-card:hover .step-desc { color: rgba(245,242,235,0.62); }
 
 /* ══════════════════════════════════════
-   SERVIÇOS — floating 3D tilt cards
+   SERVIÇOS — center-mode slider
 ══════════════════════════════════════ */
+:root {
+  --svc-gap: 1rem;
+  --svc-speed: 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --svc-closed: 5rem;
+  --svc-open: 34rem;
+}
+
 #servicos {
-  padding: 6rem 3rem 5rem;
+  padding: 6rem 0 5rem;
   background: var(--paper);
   position: relative;
-  overflow: visible; /* allow tilt scale to breathe */
+  overflow: hidden;
 }
 
-/* Subtle diagonal texture */
-#servicos::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(
-    -45deg, transparent, transparent 60px,
-    rgba(10,10,8,0.018) 60px, rgba(10,10,8,0.018) 61px
-  );
-  pointer-events: none; z-index: 0;
-}
-
-.servicos-header {
+/* Header row */
+.servicos-head {
   display: flex; align-items: flex-end; justify-content: space-between;
-  margin-bottom: 4rem;
+  padding: 0 3rem;
+  margin-bottom: 3rem;
   padding-bottom: 2.5rem;
   border-bottom: 1px solid var(--line);
-  position: relative; z-index: 1;
 }
 .servicos-title {
   font-family: var(--f-display);
@@ -882,138 +879,177 @@ footer {
   -webkit-background-clip: text; background-clip: text;
   animation: sobre-shine 4s linear infinite;
 }
-.servicos-sub {
-  font-family: var(--f-mono); font-size: 0.7rem;
-  letter-spacing: 0.15em; text-transform: uppercase;
-  color: var(--muted); max-width: 240px;
-  line-height: 1.8; text-align: right;
+
+/* Nav buttons */
+.servicos-controls { display: flex; gap: 0.5rem; }
+.svc-nav-btn {
+  width: 2.5rem; height: 2.5rem;
+  border: 1px solid var(--line); border-radius: 50%;
+  background: none; color: var(--ink);
+  font-size: 1.4rem; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.25s, color 0.25s, border-color 0.25s;
+  font-family: var(--f-sans);
+}
+.svc-nav-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.svc-nav-btn:disabled { opacity: 0.25; cursor: default; }
+
+/* Slider wrapper */
+.servicos-slider { overflow: hidden; }
+
+/* Track */
+.servicos-track {
+  display: flex;
+  gap: var(--svc-gap);
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1.5rem 0 2rem;
 }
 
-/* ── Floating grid ── */
-.servicos-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  position: relative; z-index: 1;
-  /* each card needs perspective for 3D tilt */
-  perspective: 1200px;
-}
-
-/* ── Card base ── */
+/* ── Card ── */
 .servico-card {
-  background: var(--ink);
-  border-radius: 16px;
-  padding: 2rem 2rem 1.8rem;
   position: relative;
-  cursor: default;
-  display: flex; flex-direction: column; gap: 1rem;
-  box-shadow: 0 2px 8px rgba(10,10,8,0.07), 0 1px 2px rgba(10,10,8,0.05);
-  transition: transform 300ms ease-out, box-shadow 300ms ease-out;
-  transform-style: preserve-3d;
-  will-change: transform;
+  flex: 0 0 var(--svc-closed);
+  height: 22rem;
+  border-radius: 14px;
   overflow: hidden;
+  cursor: pointer;
+  transition: flex-basis var(--svc-speed), transform var(--svc-speed), box-shadow var(--svc-speed);
+  background: var(--ink);
+}
+.servico-card[active] {
+  flex-basis: var(--svc-open);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(10,10,8,0.25);
 }
 
-/* Glow layer — repositioned by JS */
-.servico-glow {
+/* Subtle grid texture bg */
+.servico-card__bg {
   position: absolute; inset: 0;
-  border-radius: 16px;
-  background: radial-gradient(circle at 50% -20%, rgba(200,82,42,0.12), transparent 70%);
-  pointer-events: none;
-  transition: opacity 300ms ease;
+  background:
+    linear-gradient(rgba(200,82,42,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,82,42,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  animation: grid-drift 10s linear infinite;
   opacity: 0;
-  z-index: 0;
+  transition: opacity 0.4s ease;
 }
-.servico-card:hover .servico-glow { opacity: 1; }
+.servico-card[active] .servico-card__bg { opacity: 1; }
 
-/* Top accent line */
-.servico-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0;
-  height: 2px; border-radius: 16px 16px 0 0;
-  background: linear-gradient(to right, var(--accent), var(--accent2));
-  opacity: 0;
-  transition: opacity 0.35s ease;
+/* Content layout */
+.servico-card__content {
+  position: absolute; inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(transparent 30%, rgba(10,10,8,0.7) 100%);
   z-index: 2;
+  gap: 0.8rem;
 }
-.servico-card:hover::before { opacity: 1; }
 
-/* Número decorativo */
+/* Active: row layout */
+.servico-card[active] .servico-card__content {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem 2.5rem;
+  gap: 2rem;
+  background: linear-gradient(135deg, rgba(200,82,42,0.06) 0%, transparent 60%);
+}
+
+/* Left column — num + icon + name */
+.servico-card__left {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 0.6rem;
+  flex-shrink: 0;
+}
+
 .servico-num {
   font-family: var(--f-display);
   font-size: 0.7rem; font-weight: 700;
-  color: var(--accent2); letter-spacing: 0.1em;
+  color: var(--accent2); letter-spacing: 0.12em;
   font-style: italic;
-  position: relative; z-index: 1;
 }
 
-/* Ícone */
 .servico-icon {
-  font-size: 1.4rem; line-height: 1;
-  color: var(--paper); opacity: 0.1;
-  transition: opacity 0.3s ease, transform 0.35s ease, color 0.3s ease;
-  display: block;
-  position: absolute; top: 1.8rem; right: 1.8rem;
-  z-index: 1;
+  font-size: 1.8rem; line-height: 1;
+  color: var(--paper); opacity: 0.2;
+  transition: opacity 0.4s, color 0.4s, transform 0.4s;
 }
-.servico-card:hover .servico-icon {
-  opacity: 1; color: var(--accent2);
-  transform: scale(1.15) rotate(-8deg);
+.servico-card[active] .servico-icon {
+  opacity: 1; color: var(--accent);
+  transform: scale(1.1);
 }
 
 .servico-name {
   font-family: var(--f-display);
-  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
-  font-weight: 600; line-height: 1.1;
-  letter-spacing: -0.02em; color: var(--paper);
-  transition: color 0.3s;
-  position: relative; z-index: 1;
+  font-size: 0.85rem; font-weight: 600;
+  color: rgba(245,242,235,0.6);
+  text-align: center; line-height: 1.2;
+  letter-spacing: -0.01em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  transition: font-size var(--svc-speed), color var(--svc-speed), writing-mode 0s;
+  max-height: 12rem;
 }
-.servico-card:hover .servico-name { color: var(--accent2); }
+.servico-card[active] .servico-name {
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  color: var(--paper);
+  writing-mode: horizontal-tb;
+  transform: none;
+  text-align: left;
+  max-height: none;
+}
+
+/* Right body — desc + tag (hidden when closed) */
+.servico-card__body {
+  display: none;
+  flex-direction: column;
+  gap: 1.2rem;
+  flex: 1;
+}
+.servico-card[active] .servico-card__body { display: flex; }
 
 .servico-desc {
-  font-size: 0.78rem; color: rgba(245,242,235,0.45);
-  line-height: 1.7; flex: 1;
-  position: relative; z-index: 1;
+  font-size: 0.82rem; color: rgba(245,242,235,0.6);
+  line-height: 1.75;
 }
 
-/* Tag */
 .servico-tag {
   display: inline-flex; align-items: center; gap: 0.45rem;
-  font-family: var(--f-mono); font-size: 0.56rem;
+  font-family: var(--f-mono); font-size: 0.58rem;
   letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--accent2); border: 1px solid rgba(232,201,154,0.25);
-  padding: 0.3rem 0.7rem; align-self: flex-start;
-  border-radius: 3px;
-  transition: background 0.3s, color 0.3s, border-color 0.3s;
-  position: relative; z-index: 1;
+  color: var(--accent2); border: 1px solid rgba(232,201,154,0.3);
+  padding: 0.35rem 0.85rem; border-radius: 3px;
+  align-self: flex-start;
+  transition: background 0.25s, color 0.25s;
 }
 .servico-tag::before { content: '◆'; font-size: 0.38rem; }
-.servico-card:hover .servico-tag {
+.servico-card[active]:hover .servico-tag {
   background: var(--accent); color: var(--paper); border-color: var(--accent);
 }
 
-/* ── Destaque card (Diagnóstico) ── */
-.servico-card.destaque {
-  background: var(--ink);
-  box-shadow: 0 4px 20px rgba(10,10,8,0.25), 0 2px 6px rgba(10,10,8,0.15);
+/* Dots */
+.servicos-dots {
+  display: flex; gap: 0.45rem;
+  justify-content: center;
+  padding: 0.5rem 0 2rem;
 }
-.servico-card.destaque .servico-name { color: var(--paper); }
-.servico-card.destaque .servico-desc { color: rgba(245,242,235,0.5); }
-.servico-card.destaque .servico-num  { color: var(--accent2); }
-.servico-card.destaque .servico-icon { color: var(--paper); opacity: 0.1; }
-.servico-card.destaque:hover .servico-name { color: var(--accent2); }
-.servico-card.destaque:hover .servico-icon { color: var(--accent2); opacity: 1; }
-.servico-card.destaque .servico-tag { color: var(--accent2); border-color: rgba(232,201,154,0.3); }
-.servico-card.destaque:hover .servico-tag { background: var(--accent); color: var(--paper); border-color: var(--accent); }
-.servico-card.destaque::before { background: linear-gradient(to right, var(--accent2), var(--accent)); }
-.servico-card.destaque .servico-glow {
-  background: radial-gradient(circle at 50% -20%, rgba(200,82,42,0.25), transparent 70%);
+.svc-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(10,10,8,0.2);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+.svc-dot.active {
+  background: var(--accent);
+  transform: scale(1.3);
 }
 
-/* CTA strip abaixo do grid */
+/* CTA strip */
 .servicos-cta-strip {
-  margin-top: 3rem;
+  margin: 1rem 3rem 0;
   display: flex; align-items: center; justify-content: space-between;
   gap: 2rem;
   padding: 2rem 2.5rem;
@@ -1046,18 +1082,68 @@ footer {
 .servicos-cta-btn span { position: relative; z-index: 1; }
 .servicos-cta-btn:hover { transform: translateX(4px); }
 
-/* Responsive servicos */
+/* ── Responsive ── */
 @media (max-width: 900px) {
-  #servicos { padding: 4rem 1.2rem 3rem; }
-  .servicos-header {
+  :root { --svc-closed: 4rem; --svc-open: 100%; }
+  #servicos { padding: 4rem 0 3rem; }
+  .servicos-head {
     flex-direction: column; align-items: flex-start;
-    gap: 0.8rem; margin-bottom: 2.5rem; padding-bottom: 2rem;
+    gap: 1rem; padding: 0 1.2rem;
+    margin-bottom: 2rem; padding-bottom: 2rem;
   }
   .servicos-title { font-size: clamp(2.2rem, 9vw, 3.5rem); }
-  .servicos-sub { text-align: left; max-width: 100%; }
-  .servicos-grid { grid-template-columns: 1fr; gap: 1rem; }
-  .servico-card { padding: 1.6rem 1.4rem; }
-  .servicos-cta-strip { flex-direction: column; align-items: flex-start; gap: 1.2rem; padding: 1.5rem 1.2rem; }
+  .servicos-controls { width: 100%; justify-content: flex-end; }
+  .servicos-track {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem 1.2rem 1.5rem;
+    gap: 0.6rem;
+  }
+  .servico-card {
+    height: auto; min-height: 3.8rem;
+    border-radius: 10px; width: 100%;
+  }
+  .servico-card[active] {
+    min-height: 16rem;
+    transform: none;
+    box-shadow: 0 8px 30px rgba(10,10,8,0.2);
+  }
+  .servico-card__content {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 1rem 1.2rem;
+    align-items: center;
+    gap: 1rem;
+    background: none;
+  }
+  .servico-card[active] .servico-card__content {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem 1.4rem;
+    gap: 1rem;
+  }
+  .servico-card__left {
+    flex-direction: row; align-items: center; gap: 0.8rem;
+  }
+  .servico-card[active] .servico-card__left {
+    flex-direction: row; align-items: center;
+  }
+  .servico-name {
+    writing-mode: horizontal-tb;
+    transform: none;
+    font-size: 0.92rem;
+    color: rgba(245,242,235,0.7);
+    text-align: left;
+  }
+  .servico-card[active] .servico-name {
+    font-size: 1.3rem;
+  }
+  .servicos-dots { display: none; }
+  .servicos-cta-strip {
+    flex-direction: column; align-items: flex-start;
+    gap: 1.2rem; padding: 1.5rem 1.2rem;
+    margin: 1rem 1.2rem 0;
+  }
   .servicos-cta-btn { width: 100%; justify-content: center; }
 }
 
@@ -2214,106 +2300,158 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 <!-- ══ SERVIÇOS ══ -->
 <section id="servicos">
 
-  <div class="servicos-header reveal">
+  <div class="servicos-head reveal">
     <h2 class="servicos-title">
       O que posso<br><em>fazer por você</em>
     </h2>
-    <p class="servicos-sub">9 serviços. Um objetivo: seu negócio crescendo com clareza.</p>
+    <div class="servicos-controls">
+      <button id="svcPrev" class="svc-nav-btn" aria-label="Anterior">‹</button>
+      <button id="svcNext" class="svc-nav-btn" aria-label="Próximo">›</button>
+    </div>
   </div>
 
-  <div class="servicos-grid">
+  <div class="servicos-slider">
+    <div class="servicos-track" id="svcTrack">
 
-    <!-- 01 — Diagnóstico Estratégico (destaque) -->
-    <div class="servico-card destaque reveal">
-      <div class="servico-glow"></div>
-      <span class="servico-icon">◎</span>
-      <span class="servico-num">01</span>
-      <div class="servico-name">Diagnóstico Estratégico</div>
-      <p class="servico-desc">Antes de qualquer ação, é preciso entender o problema real. Em 30 minutos, identificamos com clareza onde seu negócio está perdendo dinheiro — e o que fazer a respeito.</p>
-      <span class="servico-tag">Gratuito — 30 min</span>
+      <article class="servico-card" active>
+        <div class="servico-card__bg"></div>
+        <div class="servico-card__content">
+          <div class="servico-card__left">
+            <span class="servico-num">01</span>
+            <span class="servico-icon">◎</span>
+            <div class="servico-name">Diagnóstico<br>Estratégico</div>
+          </div>
+          <div class="servico-card__body">
+            <p class="servico-desc">Antes de qualquer ação, é preciso entender o problema real. Em 30 minutos, identificamos com clareza onde seu negócio está perdendo dinheiro — e o que fazer a respeito.</p>
+            <span class="servico-tag">Gratuito — 30 min</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="servico-card">
+        <div class="servico-card__bg"></div>
+        <div class="servico-card__content">
+          <div class="servico-card__left">
+            <span class="servico-num">02</span>
+            <span class="servico-icon">◈</span>
+            <div class="servico-name">Posicionamento<br>Digital</div>
+          </div>
+          <div class="servico-card__body">
+            <p class="servico-desc">Seu negócio precisa ocupar um lugar claro na cabeça do cliente — antes mesmo de ele te procurar. Definimos sua narrativa, sua voz e a forma como o mercado vai te enxergar.</p>
+            <span class="servico-tag">Autoridade de marca</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="servico-card">
+        <div class="servico-card__bg"></div>
+        <div class="servico-card__content">
+          <div class="servico-card__left">
+            <span class="servico-num">03</span>
+            <span class="servico-icon">◉</span>
+            <div class="servico-name">Sistemas<br>com IA</div>
+          </div>
+          <div class="servico-card__body">
+            <p class="servico-desc">Tarefas repetitivas consomem tempo que poderia gerar receita. Criamos sistemas que trabalham por você — buscando clientes, triando contatos e comunicando, de forma automática.</p>
+            <span class="servico-tag">Escala sem esforço</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="servico-card">
+        <div class="servico-card__bg"></div>
+        <div class="servico-card__content">
+          <div class="servico-card__left">
+            <span class="servico-num">04</span>
+            <span class="servico-icon">◇</span>
+            <div class="servico-name">Copy de<br>Conversão</div>
+          </div>
+          <div class="servico-card__body">
+            <p class="servico-desc">A diferença entre um texto que passa batido e um que gera venda está na estrutura — gatilhos certos, sequência lógica e linguagem que fala direto com quem você quer atingir.</p>
+            <span class="servico-tag">Texto que fecha negócio</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="servico-card">
+        <div class="servico-card__bg"></div>
+        <div class="servico-card__content">
+          <div class="servico-card__left">
+            <span class="servico-num">05</span>
+            <span class="servico-icon">▣</span>
+            <div class="servico-name">Landing Page<br>& Site</div>
+          </div>
+          <div class="servico-card__body">
+            <p class="servico-desc">Uma página bonita que não converte é desperdício. Desenvolvemos com design, copy e velocidade integrados — pensados para transformar visitante em lead, e lead em cliente.</p>
+            <span class="servico-tag">Presença que converte</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="servico-card">
+        <div class="servico-card__bg"></div>
+        <div class="servico-card__content">
+          <div class="servico-card__left">
+            <span class="servico-num">06</span>
+            <span class="servico-icon">▷</span>
+            <div class="servico-name">Roteiros &<br>Vídeos</div>
+          </div>
+          <div class="servico-card__body">
+            <p class="servico-desc">Vídeo sem estratégia é só imagem em movimento. Criamos roteiros com começo que prende, meio que convence e fim que gera ação — para marketing, posicionamento pessoal ou institucional.</p>
+            <span class="servico-tag">Conteúdo que retém</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="servico-card">
+        <div class="servico-card__bg"></div>
+        <div class="servico-card__content">
+          <div class="servico-card__left">
+            <span class="servico-num">07</span>
+            <span class="servico-icon">◐</span>
+            <div class="servico-name">Estratégias<br>de Tráfego</div>
+          </div>
+          <div class="servico-card__body">
+            <p class="servico-desc">Impulsionar post não é estratégia. Definimos onde seu dinheiro rende mais, como alcançar as pessoas certas e qual mensagem usar — tanto nos anúncios quanto no conteúdo gratuito.</p>
+            <span class="servico-tag">Visibilidade com retorno</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="servico-card">
+        <div class="servico-card__bg"></div>
+        <div class="servico-card__content">
+          <div class="servico-card__left">
+            <span class="servico-num">08</span>
+            <span class="servico-icon">◫</span>
+            <div class="servico-name">Plano de Ação<br>Colaboradores</div>
+          </div>
+          <div class="servico-card__body">
+            <p class="servico-desc">Equipe sem clareza trabalha muito e entrega pouco. Estruturamos planos objetivos para que cada pessoa saiba sua função, sua meta e seu próximo passo — sem depender de você para tudo.</p>
+            <span class="servico-tag">Time que caminha sozinho</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="servico-card">
+        <div class="servico-card__bg"></div>
+        <div class="servico-card__content">
+          <div class="servico-card__left">
+            <span class="servico-num">09</span>
+            <span class="servico-icon">◑</span>
+            <div class="servico-name">Cultura<br>Empresarial</div>
+          </div>
+          <div class="servico-card__body">
+            <p class="servico-desc">Cultura é o que seu time faz quando ninguém está olhando. Construímos um guia personalizado que define valores reais, comportamentos esperados e a identidade que faz bons profissionais quererem ficar.</p>
+            <span class="servico-tag">Identidade que retém talentos</span>
+          </div>
+        </div>
+      </article>
+
     </div>
-
-    <!-- 02 — Posicionamento Digital -->
-    <div class="servico-card reveal" style="transition-delay:0.07s">
-      <div class="servico-glow"></div>
-      <span class="servico-icon">◈</span>
-      <span class="servico-num">02</span>
-      <div class="servico-name">Posicionamento Digital</div>
-      <p class="servico-desc">Seu negócio precisa ocupar um lugar claro na cabeça do cliente — antes mesmo de ele te procurar. Definimos sua narrativa, sua voz e a forma como o mercado vai te enxergar.</p>
-      <span class="servico-tag">Autoridade de marca</span>
-    </div>
-
-    <!-- 03 — Sistemas com IA -->
-    <div class="servico-card reveal" style="transition-delay:0.14s">
-      <div class="servico-glow"></div>
-      <span class="servico-icon">◉</span>
-      <span class="servico-num">03</span>
-      <div class="servico-name">Sistemas com IA</div>
-      <p class="servico-desc">Tarefas repetitivas consomem tempo que poderia gerar receita. Criamos sistemas que trabalham por você — buscando clientes, triando contatos e comunicando, de forma automática.</p>
-      <span class="servico-tag">Escala sem esforço</span>
-    </div>
-
-    <!-- 04 — Copy de Conversão -->
-    <div class="servico-card reveal" style="transition-delay:0.07s">
-      <div class="servico-glow"></div>
-      <span class="servico-icon">◇</span>
-      <span class="servico-num">04</span>
-      <div class="servico-name">Copy de Conversão</div>
-      <p class="servico-desc">A diferença entre um texto que passa batido e um que gera venda está na estrutura — gatilhos certos, sequência lógica e linguagem que fala direto com quem você quer atingir.</p>
-      <span class="servico-tag">Texto que fecha negócio</span>
-    </div>
-
-    <!-- 05 — Landing Page & Site -->
-    <div class="servico-card reveal" style="transition-delay:0.14s">
-      <div class="servico-glow"></div>
-      <span class="servico-icon">▣</span>
-      <span class="servico-num">05</span>
-      <div class="servico-name">Landing Page & Site</div>
-      <p class="servico-desc">Uma página bonita que não converte é desperdício. Desenvolvemos com design, copy e velocidade integrados — pensados para transformar visitante em lead, e lead em cliente.</p>
-      <span class="servico-tag">Presença que converte</span>
-    </div>
-
-    <!-- 06 — Roteiros & Estratégia para Vídeos -->
-    <div class="servico-card reveal" style="transition-delay:0.21s">
-      <div class="servico-glow"></div>
-      <span class="servico-icon">▷</span>
-      <span class="servico-num">06</span>
-      <div class="servico-name">Roteiros & Estratégia para Vídeos</div>
-      <p class="servico-desc">Vídeo sem estratégia é só imagem em movimento. Criamos roteiros com começo que prende, meio que convence e fim que gera ação — para marketing, posicionamento pessoal ou institucional.</p>
-      <span class="servico-tag">Conteúdo que retém</span>
-    </div>
-
-    <!-- 07 — Estratégias de Tráfego -->
-    <div class="servico-card reveal" style="transition-delay:0.07s">
-      <div class="servico-glow"></div>
-      <span class="servico-icon">◐</span>
-      <span class="servico-num">07</span>
-      <div class="servico-name">Estratégias de Tráfego Pago & Orgânico</div>
-      <p class="servico-desc">Impulsionar post não é estratégia. Definimos onde seu dinheiro rende mais, como alcançar as pessoas certas e qual mensagem usar — tanto nos anúncios quanto no conteúdo gratuito.</p>
-      <span class="servico-tag">Visibilidade com retorno</span>
-    </div>
-
-    <!-- 08 — Plano de Ação para Colaboradores -->
-    <div class="servico-card reveal" style="transition-delay:0.14s">
-      <div class="servico-glow"></div>
-      <span class="servico-icon">◫</span>
-      <span class="servico-num">08</span>
-      <div class="servico-name">Plano de Ação para Colaboradores</div>
-      <p class="servico-desc">Equipe sem clareza trabalha muito e entrega pouco. Estruturamos planos objetivos para que cada pessoa saiba sua função, sua meta e seu próximo passo — sem depender de você para tudo.</p>
-      <span class="servico-tag">Time que caminha sozinho</span>
-    </div>
-
-    <!-- 09 — Guia de Cultura Empresarial -->
-    <div class="servico-card reveal" style="transition-delay:0.21s">
-      <div class="servico-glow"></div>
-      <span class="servico-icon">◑</span>
-      <span class="servico-num">09</span>
-      <div class="servico-name">Guia de Cultura Empresarial</div>
-      <p class="servico-desc">Cultura é o que seu time faz quando ninguém está olhando. Construímos um guia personalizado que define valores reais, comportamentos esperados e a identidade que faz bons profissionais quererem ficar.</p>
-      <span class="servico-tag">Identidade que retém talentos</span>
-    </div>
-
   </div>
+
+  <div class="servicos-dots" id="svcDots"></div>
 
   <!-- CTA strip -->
   <div class="servicos-cta-strip reveal">
@@ -2806,81 +2944,85 @@ function initDotGrid(cfg){
 initDotGrid({containerId:'hero-dotgrid',trackEl:document.getElementById('hero'),dotSize:5,gap:15,baseColor:'#f4f6f7',activeColor:'#c8522a',proximity:120,shockRadius:250,shockStrength:5,returnDuration:1.5,baseOpacity:1});
 initDotGrid({containerId:'sobre-dotgrid',trackEl:document.getElementById('sobre'),dotSize:5,gap:15,baseColor:'#f4f6f7',activeColor:'#c8522a',proximity:120,shockRadius:250,shockStrength:5,returnDuration:1.5,baseOpacity:1});
 
-// ── 3D TILT — service cards ────────────────────────────────────
+// ── SERVIÇOS SLIDER ───────────────────────────────────────────
 (function(){
-  var cards = document.querySelectorAll('.servico-card');
-  if(!cards.length) return;
+  var track   = document.getElementById('svcTrack');
+  var wrap    = track ? track.parentElement : null;
+  var prev    = document.getElementById('svcPrev');
+  var next    = document.getElementById('svcNext');
+  var dotsBox = document.getElementById('svcDots');
+  if(!track || !wrap) return;
 
-  cards.forEach(function(card) {
-    var bounds;
-    var glow = card.querySelector('.servico-glow');
+  var cards   = Array.from(track.children);
+  var current = 0;
+  var isMobile = function(){ return matchMedia('(max-width:900px)').matches; };
 
-    function applyTilt(clientX, clientY) {
-      var leftX = clientX - bounds.x;
-      var topY  = clientY - bounds.y;
-      var cx = leftX - bounds.width  / 2;
-      var cy = topY  - bounds.height / 2;
-      var dist = Math.sqrt(cx * cx + cy * cy);
-
-      card.style.transform = [
-        'scale3d(1.04, 1.04, 1.04)',
-        'rotate3d(',
-          (cy / 120) + ',',
-          (-cx / 120) + ',',
-          '0,',
-          (Math.log(dist + 1) * 1.8) + 'deg',
-        ')'
-      ].join(' ');
-
-      card.style.boxShadow = '0 16px 40px rgba(10,10,8,0.18), 0 4px 12px rgba(10,10,8,0.1)';
-
-      if(glow) {
-        glow.style.backgroundImage = [
-          'radial-gradient(circle at',
-          leftX + 'px',
-          topY  + 'px,',
-          'rgba(200,82,42,0.18),',
-          'transparent 65%)'
-        ].join(' ');
-      }
-    }
-
-    function resetTilt() {
-      card.style.transform = '';
-      card.style.transition = 'transform 300ms ease-out, box-shadow 300ms ease-out';
-      card.style.boxShadow  = '';
-      if(glow) glow.style.backgroundImage = '';
-    }
-
-    // ── Mouse ──
-    function onMouseMove(e) { applyTilt(e.clientX, e.clientY); }
-
-    card.addEventListener('mouseenter', function() {
-      bounds = card.getBoundingClientRect();
-      card.style.transition = 'box-shadow 150ms ease-out';
-      document.addEventListener('mousemove', onMouseMove);
-    });
-    card.addEventListener('mouseleave', function() {
-      document.removeEventListener('mousemove', onMouseMove);
-      resetTilt();
-    });
-
-    // ── Touch ──
-    card.addEventListener('touchstart', function(e) {
-      bounds = card.getBoundingClientRect();
-      card.style.transition = 'box-shadow 150ms ease-out';
-    }, { passive: true });
-
-    card.addEventListener('touchmove', function(e) {
-      e.preventDefault();
-      var t = e.touches[0];
-      applyTilt(t.clientX, t.clientY);
-    }, { passive: false });
-
-    card.addEventListener('touchend', function() {
-      resetTilt();
-    });
+  // Build dots
+  cards.forEach(function(_, i){
+    var dot = document.createElement('span');
+    dot.className = 'svc-dot';
+    dot.onclick = function(){ activate(i, true); };
+    dotsBox.appendChild(dot);
   });
+  var dots = Array.from(dotsBox.children);
+
+  function center(i){
+    var card = cards[i];
+    if(isMobile()){
+      wrap.scrollTo({ top: card.offsetTop - (wrap.clientHeight/2 - card.clientHeight/2), behavior: 'smooth' });
+    } else {
+      wrap.scrollTo({ left: card.offsetLeft - (wrap.clientWidth/2 - card.clientWidth/2), behavior: 'smooth' });
+    }
+  }
+
+  function toggleUI(i){
+    cards.forEach(function(c, k){ c.toggleAttribute('active', k === i); });
+    dots.forEach(function(d, k){ d.classList.toggle('active', k === i); });
+    if(prev) prev.disabled = (i === 0);
+    if(next) next.disabled = (i === cards.length - 1);
+  }
+
+  function activate(i, scroll){
+    if(i === current && cards[i].hasAttribute('active')) return;
+    current = i;
+    toggleUI(i);
+    if(scroll) center(i);
+  }
+
+  function go(step){
+    activate(Math.min(Math.max(current + step, 0), cards.length - 1), true);
+  }
+
+  if(prev) prev.onclick = function(){ go(-1); };
+  if(next) next.onclick = function(){ go(1); };
+
+  // Keyboard
+  document.addEventListener('keydown', function(e){
+    if(['ArrowRight','ArrowDown'].includes(e.key)) go(1);
+    if(['ArrowLeft','ArrowUp'].includes(e.key)) go(-1);
+  }, { passive: true });
+
+  // Hover (desktop)
+  cards.forEach(function(card, i){
+    card.addEventListener('mouseenter', function(){
+      if(matchMedia('(hover:hover)').matches) activate(i, true);
+    });
+    card.addEventListener('click', function(){ activate(i, true); });
+  });
+
+  // Touch swipe
+  var sx = 0, sy = 0;
+  track.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  track.addEventListener('touchend', function(e){
+    var dx = e.changedTouches[0].clientX - sx;
+    var dy = e.changedTouches[0].clientY - sy;
+    if(isMobile() ? Math.abs(dy) > 50 : Math.abs(dx) > 50)
+      go((isMobile() ? dy : dx) > 0 ? -1 : 1);
+  }, { passive: true });
+
+  window.addEventListener('resize', function(){ center(current); });
+  toggleUI(0);
+  setTimeout(function(){ center(0); }, 100);
 })();
 // ──────────────────────────────────────────────────────────────
 (function(){
