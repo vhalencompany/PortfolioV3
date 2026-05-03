@@ -98,6 +98,7 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
     ),
     linear-gradient(-15deg, rgba(35,75,215,1) -10%, rgba(195,60,190,1) 65%);
   background-size: 120% 120%;
+  background-size: 200% 200%;
   box-shadow: 0 8px 24px -6px rgba(195,60,190,0.45);
   transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
   animation: ig-gradient 5s ease-out infinite;
@@ -1860,6 +1861,25 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     letter-spacing: -0.02em;
   }
   .nav-mobile-drawer a:last-child { border-bottom: none; }
+  .nav-drawer-instagram {
+    background-image: radial-gradient(
+        circle farthest-corner at 0% 150%,
+        rgba(255,225,125,1) 0%,
+        rgba(255,205,105,1) 12%,
+        rgba(250,145,55,1) 25%,
+        rgba(235,65,65,1) 41%,
+        transparent 95%
+      ),
+      linear-gradient(-15deg, rgba(35,75,215,1) -10%, rgba(195,60,190,1) 65%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    animation: ig-gradient 5s ease-out infinite;
+  }
+  .nav-drawer-instagram .nav-drawer-arrow {
+    -webkit-text-fill-color: rgba(245,242,235,0.3);
+  }
   .nav-mobile-drawer a:hover { color: var(--paper); padding-left: 0.5rem; }
   .nav-mobile-drawer a .nav-drawer-arrow {
     font-size: 1rem; opacity: 0.3;
@@ -1880,13 +1900,25 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     display: inline-flex; align-items: center; gap: 0.5rem;
     position: fixed; bottom: 5rem; left: 1.5rem;
     z-index: 500;
-    background: var(--ink); color: var(--paper);
+    background: radial-gradient(
+        circle farthest-corner at 0% 150%,
+        rgba(255,225,125,1) 0%,
+        rgba(255,205,105,1) 12%,
+        rgba(250,145,55,1) 25%,
+        rgba(235,65,65,1) 41%,
+        transparent 95%
+      ),
+      linear-gradient(-15deg, rgba(35,75,215,1) -10%, rgba(195,60,190,1) 65%);
+    background-size: 200% 200%;
+    color: #fff;
     font-family: var(--f-mono); font-size: 0.6rem;
     letter-spacing: 0.1em; text-transform: lowercase;
     padding: 0.6rem 1rem; border-radius: 50px;
     text-decoration: none;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 20px rgba(195,60,190,0.4);
+    animation: ig-gradient 5s ease-out infinite;
   }
+  .nav-instagram-mobile svg { fill: #fff; width: 13px; height: 13px; }
   #sobre, #processo, #projetos, #servicos, #avaliacoes, #contato, footer {
     border-radius: 1.2rem 1.2rem 0 0;
     margin-top: -1.2rem;
@@ -2094,7 +2126,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   <a href="#projetos"   onclick="closeMenu()">Projetos <span class="nav-drawer-arrow">→</span></a>
   <a href="#avaliacoes" onclick="closeMenu()">Avaliações <span class="nav-drawer-arrow">→</span></a>
   <a href="#contato"    onclick="closeMenu()">Contato <span class="nav-drawer-arrow">→</span></a>
-  <a href="https://instagram.com/felipe.f.nunes" target="_blank" onclick="closeMenu()">Instagram <span class="nav-drawer-arrow">→</span></a>
+  <a href="https://instagram.com/felipe.f.nunes" target="_blank" onclick="closeMenu()" class="nav-drawer-instagram">Instagram <span class="nav-drawer-arrow">→</span></a>
 </div>
 
 <!-- HERO -->
