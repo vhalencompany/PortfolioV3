@@ -81,20 +81,45 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 
 /* Instagram nav link */
 .nav-instagram {
-  display: inline-flex; align-items: center; gap: 0.5rem;
+  display: inline-flex; align-items: center; gap: 0.6rem;
   font-family: var(--f-mono); font-size: 0.65rem;
   letter-spacing: 0.1em; text-transform: lowercase;
-  color: var(--muted); text-decoration: none;
-  border: 1px solid var(--line);
-  padding: 0.4rem 0.8rem;
-  transition: all 0.25s ease;
+  color: #fff; text-decoration: none;
+  padding: 0.5rem 1.1rem;
+  border-radius: 10px;
+  border: none;
+  background: radial-gradient(
+      circle farthest-corner at 0% 150%,
+      rgba(255,225,125,1) 0%,
+      rgba(255,205,105,1) 12%,
+      rgba(250,145,55,1) 25%,
+      rgba(235,65,65,1) 41%,
+      transparent 95%
+    ),
+    linear-gradient(-15deg, rgba(35,75,215,1) -10%, rgba(195,60,190,1) 65%);
+  background-size: 120% 120%;
+  box-shadow: 0 8px 24px -6px rgba(195,60,190,0.45);
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  animation: ig-gradient 5s ease-out infinite;
 }
-.nav-instagram svg { flex-shrink: 0; transition: transform 0.3s; }
+.nav-instagram svg {
+  flex-shrink: 0;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  fill: #fff;
+}
 .nav-instagram:hover {
-  border-color: var(--ink);
-  background: var(--ink); color: var(--paper);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 16px 32px -8px rgba(195,60,190,0.55);
+  color: #fff;
 }
-.nav-instagram:hover svg { transform: rotate(-10deg) scale(1.1); }
+.nav-instagram:hover svg { transform: rotate(-10deg) scale(1.15); }
+
+@keyframes ig-gradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .nav-instagram-mobile { display: none; }
 
 /* ── Section curved borders (3D stack effect) ── */
