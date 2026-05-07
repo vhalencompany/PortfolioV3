@@ -1474,6 +1474,21 @@ footer {
   margin-left: auto;
 }
 
+.tf-screenshot {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(245,242,235,0.08);
+  margin-top: 0.4rem;
+}
+.tf-screenshot img {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+.testimonial-featured:hover .tf-screenshot img { opacity: 1; }
+
 /* Mobile */
 @media (max-width: 900px) {
   .testimonial-featured {
@@ -2975,11 +2990,16 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
           <span class="tf-msg-label">Sobre o portfólio</span>
           <p class="tf-msg-text"><strong>Portfólio ficou limpo e direto,</strong> parabéns.</p>
         </div>
+
+        <!-- Screenshot da conversa -->
+        <div class="tf-screenshot">
+          <img src="https://i.ibb.co/VcXhrqy1/Whats-App-Image-2026-05-07-at-18-08-40.jpg" alt="Conversa com Fernando Dasi" />
+        </div>
       </div>
 
       <div class="tf-meta">
         <div class="tf-avatar">
-          <img src="https://i.ibb.co/HTvy7J2p/Whats-App-Image-2026-05-07-at-12-33-17.jpg" alt="Fernando Dasi" style="object-position: center center;" />
+          <img src="https://i.ibb.co/3mLHKpPB/Whats-App-Image-2026-05-07-at-18-23-32.jpg" alt="Fernando Dasi" style="object-position: center top;" />
         </div>
         <div>
           <div class="tf-name">Fernando Dasi</div>
