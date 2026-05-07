@@ -269,6 +269,17 @@ footer {
 
 .hero-sub { font-size:0.95rem; color:var(--muted); line-height:1.7; max-width:420px; font-weight:400; letter-spacing:0.01em; }
 
+.hero-scope {
+  font-family: var(--f-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: 0.9rem;
+  max-width: 420px;
+  opacity: 0.75;
+}
+
 .hero-start-card {
   display: inline-flex;
   align-items: center;
@@ -580,9 +591,14 @@ footer {
   position: relative;
   width: 100%; height: 100%;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+  -webkit-transition: -webkit-transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
 }
-.flip-card-wrap:hover .flip-card-inner { transform: rotateY(180deg); }
+.flip-card-wrap:hover .flip-card-inner {
+  -webkit-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
 
 .flip-front, .flip-back {
   position: absolute; inset: 0;
@@ -590,8 +606,13 @@ footer {
   -webkit-backface-visibility: hidden;
   border: 1px solid var(--line);
   overflow: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
-.flip-back { transform: rotateY(180deg); }
+.flip-back {
+  -webkit-transform: rotateY(180deg) translateZ(0);
+  transform: rotateY(180deg) translateZ(0);
+}
 
 .flip-front {
   background: var(--ink);
@@ -1327,7 +1348,143 @@ footer {
   line-height:1; pointer-events:none; z-index:0;
 }
 
-/* AVALIAÇÕES */
+/* ── Featured testimonial — Fernando Dasi ── */
+.testimonial-featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 0;
+  background: rgba(245,242,235,0.04);
+  border: 1px solid rgba(200,82,42,0.25);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 1.5rem;
+  transition: border-color 0.4s ease, transform 0.3s ease;
+}
+.testimonial-featured:hover {
+  border-color: rgba(200,82,42,0.5);
+  transform: translateY(-4px);
+}
+.testimonial-featured .testimonial-top-line {
+  position: absolute; top: 0; left: 0;
+  height: 2px; width: 0;
+  background: linear-gradient(to right, var(--accent), var(--accent2));
+  transition: width 0.5s ease;
+}
+.testimonial-featured:hover .testimonial-top-line { width: 100%; }
+
+/* Photo side */
+.tf-photo {
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+}
+.tf-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  filter: brightness(0.75) saturate(0.8);
+  transition: filter 0.4s ease, transform 0.5s ease;
+}
+.testimonial-featured:hover .tf-photo img {
+  filter: brightness(0.85) saturate(1);
+  transform: scale(1.03);
+}
+.tf-photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, transparent 60%, rgba(10,10,8,0.95) 100%);
+}
+
+/* Content side */
+.tf-content {
+  padding: 2.5rem 2.5rem 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.tf-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--f-mono); font-size: 0.58rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent2); border: 1px solid rgba(232,201,154,0.3);
+  padding: 0.3rem 0.8rem; border-radius: 3px;
+  align-self: flex-start;
+}
+.tf-badge::before { content: '◆'; font-size: 0.38rem; }
+
+.tf-messages { display: flex; flex-direction: column; gap: 1.2rem; flex: 1; }
+
+.tf-msg {
+  background: rgba(245,242,235,0.05);
+  border: 1px solid rgba(245,242,235,0.08);
+  border-radius: 3px;
+  padding: 1.2rem 1.4rem;
+  position: relative;
+}
+.tf-msg-text {
+  font-family: var(--f-display);
+  font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+  font-weight: 300; line-height: 1.55;
+  color: rgba(245,242,235,0.82);
+}
+.tf-msg-text strong {
+  font-weight: 700; font-style: italic;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.tf-msg-label {
+  font-family: var(--f-mono); font-size: 0.55rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(245,242,235,0.25);
+  margin-bottom: 0.6rem; display: block;
+}
+
+.tf-meta {
+  border-top: 1px solid rgba(245,242,235,0.08);
+  padding-top: 1.2rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.tf-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  overflow: hidden; flex-shrink: 0;
+  border: 1.5px solid rgba(200,82,42,0.4);
+}
+.tf-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.tf-name {
+  font-family: var(--f-sans);
+  font-size: 0.82rem; font-weight: 600;
+  color: var(--paper); letter-spacing: 0.02em;
+}
+.tf-role {
+  font-family: var(--f-mono); font-size: 0.58rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(245,242,235,0.35); margin-top: 0.2rem;
+}
+.tf-verified {
+  width: 16px; height: 16px; flex-shrink: 0;
+  background: #1d9bf0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.55rem; color: #fff; font-weight: 700;
+  margin-left: auto;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .testimonial-featured {
+    grid-template-columns: 1fr;
+  }
+  .tf-photo { min-height: 220px; }
+  .tf-photo-overlay {
+    background: linear-gradient(to bottom, transparent 50%, rgba(10,10,8,0.95) 100%);
+  }
+  .tf-content { padding: 1.8rem 1.4rem; }
+}
 #avaliacoes {
   padding: 8rem 3rem;
   background: var(--ink);
@@ -1548,6 +1705,16 @@ footer {
   font-family: var(--f-mono); font-size: 0.65rem;
   letter-spacing: 0.12em; text-transform: uppercase;
   color: rgba(245,242,235,0.6);
+}
+
+.contato-objection {
+  margin-top: 1.2rem;
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: rgba(245,242,235,0.3);
+  line-height: 1.8;
+  text-transform: uppercase;
 }
 
 .contato-right { display: flex; flex-direction: column; gap: 1rem; }
@@ -2087,7 +2254,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.849L0 24l6.335-1.508A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.371l-.36-.214-3.732.888.935-3.63-.235-.374A9.818 9.818 0 1112 21.818z"/>
     </svg>
   </span>
-  <span class="float-cta-label">Diagnóstico Gratuito</span>
+  <span class="float-cta-label">Quero Crescer</span>
 </a>
 
 <!-- Mobile Instagram button -->
@@ -2149,13 +2316,14 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
     <p class="hero-sub">
-      Marketing, gestão e tecnologia aplicados a resultados reais. Diagnóstico preciso, estratégia com lógica de mercado e execução que funciona.
+      Estratégia, comunicação e tecnologia para negócios que querem crescer em meio às mudanças do mercado — e continuar relevantes quando a concorrência ficar para trás.
     </p>
+    <p class="hero-scope">Sites · Copy · Estratégia · IA · Tráfego · Posicionamento</p>
     <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vim%20pelo%20seu%20portf%C3%B3lio%20e%20quero%20come%C3%A7ar%20%E2%80%94%20como%20voc%C3%AA%20pode%20ajudar%20meu%20neg%C3%B3cio%20a%20crescer%3F" target="_blank" class="hero-start-card">
       <span class="hero-start-dot"></span>
       <span class="hero-start-text">
-        <span class="hero-start-label">Diagnóstico gratuito</span>
-        <span class="hero-start-cta">Quero começar</span>
+        <span class="hero-start-label">30 minutos · Gratuito</span>
+        <span class="hero-start-cta">Quero descobrir meu problema</span>
       </span>
       <span class="hero-start-arrow">→</span>
     </a>
@@ -2195,7 +2363,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   <div class="hero-bottom">
     <span class="hero-scroll">Role para explorar</span>
     <a href="#contato" class="hero-cta">
-      <span>Iniciar Diagnóstico</span>
+      <span>Conversa Gratuita</span>
       <span>→</span>
     </a>
   </div>
@@ -2234,7 +2402,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
               <div class="flip-name">
                 Felipe<br><em>Nunes</em>
               </div>
-              <div class="flip-role">Estrategista digital, 21 anos</div>
+              <div class="flip-role">Estrategista digital — Aracaju, Brasil</div>
             </div>
             <div class="flip-front-bottom">
               <span class="flip-hint">Passe o mouse para saber mais</span>
@@ -2307,7 +2475,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         Trabalho na <strong>interseção entre estratégia e execução</strong> — onde uma ideia bem posicionada encontra as palavras certas e a tecnologia para escalar.
       </p>
       <p class="sobre-detail">
-        Com 21 anos, atuo com <span class="sobre-highlight">diagnóstico de posicionamento</span>, construção de comunicação digital e implementação de soluções com <span class="sobre-highlight">inteligência artificial</span> para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: <em>por que este negócio não está crescendo como deveria?</em>
+        Atuo na interseção entre <span class="sobre-highlight">diagnóstico de posicionamento</span>, construção de comunicação digital e implementação de soluções com <span class="sobre-highlight">inteligência artificial</span> — para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: <em>por que este negócio não está crescendo como deveria?</em>
       </p>
     </div>
 
@@ -2315,15 +2483,15 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <div class="sobre-stats-col reveal" style="transition-delay:0.24s">
       <div class="stat-item">
         <span class="stat-num" data-target="3" data-suffix="+"><span>+</span></span>
-        <span class="stat-label">Projetos entregues</span>
+        <span class="stat-label">Projetos concluídos</span>
       </div>
       <div class="stat-item">
-        <span class="stat-num" data-target="15" data-suffix="d"><span>d</span></span>
-        <span class="stat-label">Prazo médio</span>
+        <span class="stat-num" data-target="7" data-suffix="d"><span>d</span></span>
+        <span class="stat-label">Prazo médio de entrega</span>
       </div>
       <div class="stat-item">
         <span class="stat-num" data-target="100" data-suffix="%"><span>%</span></span>
-        <span class="stat-label">Satisfação dos clientes</span>
+        <span class="stat-label">Clientes satisfeitos</span>
       </div>
       <div class="stat-item">
         <span class="stat-num" data-target="3" data-suffix="×"><span>×</span></span>
@@ -2386,7 +2554,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <span class="step-num">03</span>
       <span class="step-icon">◇</span>
       <span class="step-sep"></span>
-      <div class="step-title">Cópia</div>
+      <div class="step-title">Copy</div>
       <p class="step-desc">Palavras criadas para converter. Títulos que prendem, textos que convencem, CTAs que geram resultado.</p>
     </div>
 
@@ -2572,7 +2740,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <strong>Não sabe por onde começar?</strong> O diagnóstico gratuito define o caminho certo para o seu caso.
     </p>
     <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20seus%20servi%C3%A7os%20no%20portf%C3%B3lio%20e%20quero%20saber%20qual%20faz%20mais%20sentido%20para%20o%20meu%20neg%C3%B3cio." target="_blank" class="servicos-cta-btn">
-      <span>Quero o diagnóstico gratuito</span>
+      <span>Quero entender meu caso</span>
       <span>→</span>
     </a>
   </div>
@@ -2691,7 +2859,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   <div class="projetos-cta reveal">
     <div class="projetos-cta-text">
       <div class="projetos-cta-headline">Quer um projeto assim?</div>
-      <div class="projetos-cta-sub">Diagnóstico gratuito · Resposta em 24h</div>
+      <div class="projetos-cta-sub">Conversa gratuita · Resposta em 24h</div>
     </div>
     <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20seus%20projetos%20no%20portf%C3%B3lio%20e%20quero%20um%20projeto%20assim%20para%20o%20meu%20neg%C3%B3cio.%20Podemos%20conversar%3F" target="_blank" class="projetos-cta-btn">
       <span>Falar agora</span>
@@ -2723,8 +2891,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       </div>
     </div>
     <div class="aval-stat">
-      <span class="aval-stat-num">3</span>
-      <span class="aval-stat-label">Clientes atendidos</span>
+      <span class="aval-stat-num">10+</span>
+      <span class="aval-stat-label">Negócios analisados</span>
     </div>
     <div class="aval-stat">
       <span class="aval-stat-num">3×</span>
@@ -2743,7 +2911,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <div class="testimonial-meta">
         <div>
           <div class="testimonial-role">Varejista de Hortifruti</div>
-          <div class="testimonial-context">Após sessão de diagnóstico estratégico</div>
+          <div class="testimonial-context">Identificou o gargalo exato — clareza imediata para agir e mudar o rumo</div>
         </div>
         <span class="testimonial-num">01</span>
       </div>
@@ -2757,8 +2925,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       </div>
       <div class="testimonial-meta">
         <div>
-          <div class="testimonial-role">Proprietário de Empresa — R$500k+/ano</div>
-          <div class="testimonial-context">Ao analisar estratégia de posicionamento</div>
+          <div class="testimonial-role">Proprietário de Empresa — R$500k+/mês</div>
+          <div class="testimonial-context">Percebeu que o obstáculo era interno — e teve a escolha consciente de mudar</div>
         </div>
         <span class="testimonial-num">02</span>
       </div>
@@ -2773,12 +2941,53 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <div class="testimonial-meta">
         <div>
           <div class="testimonial-role">Advogado</div>
-          <div class="testimonial-context">Sobre o serviço completo entregue</div>
+          <div class="testimonial-context">Sem presença digital — entendeu que visibilidade não é opcional, é sobrevivência</div>
         </div>
         <span class="testimonial-num">03</span>
       </div>
     </div>
 
+  </div>
+
+  <!-- Featured testimonial — Fernando Dasi -->
+  <div class="testimonial-featured reveal" style="transition-delay:0.15s">
+    <div class="testimonial-top-line"></div>
+
+    <!-- Foto dos dois -->
+    <div class="tf-photo">
+      <img src="https://i.ibb.co/ZzMJgSgt/Whats-App-Image-2026-05-07-at-12-52-54.jpg" alt="Fernando Dasi e Felipe Nunes" />
+      <div class="tf-photo-overlay"></div>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="tf-content">
+      <span class="tf-badge">Depoimento verificado</span>
+
+      <div class="tf-messages">
+        <!-- Mensagem 1 — sobre maturidade -->
+        <div class="tf-msg">
+          <span class="tf-msg-label">Sobre o profissional</span>
+          <p class="tf-msg-text">Isso que você escreveu mostra <strong>muita maturidade e visão.</strong> Quem ama o processo e aceita a humilhação no começo, chega longe. Pode ter certeza disso. Continua firme — o que importa é a consistência nos próximos 5 anos.</p>
+        </div>
+
+        <!-- Mensagem 2 — sobre o portfólio -->
+        <div class="tf-msg">
+          <span class="tf-msg-label">Sobre o portfólio</span>
+          <p class="tf-msg-text"><strong>Portfólio ficou limpo e direto,</strong> parabéns.</p>
+        </div>
+      </div>
+
+      <div class="tf-meta">
+        <div class="tf-avatar">
+          <img src="https://i.ibb.co/VcXhrqy1/Whats-App-Image-2026-05-07-at-18-08-40.jpg" alt="Fernando Dasi" />
+        </div>
+        <div>
+          <div class="tf-name">Fernando Dasi</div>
+          <div class="tf-role">Fundador — Growth Supplements</div>
+        </div>
+        <div class="tf-verified">✓</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -2794,6 +3003,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <span class="contato-pill-icon"></span>
       <span class="contato-pill-text">Resposta em até 24 horas</span>
     </div>
+    <p class="contato-objection">Sem compromisso. Conversa franca.<br>30 minutos que mostram onde está o problema.</p>
   </div>
 
   <div class="contato-right reveal" style="transition-delay:0.15s">
@@ -2802,7 +3012,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <div class="contact-link-inner">
         <div>
           <span class="contact-link-label">WhatsApp</span>
-          <span class="contact-link-value">Iniciar Diagnóstico</span>
+          <span class="contact-link-value">Quero crescer — fala comigo</span>
         </div>
         <span class="contact-arrow">→</span>
       </div>
@@ -2930,10 +3140,13 @@ document.querySelectorAll('a,button').forEach(function(el){
   if(!wrap)return;
   wrap.addEventListener('click',function(){
     var inner=wrap.querySelector('.flip-card-inner');
-    if(inner.style.transform==='rotateY(180deg)'){
+    var isFlipped = inner.style.transform === 'rotateY(180deg)' || inner.style.webkitTransform === 'rotateY(180deg)';
+    if(isFlipped){
       inner.style.transform='';
+      inner.style.webkitTransform='';
     }else{
       inner.style.transform='rotateY(180deg)';
+      inner.style.webkitTransform='rotateY(180deg)';
     }
   });
 })();
