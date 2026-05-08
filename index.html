@@ -1736,13 +1736,13 @@ function renderPipelineScreen() {
           </div>
         </div>
         <div class="pl-actions">
-          <select class="pl-status-select" onchange="updatePipelineStatus('${lead.key}', this.value, ${idx})">
+          <select class="pl-status-select" data-key="${lead.key}" onchange="updatePipelineStatus(this.dataset.key, this.value, ${idx})">
             <option value="pending"  ${lead.status==='pending' ?'selected':''}>⬜ Pendente</option>
             <option value="reached"  ${lead.status==='reached' ?'selected':''}>📤 Abordado</option>
             <option value="replied"  ${lead.status==='replied' ?'selected':''}>💬 Respondeu</option>
             <option value="closed"   ${lead.status==='closed'  ?'selected':''}>✅ Fechado</option>
           </select>
-          <button onclick="removeFromPipeline('${lead.key}', ${idx})" title="Remover do pipeline"
+          <button data-key="${lead.key}" onclick="removeFromPipeline(this.dataset.key, ${idx})" title="Remover do pipeline"
             style="background:transparent;border:1px solid rgba(248,113,113,0.2);border-radius:8px;
                    padding:6px 10px;color:var(--red);cursor:pointer;font-size:13px;
                    transition:all 0.2s;flex-shrink:0"
