@@ -1732,6 +1732,35 @@ footer {
   text-transform: uppercase;
 }
 
+.contato-modelo {
+  margin-top: 2rem;
+  padding: 1.4rem 1.6rem;
+  border-left: 2px solid var(--accent);
+  background: rgba(200,82,42,0.05);
+  border-radius: 0 4px 4px 0;
+}
+.contato-modelo-label {
+  font-family: var(--f-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 0.7rem;
+}
+.contato-modelo-text {
+  font-family: var(--f-display);
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(245,242,235,0.6);
+}
+.contato-modelo-text strong {
+  font-weight: 700;
+  font-style: italic;
+  color: var(--paper);
+}
+
 .contato-right { display: flex; flex-direction: column; gap: 1rem; }
 
 .contact-link {
@@ -3024,6 +3053,11 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <span class="contato-pill-text">Resposta em até 24 horas</span>
     </div>
     <p class="contato-objection">Sem compromisso. Conversa franca.<br>30 minutos que mostram onde está o problema.</p>
+
+    <div class="contato-modelo">
+      <span class="contato-modelo-label">Modelo de trabalho</span>
+      <p class="contato-modelo-text">Diagnóstico, estratégia e execução — tudo construído e entregue na sua mão, pronto para funcionar. <strong>O projeto é seu.</strong> Para serviços que fazem sentido em continuidade, o modelo de recorrência pode ser conversado.</p>
+    </div>
   </div>
 
   <div class="contato-right reveal" style="transition-delay:0.15s">
