@@ -696,29 +696,20 @@ footer {
   color: var(--accent); margin-bottom: 1.4rem;
 }
 
-.skill-list { display: flex; flex-direction: column; gap: 1rem; flex: 1; }
-.skill-item { display: flex; flex-direction: column; gap: 0.4rem; }
-.skill-header {
-  display: flex; justify-content: space-between; align-items: center;
+.skill-list { display: flex; flex-direction: column; gap: 0.85rem; flex: 1; }
+.skill-item {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding-bottom: 0.85rem; border-bottom: 1px solid var(--line);
+}
+.skill-item:last-child { border-bottom: none; padding-bottom: 0; }
+.skill-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0;
 }
 .skill-name {
-  font-family: var(--f-mono); font-size: 0.62rem;
-  letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+  font-family: var(--f-mono); font-size: 0.65rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink);
 }
-.skill-pct {
-  font-family: var(--f-mono); font-size: 0.6rem;
-  color: var(--accent); letter-spacing: 0.05em;
-}
-.skill-bar {
-  height: 3px; background: var(--line); border-radius: 2px; overflow: hidden;
-}
-.skill-bar-fill {
-  height: 100%;
-  background: linear-gradient(to right, var(--accent), var(--accent2));
-  border-radius: 2px; width: 0;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.flip-card-wrap:hover .skill-bar-fill { width: var(--w); }
 
 .flip-back-footer {
   padding-top: 1.2rem;
@@ -1295,10 +1286,27 @@ footer {
   justify-content: center;
   padding: 2rem;
   border-right: 1px solid var(--line);
+  position: relative;
 }
 .project-card:nth-child(even) .project-img {
   border-right: none;
   border-left: 1px solid var(--line);
+}
+
+.project-img video {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  transition: transform 0.5s ease, box-shadow 0.4s ease;
+}
+
+.project-card:hover .project-img video {
+  transform: scale(1.02);
+  box-shadow: 0 16px 60px rgba(0,0,0,0.6);
 }
 
 .project-img img {
@@ -2458,39 +2466,24 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
             <div class="flip-back-title">O que eu faço bem</div>
             <div class="skill-list">
               <div class="skill-item">
-                <div class="skill-header">
-                  <span class="skill-name">Diagnóstico estratégico</span>
-                  <span class="skill-pct">100%</span>
-                </div>
-                <div class="skill-bar"><div class="skill-bar-fill" style="--w:100%"></div></div>
+                <span class="skill-dot"></span>
+                <span class="skill-name">Diagnóstico estratégico</span>
               </div>
               <div class="skill-item">
-                <div class="skill-header">
-                  <span class="skill-name">Posicionamento de marca</span>
-                  <span class="skill-pct">95%</span>
-                </div>
-                <div class="skill-bar"><div class="skill-bar-fill" style="--w:95%"></div></div>
+                <span class="skill-dot"></span>
+                <span class="skill-name">Posicionamento de marca</span>
               </div>
               <div class="skill-item">
-                <div class="skill-header">
-                  <span class="skill-name">Copywriting &amp; comunicação</span>
-                  <span class="skill-pct">90%</span>
-                </div>
-                <div class="skill-bar"><div class="skill-bar-fill" style="--w:90%"></div></div>
+                <span class="skill-dot"></span>
+                <span class="skill-name">Copywriting &amp; comunicação</span>
               </div>
               <div class="skill-item">
-                <div class="skill-header">
-                  <span class="skill-name">Tecnologia &amp; IA aplicada</span>
-                  <span class="skill-pct">85%</span>
-                </div>
-                <div class="skill-bar"><div class="skill-bar-fill" style="--w:85%"></div></div>
+                <span class="skill-dot"></span>
+                <span class="skill-name">Tecnologia &amp; IA aplicada</span>
               </div>
               <div class="skill-item">
-                <div class="skill-header">
-                  <span class="skill-name">Execução &amp; entrega</span>
-                  <span class="skill-pct">100%</span>
-                </div>
-                <div class="skill-bar"><div class="skill-bar-fill" style="--w:100%"></div></div>
+                <span class="skill-dot"></span>
+                <span class="skill-name">Execução &amp; entrega</span>
               </div>
             </div>
             <div class="flip-back-footer">
@@ -2801,7 +2794,9 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <!-- 01 — Lead Hunter -->
     <div class="project-card reveal">
       <div class="project-img">
-        <img src="https://i.ibb.co/TDTYWTcx/Captura-de-tela-2026-04-20-110133.png" alt="Lead Hunter" loading="lazy" decoding="async" />
+        <video class="project-video" muted loop playsinline preload="none"
+               poster="https://i.ibb.co/TDTYWTcx/Captura-de-tela-2026-04-20-110133.png"
+               data-video-src="videos/lead-hunter.mp4" aria-label="Lead Hunter"></video>
       </div>
       <div class="project-info">
         <div>
@@ -2834,7 +2829,9 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <!-- 02 — Case de posicionamento pessoal -->
     <div class="project-card reveal" style="transition-delay:0.1s">
       <div class="project-img">
-        <img src="https://i.ibb.co/mr4SJqBp/Captura-de-tela-2026-04-20-110048.png" alt="Posicionamento Pessoal" loading="lazy" decoding="async" />
+        <video class="project-video" muted loop playsinline preload="none"
+               poster="https://i.ibb.co/mr4SJqBp/Captura-de-tela-2026-04-20-110048.png"
+               data-video-src="videos/posicionamento-pessoal.mp4" aria-label="Posicionamento Pessoal"></video>
       </div>
       <div class="project-info">
         <div>
@@ -2867,7 +2864,9 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <!-- 03 — Ótica de Arapiraca -->
     <div class="project-card reveal" style="transition-delay:0.2s">
       <div class="project-img">
-        <img src="https://i.ibb.co/QgymQcD/Captura-de-tela-2026-04-19-213714.png" alt="Ótica Arapiraca" loading="lazy" decoding="async" />
+        <video class="project-video" muted loop playsinline preload="none"
+               poster="https://i.ibb.co/QgymQcD/Captura-de-tela-2026-04-19-213714.png"
+               data-video-src="videos/otica-arapiraca.mp4" aria-label="Ótica Arapiraca"></video>
       </div>
       <div class="project-info">
         <div>
@@ -3447,6 +3446,36 @@ initDotGrid({containerId:'sobre-dotgrid',trackEl:document.getElementById('sobre'
   counterObs.observe(section);
 })();
 // ──────────────────────────────────────────────────────────────
+
+// ── Vídeo de projeto: toca sozinho ao entrar na tela, pausa ao sair ──
+// Funciona igual em desktop e mobile (scroll = "entra na tela" nos dois).
+// O vídeo só é baixado quando o card fica visível pela 1ª vez (preload="none"),
+// então não pesa no carregamento inicial da página.
+// Pra ativar em cada card, preencha o atributo data-video-src="" no HTML
+// com o link do arquivo .mp4 (ex: data-video-src="https://seu-cdn.com/video.mp4").
+// Cards sem link preenchido continuam mostrando só a screenshot (poster).
+(function() {
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('.project-video').forEach(function(video) {
+    var src = video.getAttribute('data-video-src');
+    if (!src || reduceMotion) return;
+
+    var videoObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          if (!video.src) video.src = src;
+          video.play().catch(function() {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.4 });
+
+    videoObs.observe(video);
+  });
+})();
+
 </script>
 </body>
 </html>
