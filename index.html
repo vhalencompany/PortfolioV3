@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Felipe Nunes — Estratégia & Posicionamento Digital</title>
-<meta name="description" content="Felipe Nunes — Estratégia, posicionamento e comunicação digital para negócios que precisam ser vistos, entendidos e escolhidos. Diagnóstico gratuito de 30 minutos.">
+<meta name="description" content="Felipe Nunes — Estratégia, posicionamento e comunicação digital para negócios que precisam ser vistos, entendidos e escolhidos. Diagnóstico Estratégico de 30 minutos.">
 <meta name="author" content="Felipe Nunes">
 <meta name="robots" content="index, follow">
 
@@ -61,6 +61,13 @@
 
 html { scroll-behavior: smooth; }
 body { background: var(--paper); color: var(--ink); font-family: var(--f-sans); overflow-x: hidden; cursor: none; }
+
+/* Barra de rolagem customizada */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; border: 2px solid var(--paper); }
+::-webkit-scrollbar-thumb:hover { background: #a8431f; }
+html { scrollbar-width: thin; scrollbar-color: var(--accent) var(--paper); }
 
 /* CURSOR */
 .cursor { position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; }
@@ -180,6 +187,14 @@ footer {
 }
 
 .hero-bg-text { position:absolute; top:50%; left:50%; transform:translate(-50%, calc(-50% + var(--hero-parallax, 0px))); font-family:var(--f-display); font-size:clamp(8rem,20vw,22rem); font-weight:700; color:transparent; -webkit-text-stroke:1px rgba(10,10,8,0.05); white-space:nowrap; pointer-events:none; user-select:none; letter-spacing:-0.02em; z-index:1; }
+
+.hero-orb {
+  position: absolute; width: 550px; height: 550px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,82,42,0.1) 0%, transparent 70%);
+  top: -120px; right: -80px; pointer-events: none; z-index: 1;
+  animation: hero-orb-drift 9s ease-in-out infinite;
+}
+@keyframes hero-orb-drift { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-35px,50px) scale(1.1)} }
 
 .hero-content { display:flex; flex-direction:column; justify-content:center; padding-top:10rem; position:relative; z-index:2; grid-column:1; grid-row:1; }
 
@@ -379,7 +394,8 @@ footer {
   text-decoration: none; transition: background 0.3s, transform 0.2s;
 }
 .projetos-cta:hover .projetos-cta-btn { background: var(--paper); color: var(--ink); }
-.projetos-cta-btn:hover { transform: translateX(4px); }
+.projetos-cta-btn { transform: translate(var(--mx,0px), var(--my,0px)); }
+.projetos-cta-btn:hover { transform: translate(calc(var(--mx,0px) + 4px), var(--my,0px)); }
 
 .hero-card-col { grid-column:2; grid-row:1; display:flex; align-items:center; justify-content:center; padding-top:6rem; padding-bottom:2rem; position:relative; z-index:3; animation:fadeUp 0.9s ease 0.45s both; }
 
@@ -389,7 +405,7 @@ footer {
 .hero-scroll::after { content:''; display:block; width:60px; height:1px; background:var(--muted); animation:scrollLine 2s ease-in-out infinite; }
 @keyframes scrollLine { 0%,100%{width:60px;opacity:1}50%{width:100px;opacity:0.4} }
 
-.hero-cta { display:inline-flex; align-items:center; gap:0.8rem; background:var(--ink); color:var(--paper); padding:0.9rem 2rem; font-family:var(--f-mono); font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; text-decoration:none; transition:all 0.25s; position:relative; overflow:hidden; }
+.hero-cta { display:inline-flex; align-items:center; gap:0.8rem; background:var(--ink); color:var(--paper); padding:0.9rem 2rem; font-family:var(--f-mono); font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; text-decoration:none; transition:all 0.25s; position:relative; overflow:hidden; transform: translate(var(--mx,0px), var(--my,0px)); }
 .hero-cta::before { content:''; position:absolute; inset:0; background:var(--accent); transform:translateX(-100%); transition:transform 0.3s ease; }
 .hero-cta:hover::before { transform:translateX(0); }
 .hero-cta span { position:relative; z-index:1; }
@@ -1201,7 +1217,8 @@ footer {
 }
 .servicos-cta-btn:hover::before { transform: translateX(0); }
 .servicos-cta-btn span { position: relative; z-index: 1; }
-.servicos-cta-btn:hover { transform: translateX(4px); }
+.servicos-cta-btn { transform: translate(var(--mx,0px), var(--my,0px)); }
+.servicos-cta-btn:hover { transform: translate(calc(var(--mx,0px) + 4px), var(--my,0px)); }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
@@ -1994,7 +2011,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 }
 .float-cta:hover {
   box-shadow: 0 8px 32px rgba(200,82,42,0.55), 0 4px 16px rgba(0,0,0,0.25);
-  transform: translateY(-3px) scale(1.03);
+  transform: translate(var(--mx,0px), calc(var(--my,0px) - 3px)) scale(1.03);
 }
 
 .float-cta-icon {
@@ -2335,7 +2352,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 <div class="cursor cursor-dot"  id="cursorDot"></div>
 
 <!-- Floating WhatsApp CTA -->
-<a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vim%20pelo%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20agendar%20um%20diagn%C3%B3stico%20gratuito%20do%20meu%20neg%C3%B3cio." target="_blank" class="float-cta" aria-label="Iniciar diagnóstico no WhatsApp">
+<a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vim%20pelo%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20agendar%20um%20diagn%C3%B3stico%20estrat%C3%A9gico%20do%20meu%20neg%C3%B3cio." target="_blank" class="float-cta" aria-label="Iniciar diagnóstico no WhatsApp">
   <span class="float-cta-icon">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
@@ -2388,6 +2405,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 <!-- HERO -->
 <section id="hero">
   <div id="hero-dotgrid"></div>
+  <div class="hero-orb"></div>
   <div class="hero-bg-text">NUNES</div>
 
   <div class="hero-content">
@@ -2404,13 +2422,13 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
     <p class="hero-sub">
-      Estratégia, comunicação e tecnologia para negócios que querem crescer em meio às mudanças do mercado — e continuar relevantes quando a concorrência ficar para trás.
+      Estratégia, comunicação e tecnologia para negócios que precisam parar de perder clientes por falta de clareza — e começar a ser a escolha óbvia no seu mercado.
     </p>
     <p class="hero-scope">Sites · Copy · Estratégia · IA · Tráfego · Posicionamento</p>
     <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vim%20pelo%20seu%20portf%C3%B3lio%20e%20quero%20come%C3%A7ar%20%E2%80%94%20como%20voc%C3%AA%20pode%20ajudar%20meu%20neg%C3%B3cio%20a%20crescer%3F" target="_blank" class="hero-start-card">
       <span class="hero-start-dot"></span>
       <span class="hero-start-text">
-        <span class="hero-start-label">30 minutos · Gratuito</span>
+        <span class="hero-start-label">30 min · Sem compromisso</span>
         <span class="hero-start-cta">Quero descobrir meu problema</span>
       </span>
       <span class="hero-start-arrow">→</span>
@@ -2451,7 +2469,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   <div class="hero-bottom">
     <span class="hero-scroll">Role para explorar</span>
     <a href="#contato" class="hero-cta">
-      <span>Conversa Gratuita</span>
+      <span>Iniciar Diagnóstico</span>
       <span>→</span>
     </a>
   </div>
@@ -2522,7 +2540,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
               </div>
             </div>
             <div class="flip-back-footer">
-              <strong>3 projetos entregues.</strong> Todos dentro do prazo, todos satisfeitos.
+              <strong>7+ projetos entregues.</strong> Todos dentro do prazo, todos satisfeitos.
             </div>
           </div>
 
@@ -2547,7 +2565,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         Trabalho na <strong>interseção entre estratégia e execução</strong> — onde uma ideia bem posicionada encontra as palavras certas e a tecnologia para escalar.
       </p>
       <p class="sobre-detail">
-        Atuo na interseção entre <span class="sobre-highlight">diagnóstico de posicionamento</span>, construção de comunicação digital e implementação de soluções com <span class="sobre-highlight">inteligência artificial</span> — para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: <em>por que este negócio não está crescendo como deveria?</em>
+        Na prática, isso une <span class="sobre-highlight">diagnóstico de posicionamento</span>, construção de comunicação digital e implementação de soluções com <span class="sobre-highlight">inteligência artificial</span> — para negócios que precisam ser vistos, entendidos e escolhidos. Cada projeto começa com uma pergunta honesta: <em>por que este negócio não está crescendo como deveria?</em>
       </p>
     </div>
 
@@ -2556,7 +2574,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <div class="stat-item">
         <svg class="stat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l3.5 3.5L16 5.5"/></svg>
         <div class="stat-body">
-          <span class="stat-num" data-target="3" data-suffix="+"><span>+</span></span>
+          <span class="stat-num" data-target="7" data-suffix="+"><span>+</span></span>
           <span class="stat-label">Projetos concluídos</span>
         </div>
       </div>
@@ -2577,8 +2595,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <div class="stat-item">
         <svg class="stat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="6" height="6" rx="1"/><rect x="11.5" y="2.5" width="6" height="6" rx="1"/><rect x="2.5" y="11.5" width="6" height="6" rx="1"/><rect x="11.5" y="11.5" width="6" height="6" rx="1"/></svg>
         <div class="stat-body">
-          <span class="stat-num" data-target="3" data-suffix="×"><span>×</span></span>
-          <span class="stat-label">Setores atendidos</span>
+          <span class="stat-num" data-target="5" data-suffix="+"><span>+</span></span>
+          <span class="stat-label">Nichos trabalhados</span>
         </div>
       </div>
     </div>
@@ -2698,7 +2716,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
           </div>
           <div class="servico-card__body">
             <p class="servico-desc">Antes de qualquer ação, é preciso entender o problema real. Em 30 minutos, identifico com clareza onde seu negócio está perdendo dinheiro — e o que fazer a respeito.</p>
-            <span class="servico-tag">Gratuito — 30 min</span>
+            <span class="servico-tag">30 min · Sem compromisso</span>
           </div>
         </div>
       </article>
@@ -2831,7 +2849,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   <!-- CTA strip -->
   <div class="servicos-cta-strip reveal">
     <p class="servicos-cta-strip-text">
-      <strong>Não sabe por onde começar?</strong> O diagnóstico gratuito define o caminho certo para o seu caso.
+      <strong>Não sabe por onde começar?</strong> O diagnóstico estratégico define o caminho certo para o seu caso.
     </p>
     <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20seus%20servi%C3%A7os%20no%20portf%C3%B3lio%20e%20quero%20saber%20qual%20faz%20mais%20sentido%20para%20o%20meu%20neg%C3%B3cio." target="_blank" class="servicos-cta-btn">
       <span>Quero entender meu caso</span>
@@ -2959,7 +2977,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   <div class="projetos-cta reveal">
     <div class="projetos-cta-text">
       <div class="projetos-cta-headline">Quer um projeto assim?</div>
-      <div class="projetos-cta-sub">Conversa gratuita · Resposta em 24h</div>
+      <div class="projetos-cta-sub">Diagnóstico Estratégico · Resposta em 24h</div>
     </div>
     <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20seus%20projetos%20no%20portf%C3%B3lio%20e%20quero%20um%20projeto%20assim%20para%20o%20meu%20neg%C3%B3cio.%20Podemos%20conversar%3F" target="_blank" class="projetos-cta-btn">
       <span>Falar agora</span>
@@ -2997,8 +3015,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
     <div class="aval-stat">
       <svg class="aval-stat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="6" height="6" rx="1"/><rect x="11.5" y="2.5" width="6" height="6" rx="1"/><rect x="2.5" y="11.5" width="6" height="6" rx="1"/><rect x="11.5" y="11.5" width="6" height="6" rx="1"/></svg>
-      <span class="aval-stat-num">3×</span>
-      <span class="aval-stat-label">Setores diferentes</span>
+      <span class="aval-stat-num">5×</span>
+      <span class="aval-stat-label">Nichos diferentes</span>
     </div>
   </div>
 
@@ -3099,7 +3117,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   <div class="contato-left reveal">
     <div class="contato-tag">Vamos conversar</div>
     <h2 class="contato-title">Vamos<br>construir<br><em>juntos?</em></h2>
-    <p class="contato-sub">Diagnóstico gratuito de 30 minutos para entender onde seu negócio está perdendo dinheiro por falta de posicionamento claro.</p>
+    <p class="contato-sub">Diagnóstico Estratégico de 30 minutos para entender onde seu negócio está perdendo dinheiro por falta de posicionamento claro.</p>
     <div class="contato-pill">
       <span class="contato-pill-icon"></span>
       <span class="contato-pill-text">Resposta em até 24 horas</span>
@@ -3114,7 +3132,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
   <div class="contato-right reveal" style="transition-delay:0.15s">
 
-    <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vim%20pelo%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20iniciar%20um%20diagn%C3%B3stico%20gratuito%20do%20meu%20neg%C3%B3cio." class="contact-link" target="_blank">
+    <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vim%20pelo%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20iniciar%20um%20diagn%C3%B3stico%20estrat%C3%A9gico%20do%20meu%20neg%C3%B3cio." class="contact-link" target="_blank">
       <div class="contact-link-inner">
         <div>
           <span class="contact-link-label">WhatsApp</span>
@@ -3272,6 +3290,44 @@ document.querySelectorAll('.project-card').forEach(function(card){
     });
   }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
   sections.forEach(function(s){ spyObs.observe(s); });
+})();
+
+// botões magnéticos — CTAs reagem discretamente à proximidade do cursor
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!window.matchMedia('(hover: hover)').matches) return; // sem mouse (touch), sem efeito
+  var radius = 70, strength = 0.3;
+  var magnets = document.querySelectorAll('.hero-cta, .projetos-cta-btn, .servicos-cta-btn');
+  document.addEventListener('mousemove', function(e){
+    magnets.forEach(function(el){
+      var rect = el.getBoundingClientRect();
+      var cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+      var dx = e.clientX - cx, dy = e.clientY - cy;
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < radius) {
+        el.style.setProperty('--mx', (dx*strength)+'px');
+        el.style.setProperty('--my', (dy*strength)+'px');
+      } else {
+        el.style.setProperty('--mx', '0px');
+        el.style.setProperty('--my', '0px');
+      }
+    });
+  }, { passive: true });
+
+  var floatBtn = document.querySelector('.float-cta');
+  if (floatBtn) {
+    floatBtn.addEventListener('mousemove', function(e){
+      var rect = floatBtn.getBoundingClientRect();
+      var dx = e.clientX - (rect.left + rect.width/2);
+      var dy = e.clientY - (rect.top + rect.height/2);
+      floatBtn.style.setProperty('--mx', (dx*0.25)+'px');
+      floatBtn.style.setProperty('--my', (dy*0.25)+'px');
+    });
+    floatBtn.addEventListener('mouseleave', function(){
+      floatBtn.style.setProperty('--mx','0px');
+      floatBtn.style.setProperty('--my','0px');
+    });
+  }
 })();
 
 // serviços accordion — clique expande/colapsa (só um aberto por vez)
