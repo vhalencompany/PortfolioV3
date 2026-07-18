@@ -65,7 +65,14 @@ body { background: var(--paper); color: var(--ink); font-family: var(--f-sans); 
 /* CURSOR */
 .cursor { position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; }
 .cursor-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; transform: translate(-50%,-50%); }
-.cursor-ring { width: 36px; height: 36px; border: 1px solid var(--ink); border-radius: 50%; transform: translate(-50%,-50%); transition: all 0.15s ease; }
+.cursor-ring { width: 36px; height: 36px; border: 1px solid var(--ink); border-radius: 50%; transform: translate(-50%,-50%); transition: width 0.25s ease, height 0.25s ease, opacity 0.15s ease, background 0.25s ease; display: flex; align-items: center; justify-content: center; }
+.cursor-label {
+  font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--paper); white-space: nowrap;
+  opacity: 0; transition: opacity 0.2s ease; text-align: center;
+}
+.cursor-ring.has-label { background: var(--ink); }
+.cursor-ring.has-label .cursor-label { opacity: 1; }
 
 /* Hamburguer só aparece no mobile */
 .nav-menu-btn { display: none; }
@@ -78,6 +85,7 @@ nav { position: fixed; top:0; left:0; right:0; z-index:100; display:flex; align-
 .nav-links { display:flex; gap:2.5rem; list-style:none; }
 .nav-links a { font-family:var(--f-mono); font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
 .nav-links a:hover { color:var(--ink); }
+.nav-links a.active-link { color: var(--accent); }
 
 /* Instagram nav link */
 .nav-instagram {
@@ -171,7 +179,7 @@ footer {
   height: 100% !important;
 }
 
-.hero-bg-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:var(--f-display); font-size:clamp(8rem,20vw,22rem); font-weight:700; color:transparent; -webkit-text-stroke:1px rgba(10,10,8,0.05); white-space:nowrap; pointer-events:none; user-select:none; letter-spacing:-0.02em; z-index:1; }
+.hero-bg-text { position:absolute; top:50%; left:50%; transform:translate(-50%, calc(-50% + var(--hero-parallax, 0px))); font-family:var(--f-display); font-size:clamp(8rem,20vw,22rem); font-weight:700; color:transparent; -webkit-text-stroke:1px rgba(10,10,8,0.05); white-space:nowrap; pointer-events:none; user-select:none; letter-spacing:-0.02em; z-index:1; }
 
 .hero-content { display:flex; flex-direction:column; justify-content:center; padding-top:10rem; position:relative; z-index:2; grid-column:1; grid-row:1; }
 
@@ -217,17 +225,6 @@ footer {
   display: inline-block;
 }
 
-#sobre-dotgrid {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.45;
-}
-#sobre-dotgrid canvas {
-  position: absolute;
-  inset: 0;
-}
 #sobre > * { position: relative; z-index: 1; }
 
 .project-result-strip {
@@ -451,16 +448,10 @@ footer {
   overflow: hidden;
 }
 
-#sobre-dotgrid {
-  position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.45;
-}
-#sobre-dotgrid canvas { position: absolute; inset: 0; }
-#sobre > * { position: relative; z-index: 1; }
-
 #sobre::before {
   content: 'FN';
   position: absolute; right: -1rem; top: 50%;
-  transform: translateY(-50%) rotate(-90deg);
+  transform: translateY(calc(-50% + var(--sobre-parallax, 0px))) rotate(-90deg);
   font-family: var(--f-display);
   font-size: clamp(10rem, 20vw, 18rem);
   font-weight: 700; line-height: 1;
@@ -471,8 +462,8 @@ footer {
   letter-spacing: -0.05em;
 }
 @keyframes sobre-drift {
-  0%,100% { transform: translateY(-50%) rotate(-90deg) translateX(0); }
-  50%      { transform: translateY(-52%) rotate(-90deg) translateX(-12px); }
+  0%,100% { transform: translateY(calc(-50% + var(--sobre-parallax, 0px))) rotate(-90deg) translateX(0); }
+  50%      { transform: translateY(calc(-52% + var(--sobre-parallax, 0px))) rotate(-90deg) translateX(-12px); }
 }
 
 .sobre-header {
@@ -742,10 +733,16 @@ footer {
 .stat-item {
   padding: 1.8rem 2rem;
   border-bottom: 1px solid var(--line);
-  display: flex; flex-direction: column; gap: 0.4rem;
+  display: flex; flex-direction: row; align-items: center; gap: 1.1rem;
   position: relative; overflow: hidden;
   transition: background 0.3s;
 }
+.stat-icon {
+  flex-shrink: 0; width: 26px; height: 26px;
+  color: var(--accent); opacity: 0.55;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.stat-item:hover .stat-icon { opacity: 1; transform: scale(1.08); }
 .stat-item::before {
   content: '';
   position: absolute; left: 0; top: 0; bottom: 0;
@@ -756,6 +753,8 @@ footer {
 .stat-item:hover::before { width: 3px; }
 .stat-item:hover { background: var(--paper2); }
 .stat-item:last-child { border-bottom: none; }
+
+.stat-body { display: flex; flex-direction: column; gap: 0.4rem; min-width: 0; }
 
 .stat-num {
   font-family: var(--f-display);
@@ -903,6 +902,36 @@ footer {
 .step-card:hover .step-num {
   -webkit-text-stroke-color: rgba(200,82,42,0.4);
 }
+
+/* Timeline: nó + trilho que "acende" em sequência conforme a seção entra na tela */
+.step-node {
+  position: absolute; top: 0; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--ink);
+  border: 2px solid rgba(245,242,235,0.22);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  z-index: 2; pointer-events: none;
+}
+.step-card.visible .step-node {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(200,82,42,0.18);
+}
+.step-rail {
+  position: absolute; top: -1px; left: -50%;
+  width: 100%; height: 2px;
+  background: rgba(245,242,235,0.12);
+  z-index: 1; pointer-events: none; overflow: hidden;
+}
+.step-card:first-child .step-rail { display: none; }
+.step-rail::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to right, var(--accent), var(--accent2));
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.step-card.visible .step-rail::after { transform: scaleX(1); }
 
 .step-icon {
   font-size: 1.3rem; display: block;
@@ -1549,6 +1578,11 @@ footer {
   border-bottom: 1px solid rgba(245,242,235,0.08);
 }
 .aval-stat { display: flex; flex-direction: column; gap: 0.3rem; }
+.aval-stat-icon {
+  width: 20px; height: 20px; color: var(--accent); opacity: 0.55;
+  margin-bottom: 0.2rem; transition: opacity 0.3s;
+}
+.aval-stat:hover .aval-stat-icon { opacity: 1; }
 .aval-stat-num {
   font-family: var(--f-display); font-size: 2.8rem; font-weight: 700;
   line-height: 1; letter-spacing: -0.04em; color: var(--accent);
@@ -1688,6 +1722,7 @@ footer {
 
 #contato > .contato-left,
 #contato > .contato-right { position: relative; z-index: 1; }
+#contato > .contato-left { position: relative; z-index: 1; }
 
 .contato-title {
   font-family: var(--f-display);
@@ -2221,6 +2256,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   .step-num { font-size:2rem; margin-bottom:1rem; }
   .step-title { font-size:1rem; }
   .step-desc { font-size:0.65rem; }
+  .step-rail, .step-node { display: none; }
 
   #projetos { padding: 4rem 1.2rem; }
   .projetos-header { grid-template-columns: 1fr; gap: 0.8rem; margin-bottom: 3rem; }
@@ -2295,7 +2331,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 </head>
 <body>
 
-<div class="cursor cursor-ring" id="cursorRing"></div>
+<div class="cursor cursor-ring" id="cursorRing"><span class="cursor-label" id="cursorLabel"></span></div>
 <div class="cursor cursor-dot"  id="cursorDot"></div>
 
 <!-- Floating WhatsApp CTA -->
@@ -2424,7 +2460,6 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 <div class="divider"></div>
 
 <section id="sobre">
-  <div id="sobre-dotgrid"></div>
 
   <!-- Header -->
   <div class="sobre-header reveal">
@@ -2519,20 +2554,32 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <!-- Col 3: métricas — data-target controla o counter -->
     <div class="sobre-stats-col reveal" style="transition-delay:0.24s">
       <div class="stat-item">
-        <span class="stat-num" data-target="3" data-suffix="+"><span>+</span></span>
-        <span class="stat-label">Projetos concluídos</span>
+        <svg class="stat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l3.5 3.5L16 5.5"/></svg>
+        <div class="stat-body">
+          <span class="stat-num" data-target="3" data-suffix="+"><span>+</span></span>
+          <span class="stat-label">Projetos concluídos</span>
+        </div>
       </div>
       <div class="stat-item">
-        <span class="stat-num" data-target="7" data-suffix="d"><span>d</span></span>
-        <span class="stat-label">Prazo médio de entrega</span>
+        <svg class="stat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.25"/><path d="M10 6v4.2l3 2"/></svg>
+        <div class="stat-body">
+          <span class="stat-num" data-target="7" data-suffix="d"><span>d</span></span>
+          <span class="stat-label">Prazo médio de entrega</span>
+        </div>
       </div>
       <div class="stat-item">
-        <span class="stat-num" data-target="100" data-suffix="%"><span>%</span></span>
-        <span class="stat-label">Clientes satisfeitos</span>
+        <svg class="stat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.2l1.9 3.9 4.3.6-3.1 3 .7 4.3-3.8-2-3.8 2 .7-4.3-3.1-3 4.3-.6z"/></svg>
+        <div class="stat-body">
+          <span class="stat-num" data-target="100" data-suffix="%"><span>%</span></span>
+          <span class="stat-label">Clientes satisfeitos</span>
+        </div>
       </div>
       <div class="stat-item">
-        <span class="stat-num" data-target="3" data-suffix="×"><span>×</span></span>
-        <span class="stat-label">Setores atendidos</span>
+        <svg class="stat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="6" height="6" rx="1"/><rect x="11.5" y="2.5" width="6" height="6" rx="1"/><rect x="2.5" y="11.5" width="6" height="6" rx="1"/><rect x="11.5" y="11.5" width="6" height="6" rx="1"/></svg>
+        <div class="stat-body">
+          <span class="stat-num" data-target="3" data-suffix="×"><span>×</span></span>
+          <span class="stat-label">Setores atendidos</span>
+        </div>
       </div>
     </div>
 
@@ -2572,6 +2619,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
   <div class="steps-grid">
 
     <div class="step-card reveal">
+      <span class="step-rail" aria-hidden="true"></span>
+      <span class="step-node" aria-hidden="true"></span>
       <span class="step-num">01</span>
       <span class="step-icon">◎</span>
       <span class="step-sep"></span>
@@ -2580,6 +2629,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
     <div class="step-card reveal" style="transition-delay:0.1s">
+      <span class="step-rail" aria-hidden="true"></span>
+      <span class="step-node" aria-hidden="true"></span>
       <span class="step-num">02</span>
       <span class="step-icon">◈</span>
       <span class="step-sep"></span>
@@ -2588,6 +2639,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
     <div class="step-card reveal" style="transition-delay:0.2s">
+      <span class="step-rail" aria-hidden="true"></span>
+      <span class="step-node" aria-hidden="true"></span>
       <span class="step-num">03</span>
       <span class="step-icon">◇</span>
       <span class="step-sep"></span>
@@ -2596,6 +2649,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
     <div class="step-card reveal" style="transition-delay:0.3s">
+      <span class="step-rail" aria-hidden="true"></span>
+      <span class="step-node" aria-hidden="true"></span>
       <span class="step-num">04</span>
       <span class="step-icon">▣</span>
       <span class="step-sep"></span>
@@ -2604,6 +2659,8 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     </div>
 
     <div class="step-card reveal" style="transition-delay:0.4s">
+      <span class="step-rail" aria-hidden="true"></span>
+      <span class="step-node" aria-hidden="true"></span>
       <span class="step-num">05</span>
       <span class="step-icon">◉</span>
       <span class="step-sep"></span>
@@ -2640,7 +2697,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
             <div class="servico-name">Diagnóstico<br>Estratégico</div>
           </div>
           <div class="servico-card__body">
-            <p class="servico-desc">Antes de qualquer ação, é preciso entender o problema real. Em 30 minutos, identificamos com clareza onde seu negócio está perdendo dinheiro — e o que fazer a respeito.</p>
+            <p class="servico-desc">Antes de qualquer ação, é preciso entender o problema real. Em 30 minutos, identifico com clareza onde seu negócio está perdendo dinheiro — e o que fazer a respeito.</p>
             <span class="servico-tag">Gratuito — 30 min</span>
           </div>
         </div>
@@ -2655,7 +2712,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
             <div class="servico-name">Posicionamento<br>Digital</div>
           </div>
           <div class="servico-card__body">
-            <p class="servico-desc">Seu negócio precisa ocupar um lugar claro na cabeça do cliente — antes mesmo de ele te procurar. Definimos sua narrativa, sua voz e a forma como o mercado vai te enxergar.</p>
+            <p class="servico-desc">Seu negócio precisa ocupar um lugar claro na cabeça do cliente — antes mesmo de ele te procurar. Defino sua narrativa, sua voz e a forma como o mercado vai te enxergar.</p>
             <span class="servico-tag">Autoridade de marca</span>
           </div>
         </div>
@@ -2670,7 +2727,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
             <div class="servico-name">Sistemas<br>com IA</div>
           </div>
           <div class="servico-card__body">
-            <p class="servico-desc">Tarefas repetitivas consomem tempo que poderia gerar receita. Criamos sistemas que trabalham por você — buscando clientes, triando contatos e comunicando, de forma automática.</p>
+            <p class="servico-desc">Tarefas repetitivas consomem tempo que poderia gerar receita. Crio sistemas que trabalham por você — buscando clientes, triando contatos e comunicando, de forma automática.</p>
             <span class="servico-tag">Escala sem esforço</span>
           </div>
         </div>
@@ -2700,7 +2757,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
             <div class="servico-name">Landing Page<br>& Site</div>
           </div>
           <div class="servico-card__body">
-            <p class="servico-desc">Uma página bonita que não converte é desperdício. Desenvolvemos com design, copy e velocidade integrados — pensados para transformar visitante em lead, e lead em cliente.</p>
+            <p class="servico-desc">Uma página bonita que não converte é desperdício. Desenvolvo com design, copy e velocidade integrados — pensados para transformar visitante em lead, e lead em cliente.</p>
             <span class="servico-tag">Presença que converte</span>
           </div>
         </div>
@@ -2715,7 +2772,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
             <div class="servico-name">Roteiros &<br>Vídeos</div>
           </div>
           <div class="servico-card__body">
-            <p class="servico-desc">Vídeo sem estratégia é só imagem em movimento. Criamos roteiros com começo que prende, meio que convence e fim que gera ação — para marketing, posicionamento pessoal ou institucional.</p>
+            <p class="servico-desc">Vídeo sem estratégia é só imagem em movimento. Crio roteiros com começo que prende, meio que convence e fim que gera ação — para marketing, posicionamento pessoal ou institucional.</p>
             <span class="servico-tag">Conteúdo que retém</span>
           </div>
         </div>
@@ -2730,7 +2787,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
             <div class="servico-name">Estratégias<br>de Tráfego</div>
           </div>
           <div class="servico-card__body">
-            <p class="servico-desc">Impulsionar post não é estratégia. Definimos onde seu dinheiro rende mais, como alcançar as pessoas certas e qual mensagem usar — tanto nos anúncios quanto no conteúdo gratuito.</p>
+            <p class="servico-desc">Impulsionar post não é estratégia. Defino onde seu dinheiro rende mais, como alcançar as pessoas certas e qual mensagem usar — tanto nos anúncios quanto no conteúdo gratuito.</p>
             <span class="servico-tag">Visibilidade com retorno</span>
           </div>
         </div>
@@ -2745,7 +2802,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
             <div class="servico-name">Plano de Ação<br>Colaboradores</div>
           </div>
           <div class="servico-card__body">
-            <p class="servico-desc">Equipe sem clareza trabalha muito e entrega pouco. Estruturamos planos objetivos para que cada pessoa saiba sua função, sua meta e seu próximo passo — sem depender de você para tudo.</p>
+            <p class="servico-desc">Equipe sem clareza trabalha muito e entrega pouco. Estruturo planos objetivos para que cada pessoa saiba sua função, sua meta e seu próximo passo — sem depender de você para tudo.</p>
             <span class="servico-tag">Time que caminha sozinho</span>
           </div>
         </div>
@@ -2760,7 +2817,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
             <div class="servico-name">Cultura<br>Empresarial</div>
           </div>
           <div class="servico-card__body">
-            <p class="servico-desc">Cultura é o que seu time faz quando ninguém está olhando. Construímos um guia personalizado que define valores reais, comportamentos esperados e a identidade que faz bons profissionais quererem ficar.</p>
+            <p class="servico-desc">Cultura é o que seu time faz quando ninguém está olhando. Construo um guia personalizado que define valores reais, comportamentos esperados e a identidade que faz bons profissionais quererem ficar.</p>
             <span class="servico-tag">Identidade que retém talentos</span>
           </div>
         </div>
@@ -2872,7 +2929,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         <div>
           <div class="project-type">Conversão · Presença Digital · Varejo</div>
           <h3 class="project-name">Página de Conversão — Maior Ótica de Arapiraca</h3>
-          <p class="project-desc">Redes desatualizadas, sem estratégia, com só um botão de WhatsApp e nada mais. Criamos uma página de conversão e posicionamento do zero — presença digital real, atualizada e estruturada para transformar visitante em cliente.</p>
+          <p class="project-desc">Redes desatualizadas, sem estratégia, com só um botão de WhatsApp e nada mais. Criei uma página de conversão e posicionamento do zero — presença digital real, atualizada e estruturada para transformar visitante em cliente.</p>
         </div>
         <div class="project-footer">
           <span class="project-result">"Ficou perfeito, eu tava precisando dar uma atualizada dessa."</span>
@@ -2934,10 +2991,12 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       </div>
     </div>
     <div class="aval-stat">
+      <svg class="aval-stat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M17 17l-4.3-4.3"/></svg>
       <span class="aval-stat-num">10+</span>
       <span class="aval-stat-label">Negócios analisados</span>
     </div>
     <div class="aval-stat">
+      <svg class="aval-stat-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="6" height="6" rx="1"/><rect x="11.5" y="2.5" width="6" height="6" rx="1"/><rect x="2.5" y="11.5" width="6" height="6" rx="1"/><rect x="11.5" y="11.5" width="6" height="6" rx="1"/></svg>
       <span class="aval-stat-num">3×</span>
       <span class="aval-stat-label">Setores diferentes</span>
     </div>
@@ -2949,12 +3008,12 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <div class="testimonial-top-line"></div>
       <div>
         <div class="quote-mark">"</div>
-        <p class="testimonial-text">Você entendeu perfeitamente <strong>o meu negócio.</strong></p>
+        <p class="testimonial-text">Você tocou na ferida. Você realmente <strong>diagnosticou o problema.</strong></p>
       </div>
       <div class="testimonial-meta">
         <div>
-          <div class="testimonial-role">Varejista de Hortifruti</div>
-          <div class="testimonial-context">Identificou o gargalo exato — clareza imediata para agir e mudar o rumo</div>
+          <div class="testimonial-role">Proprietário de Empresa — R$500k+/mês</div>
+          <div class="testimonial-context">Percebeu que o obstáculo era interno — e teve a escolha consciente de mudar</div>
         </div>
         <span class="testimonial-num">01</span>
       </div>
@@ -2964,12 +3023,12 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <div class="testimonial-top-line"></div>
       <div>
         <div class="quote-mark">"</div>
-        <p class="testimonial-text">Você tocou na ferida. Você realmente <strong>diagnosticou o problema.</strong></p>
+        <p class="testimonial-text">Você entendeu perfeitamente <strong>o meu negócio.</strong></p>
       </div>
       <div class="testimonial-meta">
         <div>
-          <div class="testimonial-role">Proprietário de Empresa — R$500k+/mês</div>
-          <div class="testimonial-context">Percebeu que o obstáculo era interno — e teve a escolha consciente de mudar</div>
+          <div class="testimonial-role">Varejista de Hortifruti</div>
+          <div class="testimonial-context">Identificou o gargalo exato — clareza imediata para agir e mudar o rumo</div>
         </div>
         <span class="testimonial-num">02</span>
       </div>
@@ -3004,16 +3063,10 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- Conteúdo -->
     <div class="tf-content">
-      <span class="tf-badge">Depoimento verificado</span>
+      <span class="tf-badge">Feedback de fundador</span>
 
       <div class="tf-messages">
-        <!-- Mensagem 1 — sobre maturidade -->
-        <div class="tf-msg">
-          <span class="tf-msg-label">Sobre o profissional</span>
-          <p class="tf-msg-text">Isso que você escreveu mostra <strong>muita maturidade e visão.</strong> Quem ama o processo e aceita a humilhação no começo, chega longe. Pode ter certeza disso. Continua firme — o que importa é a consistência nos próximos 5 anos.</p>
-        </div>
-
-        <!-- Mensagem 2 — sobre o portfólio -->
+        <!-- Mensagem — sobre o portfólio -->
         <div class="tf-msg">
           <span class="tf-msg-label">Sobre o portfólio</span>
           <p class="tf-msg-text"><strong>Portfólio ficou limpo e direto,</strong> parabéns.</p>
@@ -3172,6 +3225,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 // cursor
 var dot=document.getElementById('cursorDot');
 var ring=document.getElementById('cursorRing');
+var label=document.getElementById('cursorLabel');
 var mouseX=0,mouseY=0,ringX=0,ringY=0;
 document.addEventListener('mousemove',function(e){
   mouseX=e.clientX;mouseY=e.clientY;
@@ -3182,10 +3236,55 @@ document.addEventListener('mousemove',function(e){
   ring.style.left=ringX+'px';ring.style.top=ringY+'px';
   requestAnimationFrame(loop);
 })();
-document.querySelectorAll('a,button').forEach(function(el){
+document.querySelectorAll('a,button,.servico-card').forEach(function(el){
+  if(el.closest('.project-card'))return; // tratado à parte, com rótulo
   el.addEventListener('mouseenter',function(){ring.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.opacity='0.5';});
   el.addEventListener('mouseleave',function(){ring.style.transform='translate(-50%,-50%) scale(1)';ring.style.opacity='1';});
 });
+document.querySelectorAll('.project-card').forEach(function(card){
+  card.addEventListener('mouseenter',function(){
+    ring.style.width='96px';ring.style.height='96px';
+    ring.classList.add('has-label');
+    label.textContent='Ver projeto';
+    dot.style.opacity='0';
+  });
+  card.addEventListener('mouseleave',function(){
+    ring.style.width='36px';ring.style.height='36px';
+    ring.classList.remove('has-label');
+    label.textContent='';
+    dot.style.opacity='1';
+  });
+});
+
+// scrollspy — destaca no menu a seção que está sendo lida no momento
+(function(){
+  var sections = document.querySelectorAll('section[id]');
+  var navLinks = document.querySelectorAll('.nav-links a[href^="#"], .nav-mobile-drawer a[href^="#"]');
+  if(!sections.length || !navLinks.length) return;
+  var spyObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var id = entry.target.getAttribute('id');
+        navLinks.forEach(function(link){
+          link.classList.toggle('active-link', link.getAttribute('href') === '#'+id);
+        });
+      }
+    });
+  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+  sections.forEach(function(s){ spyObs.observe(s); });
+})();
+
+// serviços accordion — clique expande/colapsa (só um aberto por vez)
+(function(){
+  var cards = document.querySelectorAll('.servico-card');
+  cards.forEach(function(card){
+    card.addEventListener('click', function(){
+      var wasActive = card.hasAttribute('active');
+      cards.forEach(function(c){ c.removeAttribute('active'); });
+      if(!wasActive) card.setAttribute('active','');
+    });
+  });
+})();
 
 // flip card touch
 (function(){
@@ -3202,6 +3301,28 @@ document.querySelectorAll('a,button').forEach(function(el){
       inner.style.webkitTransform='rotateY(180deg)';
     }
   });
+})();
+
+// ── Parallax sutil nos textos de fundo decorativos (Hero e Sobre) ──
+// Move o "NUNES" do hero e o "FN" do sobre numa velocidade levemente
+// diferente do scroll normal, criando sensação de profundidade.
+// Desativado para quem prefere menos movimento na tela.
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var heroText=document.querySelector('.hero-bg-text');
+  var sobreEl=document.getElementById('sobre');
+  if(!heroText&&!sobreEl) return;
+  var ticking=false;
+  function updateParallax(){
+    var y=window.scrollY;
+    if(heroText) heroText.style.setProperty('--hero-parallax',(y*0.12)+'px');
+    if(sobreEl) sobreEl.style.setProperty('--sobre-parallax',(y*0.06)+'px');
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){
+    if(!ticking){ requestAnimationFrame(updateParallax); ticking=true; }
+  },{passive:true});
+  updateParallax();
 })();
 
 // scroll reveal
@@ -3256,11 +3377,16 @@ function initDotGrid(cfg){
   var dots=[],mouse={x:-9999,y:-9999},shock=null;
   function hexRgb(h){var c=h.replace('#','');return[parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)];}
   var BR=hexRgb(cfg.baseColor),AR=hexRgb(cfg.activeColor);
-  function buildDots(W,H){
+  function buildDots(W,H,offX,offY){
     dots=[];
     var step=cfg.dotSize+cfg.gap;
-    var cols=Math.ceil(W/step)+1,rows=Math.ceil(H/step)+1;
-    var ox=(W-(cols-1)*step)/2,oy=(H-(rows-1)*step)/2;
+    var cols=Math.ceil(W/step)+2,rows=Math.ceil(H/step)+2;
+    // Fase travada numa grade global da página (em vez de centralizar
+    // dentro da própria seção) — assim, seções vizinhas com dotgrids
+    // separados desenham pontos que continuam exatamente onde o
+    // canvas anterior parou, sem "costura" na transição.
+    var ox=-(((offX%step)+step)%step)-step/2;
+    var oy=-(((offY%step)+step)%step)-step/2;
     for(var r=0;r<rows;r++)for(var c=0;c<cols;c++)
       dots.push({ox:ox+c*step,oy:oy+r*step,x:ox+c*step,y:oy+r*step,vx:0,vy:0,t:0});
   }
@@ -3268,7 +3394,8 @@ function initDotGrid(cfg){
     var W=trackEl.offsetWidth,H=trackEl.offsetHeight;
     if(!W||!H)return;
     canvas.width=W;canvas.height=H;
-    buildDots(W,H);
+    var rect=trackEl.getBoundingClientRect();
+    buildDots(W,H,rect.left+window.scrollX,rect.top+window.scrollY);
   }
   resize();
   window.addEventListener('resize',resize);
@@ -3321,7 +3448,6 @@ function initDotGrid(cfg){
 }
 
 initDotGrid({containerId:'hero-dotgrid',trackEl:document.getElementById('hero'),dotSize:5,gap:15,baseColor:'#f4f6f7',activeColor:'#c8522a',proximity:120,shockRadius:250,shockStrength:5,returnDuration:1.5,baseOpacity:1});
-initDotGrid({containerId:'sobre-dotgrid',trackEl:document.getElementById('sobre'),dotSize:5,gap:15,baseColor:'#f4f6f7',activeColor:'#c8522a',proximity:120,shockRadius:250,shockStrength:5,returnDuration:1.5,baseOpacity:1});
 
 // ── SERVIÇOS SLIDER ───────────────────────────────────────────
 (function(){
@@ -3477,5 +3603,6 @@ initDotGrid({containerId:'sobre-dotgrid',trackEl:document.getElementById('sobre'
 })();
 
 </script>
+
 </body>
 </html>
