@@ -23,10 +23,41 @@
 
 <!-- Favicon SVG inline -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0a08' rx='6'/><text x='50%' y='50%' dominant-baseline='central' text-anchor='middle' font-family='Georgia,serif' font-size='14' font-weight='700' font-style='italic' fill='%23c8522a'>FN</text></svg>">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<!-- O avatar do cartão do hero é o maior elemento da primeira dobra, ou
+     seja, é ele que o LCP mede. Avisado aqui, o navegador começa a
+     buscá-lo antes de terminar de ler a página. -->
+<link rel="preload" as="image" href="imagens/felipe.webp">
+
+<!-- Estas três aparecem na primeira dobra. `crossorigin` é obrigatório
+     mesmo sendo do próprio domínio: requisição de fonte é sempre
+     anônima, e sem isso o navegador baixa o arquivo duas vezes. -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fontes/syne-variavel.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fontes/cormorant-garamond-variavel.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="fontes/dm-mono-400.woff2">
+
+<style>
+/* ── AS FONTES MORAM AQUI DENTRO ─────────────────────────────────
+   Antes vinham do Google, e o PageSpeed media 2.040 ms parados nisso.
+   Eram DOIS apertos de mão com servidores de fora antes da primeira
+   letra: DNS, TCP e TLS no fonts.googleapis.com para buscar a folha, e
+   tudo de novo no fonts.gstatic.com para buscar os arquivos.
+
+   E eram 14 ARQUIVOS, 436 KB, porque a página pedia peso por peso.
+   Pedindo a versão VARIÁVEL, cada família vira um arquivo só com todos
+   os pesos dentro: 6 arquivos, 152 KB. O DM Mono continua em três
+   porque não existe versão variável dele.
+
+   As três são SIL Open Font License, que permite redistribuir com uma
+   condição: o texto da licença acompanha os arquivos. Está em
+   fontes/OFL.txt e **precisa continuar lá**. */
+@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:300 700;font-display:swap;src:url('fontes/cormorant-garamond-italico-variavel.woff2') format('woff2');}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:300 700;font-display:swap;src:url('fontes/cormorant-garamond-variavel.woff2') format('woff2');}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:300;font-display:swap;src:url('fontes/dm-mono-300.woff2') format('woff2');}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:400;font-display:swap;src:url('fontes/dm-mono-400.woff2') format('woff2');}
+@font-face{font-family:'DM Mono';font-style:normal;font-weight:500;font-display:swap;src:url('fontes/dm-mono-500.woff2') format('woff2');}
+@font-face{font-family:'Syne';font-style:normal;font-weight:400 800;font-display:swap;src:url('fontes/syne-variavel.woff2') format('woff2');}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
   --ink: #0a0a08;
@@ -2444,7 +2475,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
           <div class="pc-inside"></div>
           <div class="pc-avatar-content">
             <img class="avatar"
-              src="https://i.ibb.co/hxdfqFr5/E5-A76-EBE-350-B-41-F1-8-B21-CD40-E1-A51745.jpg"
+              src="imagens/felipe.webp"
               alt="Felipe Nunes" />
           </div>
           <div class="pc-shine"></div>
@@ -2452,7 +2483,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
           <div class="pc-user-info">
             <div class="pc-user-details">
               <div class="pc-mini-avatar">
-                <img src="https://i.ibb.co/hxdfqFr5/E5-A76-EBE-350-B-41-F1-8-B21-CD40-E1-A51745.jpg" alt="FN" />
+                <img src="imagens/felipe.webp" alt="FN" />
               </div>
               <div class="pc-user-text">
                 <span class="pc-handle">Felipe Nunes</span>
@@ -2870,7 +2901,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <div class="project-card reveal">
       <div class="project-img">
         <video class="project-video" muted loop playsinline preload="none"
-               poster="https://i.ibb.co/TDTYWTcx/Captura-de-tela-2026-04-20-110133.png"
+               poster="imagens/poster-lead-hunter.webp"
                data-video-src="videos/lead-hunter.mp4" aria-label="Lead Hunter"></video>
       </div>
       <div class="project-info">
@@ -2905,7 +2936,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <div class="project-card reveal" style="transition-delay:0.1s">
       <div class="project-img">
         <video class="project-video" muted loop playsinline preload="none"
-               poster="https://i.ibb.co/mr4SJqBp/Captura-de-tela-2026-04-20-110048.png"
+               poster="imagens/poster-posicionamento.webp"
                data-video-src="videos/posicionamento-pessoal.mp4" aria-label="Posicionamento Pessoal"></video>
       </div>
       <div class="project-info">
@@ -2940,7 +2971,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
     <div class="project-card reveal" style="transition-delay:0.2s">
       <div class="project-img">
         <video class="project-video" muted loop playsinline preload="none"
-               poster="https://i.ibb.co/QgymQcD/Captura-de-tela-2026-04-19-213714.png"
+               poster="imagens/poster-otica.webp"
                data-video-src="videos/otica-arapiraca.mp4" aria-label="Ótica Arapiraca"></video>
       </div>
       <div class="project-info">
@@ -2968,6 +2999,47 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
       <div class="result-item">
         <span class="result-label">Resultado</span>
         <span class="result-value">Conversão maior, presença atualizada e profissional</span>
+      </div>
+    </div>
+
+    <!-- 04 — Eduarda Magalhães -->
+    <div class="project-card reveal" style="transition-delay:0.3s">
+      <div class="project-img">
+        <!-- pôster local, ao contrário dos outros três que usam i.ibb.co:
+             um a menos dependendo de servidor de terceiro estar no ar -->
+        <video class="project-video" muted loop playsinline preload="none"
+               poster="videos/eduarda-magalhaes-poster.jpg"
+               data-video-src="videos/eduarda-magalhaes.mp4" aria-label="Eduarda Magalhães"></video>
+      </div>
+      <div class="project-info">
+        <div>
+          <div class="project-type">Site · Portfólio · UGC e Social Media</div>
+          <h3 class="project-name">Eduarda Magalhães — Portfólio para criadora de conteúdo</h3>
+          <p class="project-desc">Ela tinha só o perfil no Instagram e nenhum lugar para onde mandar quem pedia orçamento. Construí um site de uma página que mostra o trabalho com prints reais do perfil, explica como ela trabalha e leva direto para o direct — sem formulário e sem intermediário.</p>
+        </div>
+        <div class="project-footer">
+          <!-- ⚠️ TROCAR QUANDO ELA MANDAR UMA FRASE. Os outros três
+               cases têm citação de cliente de verdade; esta aqui é uma
+               afirmação sobre a entrega, não uma citação, justamente
+               para não inventar depoimento que não existe. -->
+          <span class="project-result">Site no ar e editável por ela mesma — sem build, sem programador.</span>
+          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20projeto%20da%20Eduarda%20Magalh%C3%A3es%20no%20seu%20portf%C3%B3lio%20e%20quero%20um%20site%20assim%20para%20o%20meu%20neg%C3%B3cio." target="_blank" class="project-arrow">→</a>
+        </div>
+      </div>
+      <span class="project-num">04</span>
+    </div>
+    <div class="project-result-strip reveal">
+      <div class="result-item">
+        <span class="result-label">Problema</span>
+        <span class="result-value">Só o perfil no Instagram — nada para mandar a quem pedia orçamento</span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Solução</span>
+        <span class="result-value">Uma página com <em>prova real do trabalho</em> e caminho direto para o direct</span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">Resultado</span>
+        <span class="result-value">No ar, rápida no celular e editável sem depender de programador</span>
       </div>
     </div>
 
@@ -3075,7 +3147,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
     <!-- Foto dos dois -->
     <div class="tf-photo">
-      <img src="https://i.ibb.co/ZzMJgSgt/Whats-App-Image-2026-05-07-at-12-52-54.jpg" alt="Fernando Dasi e Felipe Nunes" loading="lazy" decoding="async" />
+      <img src="imagens/depoimento-foto.webp" alt="Fernando Dasi e Felipe Nunes" loading="lazy" decoding="async" />
       <div class="tf-photo-overlay"></div>
     </div>
 
@@ -3092,13 +3164,13 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 
         <!-- Screenshot da conversa -->
         <div class="tf-screenshot">
-          <img src="https://i.ibb.co/VcXhrqy1/Whats-App-Image-2026-05-07-at-18-08-40.jpg" alt="Conversa com Fernando Dasi" loading="lazy" decoding="async" />
+          <img src="imagens/depoimento-conversa.webp" alt="Conversa com Fernando Dasi" loading="lazy" decoding="async" />
         </div>
       </div>
 
       <div class="tf-meta">
         <div class="tf-avatar">
-          <img src="https://i.ibb.co/3mLHKpPB/Whats-App-Image-2026-05-07-at-18-23-32.jpg" alt="Fernando Dasi" loading="lazy" decoding="async" style="object-position: center top;" />
+          <img src="imagens/depoimento-avatar.webp" alt="Fernando Dasi" loading="lazy" decoding="async" style="object-position: center top;" />
         </div>
         <div>
           <div class="tf-name">Fernando Dasi</div>
