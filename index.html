@@ -3487,11 +3487,25 @@ document.querySelectorAll('.reveal').forEach(function(el){observer.observe(el);}
     wrapper.style.setProperty('--rotate-x','0deg');wrapper.style.setProperty('--rotate-y','0deg');
     wrapper.style.setProperty('--background-x','50%');wrapper.style.setProperty('--background-y','50%');
   }
-  wrapper.addEventListener('mouseenter',function(){shell.classList.add('entering');card.classList.add('active');wrapper.classList.add('active');setTimeout(function(){shell.classList.remove('entering');},200);});
-  wrapper.addEventListener('mousemove',function(e){set(e.clientX,e.clientY);});
-  wrapper.addEventListener('mouseleave',function(){card.classList.remove('active');wrapper.classList.remove('active');reset();});
-  wrapper.addEventListener('touchmove',function(e){e.preventDefault();var t=e.touches[0];set(t.clientX,t.clientY);card.classList.add('active');wrapper.classList.add('active');},{passive:false});
-  wrapper.addEventListener('touchend',function(){card.classList.remove('active');wrapper.classList.remove('active');reset();});
+  /* ⚠️ A INCLINAÇÃO SÓ EXISTE ONDE HÁ CURSOR — E ISSO É UM CONSERTO.
+     A versão anterior escutava `touchmove` com `preventDefault()` e
+     `passive:false`. Traduzindo: se o dedo encostasse no cartão e
+     arrastasse, a PÁGINA NÃO ROLAVA. O cartão engolia o gesto, e ele
+     ocupa boa parte da primeira tela no celular — quem chegava e
+     deslizava por cima dele achava a página travada.
+
+     Mesmo sem o preventDefault, `passive:false` já obriga o navegador
+     a esperar o código terminar antes de decidir se rola, o que atrasa
+     todo toque da região.
+
+     Inclinar é resposta a ponteiro. No toque não existe ponteiro: não
+     há o que responder, e o preço é a rolagem. Então não se liga. */
+  var temCursor = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if(temCursor){
+    wrapper.addEventListener('mouseenter',function(){shell.classList.add('entering');card.classList.add('active');wrapper.classList.add('active');setTimeout(function(){shell.classList.remove('entering');},200);});
+    wrapper.addEventListener('mousemove',function(e){set(e.clientX,e.clientY);});
+    wrapper.addEventListener('mouseleave',function(){card.classList.remove('active');wrapper.classList.remove('active');reset();});
+  }
 })();
 
 // dotgrid factory
@@ -3531,11 +3545,34 @@ function initDotGrid(cfg){
   trackEl.addEventListener('mouseleave',function(){mouse.x=-9999;mouse.y=-9999;});
   trackEl.addEventListener('click',function(e){var r=trackEl.getBoundingClientRect();shock={x:e.clientX-r.left,y:e.clientY-r.top,t:performance.now()};});
   function lerpC(a,b,f){return[Math.round(a[0]+(b[0]-a[0])*f),Math.round(a[1]+(b[1]-a[1])*f),Math.round(a[2]+(b[2]-a[2])*f)];}
+  /* ── QUANDO O LAÇO PODE RODAR ──────────────────────────────────
+     Antes ele rodava SEMPRE: redesenhava o canvas inteiro 60 vezes por
+     segundo, para sempre, mesmo com a seção fora da tela e mesmo no
+     celular — onde o efeito responde a `mousemove` e portanto nunca
+     acontece. Num telefone de 400x800 são ~920 pontos, cada um com uma
+     raiz quadrada e um arco, 60 vezes por segundo, produzindo nada.
+     Era isso que engasgava a rolagem.
+
+     Agora: no toque (e com "menos movimento") ele desenha UMA vez e
+     para — a grade fica na tela igualzinha, só não se mexe. No
+     computador roda, mas só enquanto a seção está visível. */
+  var podeAnimar = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+                && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var naTela = true, rodando = false;
+
   var last=performance.now();
   function frame(now){
-    requestAnimationFrame(frame);
     var dt=Math.min((now-last)/1000,0.05);last=now;
-    if(!canvas.width||!canvas.height){resize();return;}
+
+    /* ⚠️ ESTE PEDIDO DE QUADRO É OBRIGATÓRIO, mesmo sem animar.
+       Se o canvas ainda não tem tamanho, esta passada sai sem desenhar
+       nada. No celular só existe UMA passada — sem tentar de novo aqui,
+       a grade simplesmente nunca apareceria, sem erro nenhum no
+       console. Foi o que aconteceu na primeira versão desta mudança. */
+    if(!canvas.width||!canvas.height){ resize(); requestAnimationFrame(frame); return; }
+
+    if(podeAnimar && naTela){ requestAnimationFrame(frame); rodando = true; }
+    else { rodando = false; }
     ctx.clearRect(0,0,canvas.width,canvas.height);
     var sa=shock?(now-shock.t)/1000:999;
     for(var i=0;i<dots.length;i++){
@@ -3572,6 +3609,22 @@ function initDotGrid(cfg){
     }
     if(shock&&sa>2)shock=null;
   }
+
+  function acordar(){
+    if(!rodando && podeAnimar && naTela){ last=performance.now(); requestAnimationFrame(frame); }
+  }
+
+  /* fora da tela o laço para de vez, em vez de continuar desenhando um
+     canvas que ninguém está vendo */
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){ naTela = e.isIntersecting; if(naTela) acordar(); });
+    },{rootMargin:'120px 0px'}).observe(container);
+  }
+
+  /* um quadro sempre é desenhado — é ele que põe a grade na tela.
+     No toque, é o único, e é o suficiente: o efeito de proximidade
+     depende do cursor, que ali não existe. */
   requestAnimationFrame(frame);
 }
 
