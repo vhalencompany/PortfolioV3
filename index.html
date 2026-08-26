@@ -104,13 +104,6 @@ html { scrollbar-width: thin; scrollbar-color: var(--accent) var(--paper); }
 .cursor { position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; }
 .cursor-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; transform: translate(-50%,-50%); }
 .cursor-ring { width: 36px; height: 36px; border: 1px solid var(--ink); border-radius: 50%; transform: translate(-50%,-50%); transition: width 0.25s ease, height 0.25s ease, opacity 0.15s ease, background 0.25s ease; display: flex; align-items: center; justify-content: center; }
-.cursor-label {
-  font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.05em;
-  text-transform: uppercase; color: var(--paper); white-space: nowrap;
-  opacity: 0; transition: opacity 0.2s ease; text-align: center;
-}
-.cursor-ring.has-label { background: var(--ink); }
-.cursor-ring.has-label .cursor-label { opacity: 1; }
 
 /* Hamburguer só aparece no mobile */
 .nav-menu-btn { display: none; }
@@ -1332,7 +1325,7 @@ footer {
 
 .project-card {
   background: var(--paper);
-  cursor: pointer;
+  /* sem cursor:pointer — o card não é clicável, só a seta dentro dele */
   transition: background 0.3s;
   position: relative;
   overflow: hidden;
@@ -2379,7 +2372,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 </head>
 <body>
 
-<div class="cursor cursor-ring" id="cursorRing"><span class="cursor-label" id="cursorLabel"></span></div>
+<div class="cursor cursor-ring" id="cursorRing"></div>
 <div class="cursor cursor-dot"  id="cursorDot"></div>
 
 <!-- Floating WhatsApp CTA -->
@@ -2912,7 +2905,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         </div>
         <div class="project-footer">
           <span class="project-result">"Cara, eu tava precisando disso completamente pra ontem."</span>
-          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20projeto%20Lead%20Hunter%20no%20seu%20portf%C3%B3lio%20e%20tenho%20interesse%20em%20saber%20como%20ele%20pode%20ajudar%20minha%20prospec%C3%A7%C3%A3o%20B2B." target="_blank" class="project-arrow">→</a>
+          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20projeto%20Lead%20Hunter%20no%20seu%20portf%C3%B3lio%20e%20tenho%20interesse%20em%20saber%20como%20ele%20pode%20ajudar%20minha%20prospec%C3%A7%C3%A3o%20B2B." target="_blank" class="project-arrow" aria-label="Falar no WhatsApp sobre o Lead Hunter">→</a>
         </div>
       </div>
       <span class="project-num">01</span>
@@ -2947,7 +2940,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         </div>
         <div class="project-footer">
           <span class="project-result">"Essa página mostra completamente o posicionamento da empresa."</span>
-          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20case%20de%20posicionamento%20pessoal%20no%20seu%20portf%C3%B3lio%20e%20quero%20algo%20assim%20para%20mim." target="_blank" class="project-arrow">→</a>
+          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20case%20de%20posicionamento%20pessoal%20no%20seu%20portf%C3%B3lio%20e%20quero%20algo%20assim%20para%20mim." target="_blank" class="project-arrow" aria-label="Falar no WhatsApp sobre o case de posicionamento pessoal">→</a>
         </div>
       </div>
       <span class="project-num">02</span>
@@ -2982,7 +2975,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
         </div>
         <div class="project-footer">
           <span class="project-result">"Ficou perfeito, eu tava precisando dar uma atualizada dessa."</span>
-          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20projeto%20da%20%C3%B3tica%20no%20seu%20portf%C3%B3lio%20e%20quero%20uma%20p%C3%A1gina%20de%20convers%C3%A3o%20para%20o%20meu%20neg%C3%B3cio." target="_blank" class="project-arrow">→</a>
+          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20projeto%20da%20%C3%B3tica%20no%20seu%20portf%C3%B3lio%20e%20quero%20uma%20p%C3%A1gina%20de%20convers%C3%A3o%20para%20o%20meu%20neg%C3%B3cio." target="_blank" class="project-arrow" aria-label="Falar no WhatsApp sobre o projeto da Ótica Arapiraca">→</a>
         </div>
       </div>
       <span class="project-num">03</span>
@@ -3023,7 +3016,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
                afirmação sobre a entrega, não uma citação, justamente
                para não inventar depoimento que não existe. -->
           <span class="project-result">Site no ar e editável por ela mesma — sem build, sem programador.</span>
-          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20projeto%20da%20Eduarda%20Magalh%C3%A3es%20no%20seu%20portf%C3%B3lio%20e%20quero%20um%20site%20assim%20para%20o%20meu%20neg%C3%B3cio." target="_blank" class="project-arrow">→</a>
+          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20projeto%20da%20Eduarda%20Magalh%C3%A3es%20no%20seu%20portf%C3%B3lio%20e%20quero%20um%20site%20assim%20para%20o%20meu%20neg%C3%B3cio." target="_blank" class="project-arrow" aria-label="Falar no WhatsApp sobre o projeto da Eduarda Magalhães">→</a>
         </div>
       </div>
       <span class="project-num">04</span>
@@ -3060,7 +3053,7 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
           <!-- Afirmação sobre a entrega, não citação: mesmo critério do
                case da Eduarda, para não inventar depoimento inexistente. -->
           <span class="project-result">Dois formulários que abrem o WhatsApp preenchido — 320 KB na primeira tela.</span>
-          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20projeto%20do%20Bruno%20Botto%20no%20seu%20portf%C3%B3lio%20e%20quero%20uma%20landing%20page%20assim%20para%20o%20meu%20neg%C3%B3cio." target="_blank" class="project-arrow">→</a>
+          <a href="https://wa.me/5579998453719?text=Ol%C3%A1%2C%20Felipe%21%20Vi%20o%20projeto%20do%20Bruno%20Botto%20no%20seu%20portf%C3%B3lio%20e%20quero%20uma%20landing%20page%20assim%20para%20o%20meu%20neg%C3%B3cio." target="_blank" class="project-arrow" aria-label="Falar no WhatsApp sobre a landing page do Bruno Botto">→</a>
         </div>
       </div>
       <span class="project-num">05</span>
@@ -3352,7 +3345,6 @@ body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:
 // cursor
 var dot=document.getElementById('cursorDot');
 var ring=document.getElementById('cursorRing');
-var label=document.getElementById('cursorLabel');
 var mouseX=0,mouseY=0,ringX=0,ringY=0;
 document.addEventListener('mousemove',function(e){
   mouseX=e.clientX;mouseY=e.clientY;
@@ -3363,24 +3355,13 @@ document.addEventListener('mousemove',function(e){
   ring.style.left=ringX+'px';ring.style.top=ringY+'px';
   requestAnimationFrame(loop);
 })();
+// O cursor só reage ao que é REALMENTE clicável. O card de projeto é uma
+// <div> sem link: antes ele exibia "Ver projeto" no cursor e o clique não
+// fazia nada — promessa quebrada. Agora quem recebe o destaque é a seta
+// dentro do card, que é o link de verdade.
 document.querySelectorAll('a,button,.servico-card').forEach(function(el){
-  if(el.closest('.project-card'))return; // tratado à parte, com rótulo
   el.addEventListener('mouseenter',function(){ring.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.opacity='0.5';});
   el.addEventListener('mouseleave',function(){ring.style.transform='translate(-50%,-50%) scale(1)';ring.style.opacity='1';});
-});
-document.querySelectorAll('.project-card').forEach(function(card){
-  card.addEventListener('mouseenter',function(){
-    ring.style.width='96px';ring.style.height='96px';
-    ring.classList.add('has-label');
-    label.textContent='Ver projeto';
-    dot.style.opacity='0';
-  });
-  card.addEventListener('mouseleave',function(){
-    ring.style.width='36px';ring.style.height='36px';
-    ring.classList.remove('has-label');
-    label.textContent='';
-    dot.style.opacity='1';
-  });
 });
 
 // scrollspy — destaca no menu a seção que está sendo lida no momento
